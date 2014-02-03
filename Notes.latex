@@ -1,0 +1,98 @@
+\documentclass[11pt,a4paper,oneside]{article}
+%\renewcommand\abstractname{Executive Summary}
+\renewcommand*\thesection{\arabic{section}}
+%\renewcommand\bibname{References}
+    \setcounter{tocdepth}{3}
+    \setcounter{secnumdepth}{3}
+    \usepackage{tocloft}
+    \usepackage{graphicx}
+    \usepackage[section]{placeins}
+    \usepackage{array}
+    \usepackage{rotating}
+    \usepackage{float}
+    \usepackage{pdflscape}
+    \usepackage{wrapfig}
+    \usepackage{multirow}
+    \usepackage{epstopdf}
+    \usepackage{subfig}
+    \usepackage{txfonts}
+    \usepackage{url}
+    \usepackage{graphics}
+    \usepackage[titletoc,toc,title]{appendix}
+    \usepackage{varioref}
+    \usepackage{verbatim}
+    \usepackage{listings}
+    \usepackage{color}
+    \usepackage[pprintonlyused]{acronym}
+    \usepackage{url}
+    \usepackage{caption}
+    \usepackage{subcaption}
+    \usepackage{fancyhdr}
+    %\usepackage[table]{xcolor}
+    \usepackage{hhline}
+    
+    
+    \usepackage[usenames,dvipsnames,table]{xcolor}
+    
+    \definecolor{dkgreen}{rgb}{0,0.6,0}
+    \definecolor{gray}{rgb}{0.5,0.5,0.5}
+    \definecolor{mauve}{rgb}{0.58,0,0.82}
+%\pagestyle{fancy}
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+   numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=3
+}
+%\usepackage{amssymb}
+%\usepackage{amsmath}
+%\usepackage{mathtools}
+%\usepackage{natbib}
+\newcommand{\degree}{\ensuremath{^\circ}}
+\renewcommand{\headrulewidth}{0pt} % remove the header rule
+\newcommand{\includecode}[2][c]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
+ 
+\addtolength{\voffset}{-1.5cm}
+\addtolength{\hoffset}{-1.3cm}
+\addtolength{\textwidth}{3cm}
+\addtolength{\textheight}{120pt}
+\addtolength{\marginparwidth}{-100pt}
+\addtolength{\oddsidemargin}{-0.3in}
+\addtolength{\evensidemargin}{-0.3in}
+\textwidth 6.6in
+ 
+\setlength\cftparskip{1pt}
+\setlength{\parindent}{0pt}
+% leftmark shows the chapter, rightmark shows the section.
+\fancyhead{}
+\fancyfoot[L]{}% empty left
+\fancyfoot[R]{ % right
+   \includegraphics[height=0.53in]{logo.png}
+}
+\pagestyle{fancy}
+
+   
+ 
+\title{Notes for Final Year Project}
+\author{James Cox 
+ \\
+ Department of Electrical and Electronic Engineering\\
+ \\
+ University of Bath}
+ 
+\date{\today}
+\begin{document}
+Test
+\end{document}
+
