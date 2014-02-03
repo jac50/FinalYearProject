@@ -23,10 +23,10 @@
     \usepackage{verbatim}
     \usepackage{listings}
     \usepackage{color}
-    \usepackage[pprintonlyused]{acronym}
+   % \usepackage[pprintonlyused]{acronym}
     \usepackage{url}
     \usepackage{caption}
-    \usepackage{subcaption}
+   % \usepackage{subcaption}
     \usepackage{fancyhdr}
     %\usepackage[table]{xcolor}
     \usepackage{hhline}
@@ -78,7 +78,6 @@
 \fancyhead{}
 \fancyfoot[L]{}% empty left
 \fancyfoot[R]{ % right
-   \includegraphics[height=0.53in]{logo.png}
 }
 \pagestyle{fancy}
 
@@ -93,6 +92,7 @@
  
 \date{\today}
 \begin{document}
-Test
+\section{Test}
+
 \end{document}
 
