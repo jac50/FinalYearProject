@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Final Year Project" company="University of Bath" webLink="http://" view-date="2014-02-03" view-index="0" gantt-divider-location="353" resource-divider-location="300" version="2.0" locale="en_GB">
+<?xml version="1.0" encoding="UTF-8"?><project name="Final Year Project" company="University of Bath" webLink="http://" view-date="2014-01-27" view-index="0" gantt-divider-location="365" resource-divider-location="300" version="2.0" locale="en_GB">
     <description><![CDATA[PTP Project]]></description>
-    <view zooming-state="default:2" id="gantt-chart">
-        <field id="tpd3" name="Name" width="57" order="0"/>
+    <view zooming-state="default:7" id="gantt-chart">
+        <field id="tpd3" name="Name" width="56" order="0"/>
         <field id="tpd4" name="Begin date" width="21" order="1"/>
         <field id="tpd5" name="End date" width="21" order="2"/>
     </view>
     <view id="resource-table">
-        <field id="0" name="Name" width="70" order="0"/>
-        <field id="1" name="Default role" width="29" order="1"/>
+        <field id="0" name="Name" width="56" order="0"/>
+        <field id="1" name="Default role" width="43" order="1"/>
     </view>
     <!-- -->
     <calendars>
@@ -36,8 +36,10 @@
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
         <task id="0" name="Interim Report" color="#ff0033" meeting="false" start="2014-02-03" duration="13" complete="0" expand="true"/>
-        <task id="14" name="Research PTP/PTPd" meeting="false" start="2014-02-03" duration="5" complete="0" expand="true"/>
-        <task id="15" name="Brainstorm Ideas/Deliverables" meeting="false" start="2014-02-03" duration="5" complete="0" expand="true"/>
+        <task id="14" name="Research PTP/PTPd" meeting="false" start="2014-02-03" duration="10" complete="0" expand="true"/>
+        <task id="15" name="Brainstorm Ideas/Deliverables" meeting="false" start="2014-02-03" duration="10" complete="0" expand="true"/>
+        <task id="17" name="Investigate GM and Slave Chronos Clocks" color="#8cb6ce" meeting="false" start="2014-02-10" duration="3" complete="0" expand="true"/>
+        <task id="19" name="Confirm Project Spec" color="#8cb6ce" meeting="true" start="2014-02-10" duration="0" complete="0" expand="true"/>
         <task id="8" name="Final Year Report" color="#ff0033" meeting="false" start="2014-02-24" duration="53" complete="0" expand="true"/>
         <task id="11" name="Final Year Report Deadline" color="#ff0033" meeting="true" start="2014-05-07" duration="0" complete="0" priority="4" expand="true"/>
         <task id="4" name="Interim Report Deadline" color="#ff0033" meeting="true" start="2014-02-19" duration="0" complete="0" priority="2" expand="true"/>
@@ -55,9 +57,9 @@
         <displaycolumn property-id="tpd9" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd1" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd0" order="-1" width="75" visible="false"/>
-        <displaycolumn property-id="tpd3" order="0" width="199" visible="true"/>
-        <displaycolumn property-id="tpd4" order="1" width="75" visible="true"/>
-        <displaycolumn property-id="tpd5" order="2" width="75" visible="true"/>
+        <displaycolumn property-id="tpd3" order="0" width="203" visible="true"/>
+        <displaycolumn property-id="tpd4" order="1" width="79" visible="true"/>
+        <displaycolumn property-id="tpd5" order="2" width="79" visible="true"/>
     </taskdisplaycolumns>
     <previous/>
     <roles roleset-name="Default"/>
