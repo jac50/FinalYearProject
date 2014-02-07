@@ -62,15 +62,84 @@
 \\ Department of Electrical and Electronic Engineering \\
 \\
 University of Bath}
-
 \date{\today}
 \begin{document}
+
 \maketitle
 \renewcommand{\abstractname}{Executive Summary}
 \vfill
 \tableofcontents
 \newpage
+
+\section*{Acronyms}
+\begin{acronym}
+\acro{CSMA/CD}{Carrier Sense Multiple Access with Collision Detection}
+\acro{GM}{Grandmaster}
+\acro{GPS}{Global Positioning System}
+\acro{IEEE}{Institute of Electrical and Electronic Engineers}
+\acro{NTP}{Network Time Protocol}
+\acro{PTP}{Precision Time Protocol}
+\acro{PTPd}{PTP Daemon}
+
+\end{acronym}
 \section{Executive Summary}
 \section{Introduction}
+- brief description of the project
+- project context / where it fits in to engineering
+\section{Aims and Objectives}
+- list all aims and objectives for project
+- list the deliverables based on this
+- Gantt chart produced from these results
+\section{Literature Review}
+During the first week of the project a number of different \ac{IEEE} reports were read and summarised in the logbook. 
+This section of the report will outline some of thedocuments that were used in order for work to begin. 
+The reports were:
+
+\begin{description}
+\item[\ac{PTP} Specification \cite{}] IEEE1558-2004 specification
+\item[Prevention of Packet Collisions \cite{IEEECollision}] A journal article describing an algorithm that aims to prevent packet collisions in an Ethernet network.
+\item[Sub-nanosecond synchronisation \cite{IEEEWhiteRabbit}] A conference paper describing a method of nanosecond accuracy synchonisation
+\item[Measurement of Egress and Ingress Delays \cite{IEEEEgress}]
+\end{description}
+
+\subsection{\ac{PTP} Specification}
+\subsection{Prevention of Packet Collisions}
+
+The paper begins by explaining the drawbacks with \ac{CSMA/CD} that is used in Ethernet and hence explains that time critical packets (mainly \textit{Sync}, \textit{Delay\_resp} and \textit{Delay\_req}) would be effected if these packets collided. 
+It then goes on to explain briefly how the author developed a token passing system between the slave clocks. Tokens are passed during every two-way session (\textit{Delay\_req} and \textit{Delay\_resp}).
+\\
+Because the slave clocks don't require the two-session to be performed at regular interviews (only somewhere between 0 and some Tmax), the time being executions can be variable. 
+Therefore the next slave could be designed by random.
+The sender would therefore need some registry of all of the other slave clocks. 
+The author explains two ways in which this could be implemented: a centralised database or a local cache at each slave. 
+The centralised database would create a single point of falure and it would also be a mutual exclusion problem. 
+On the other hand having a local cache at each slave clock would be impractical to keep updating when slaves join and leave the network.
+Therefore the journal authors decided on a compromise by maintain a neighbourhood of clocks which are a subset of the total population of slave clocks.
+The property of "random walks" would still be maintained even though all of the clocks will not be in the list.
+\\
+The authors also described a method in solving the issue if a particular slave clock (for example Clock Z) reached its maximum time between a two-way session. 
+If the current slave clock proposes to past the token to Slave Y, and the master notices that Clock Z has not been updated since the max time, it will reroute the token to Clock Z instead. 
+The current clock X will then update its neighbourhood with Y instead of Z.
+\\
+This method will exclude any occurance of collisions as only one two-way session occurs at any one time. 
+Also, at time t, the maximum number of slaves that are "starved" (ie have reached their maximum time between sessions) is one. 
+This is due to the maximum time between sessions being the same for all the clocks.
+\\
+
+
+\subsection{Sub-Nanosecond Synchronisation}
+\subsection{Measurement of Egress and Ingress Delays}
+
+\section{Work Carried out so Far}
+- outline all work that has been carried out to date.
+- Review this. how well has it gone
+\section{Challenges}
+\section{Next Steps}
+\section{Conclusion}
+
+\bibliographystyle{ieeetr}
+\bibliography{Bibliography}
+\begin{appendices}
+\end{appendices}
 \end{document}
 
