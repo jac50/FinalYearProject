@@ -14,8 +14,7 @@ print ("Reading CSV Data...")
 Data <- read.csv(file = "../PTPData/subsetData.txt",head = TRUE, sep=",")
 print ("CSV Data has been written to Data variable")
 delays <- as.matrix(Data[4])
-# delays <-sort(delays)
-print(delays)
+# delays <-sort(delays) Sort if needed
 To <- 1/16 #Assume To = 1/16
 # ---- Removes Init Messages and the first value
 delays = delays[-1] 
@@ -33,5 +32,7 @@ for (i in 1:maxn){
 
 print(result)
 
+#Create a CSV output file
 
-#print(delays)
+
+
