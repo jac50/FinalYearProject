@@ -1,24 +1,28 @@
 #!/usr/bin/env Rscript
+#---- MINTDEV --------
 
-#minTDEV Scrit
+
 #Input Data 
 
-minTDEV <- function(nTo,N){
+TDEV <- function(nTo,N,x){
 To <- 0.1
 n <- nTo / To
-test = c(1,2,3)
+#generate test data
+x <- seq(0,1000)
+window <- 15
+windowSide <- (window - 1) / 2
 
 outerStep <- 0
 for (j in 1:(N-3*n + 1)){
 	interimStep <- 0
 	for (i in j:(n+j - 1)){
-		interimStep <- interimStep + min(x(i + 2*n)) - 2*min(x(i+n)) +min(x(i)) 
+		interimStep <- interimStep + x[i + 2*n - windowSide] - 2* x[i+n - windowSide] + x[i - windowSide] 
 	}
 	interimStep = interimStep ^ 2
 	outerStep = outerStep + interimStep
 }
 outerStep = outerStep / (6 * n^2 * (N - 3*n + 1));
-result <- sqrt(6)
+result <- sqrt(outerStep)
 return(result) 
 }
 
