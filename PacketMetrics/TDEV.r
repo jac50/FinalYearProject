@@ -18,14 +18,12 @@ TDEV <- function(To,n, N,x){
 	for (j in windowSide+1:(N-3*n + 1) - windowSide){
 		interimStep <- 0
 		for (i in j:(n+j - 1)){
-			interimStep <- interimStep + mean(x[i + 2*n - windowSide:i + 2*n + windowSide]) - 2* mean(x[i+n - windowSide : i + n + windowSide]) + mean(x[i - windowSide : i + windowSide])
+			interimStep <- interimStep + mean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* mean(x[i+n - windowSide : i + n + windowSide]) + mean(x[i - windowSide : i + windowSide])
 		}
 		interimStep = interimStep ^ 2
 		outerStep = outerStep + interimStep
 	}
-	print(outerStep)
 	outerStep = outerStep / (6 * (N - 3*n + 1));
-	#print (outerStep) #Test Line
 	result <- sqrt(outerStep)
 	return(result) 
 }
