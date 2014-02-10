@@ -14,12 +14,6 @@ minTDEV <- function(nTo,N,x){
 	To <- 0.1 #time between samples
 	n <- nTo / To #number of samples to current point
 
-	# ------ Test Code --------
-	# - Generate test samples. 
-	# will pass into func.
-	#--------------------------
-	x <- seq(0,1000)
-	#--- End Test Code -------
 	window <- 15 
 	windowSide <- (window - 1) / 2 #Calculate left and right side of window
 	outerStep <- 0
@@ -38,5 +32,8 @@ minTDEV <- function(nTo,N,x){
 	return(result) 
 }
 
-print(minTDEV(12,12)) #Test Data
+#--- Test Code --------
+#- Generate samples  --
+x <- seq(0,1000)
+print(minTDEV(12,12,x)) #Test Data
 

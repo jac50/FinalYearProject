@@ -12,12 +12,6 @@
 TDEV <- function(nTo,N,x){
 	To <- 0.1 #time between samples
 	n <- nTo / To #number of samples to current point
-	# ------ Test Code --------
-	# - Generate test samples. 
-	# will pass into func.
-	#--------------------------
-	x <- seq(0,1000)
-	#--- End Test Code -------
 	window <- 15 # Set window Size
 	windowSide <- (window - 1) / 2 # Set the length of Side of window
 	outerStep <- 0 
@@ -34,5 +28,8 @@ TDEV <- function(nTo,N,x){
 	return(result) 
 }
 
-print(TDEV(12,12)) #Test Data
+#--- Test Code --------
+#- Generate samples  --
+x <- seq(0,1000)
+print(TDEV(12,12,x)) #Test Data
 

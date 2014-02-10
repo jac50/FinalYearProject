@@ -32,7 +32,8 @@ bandTDEV <- function(nTo,N,x){
 	return(result) 
 }
 
-	
-
-print(bandTDEV(12,12))
+#--- Test Code --------
+#- Generate samples  --
+x <- seq(0,1000)
+print(bandTDEV(12,12,x))
 

@@ -33,7 +33,8 @@ percentileTDEV <- function(nTo,N,x){
 	return(result) 
 }
 
-	
-
-print(percentileTDEV(12,12))
+#--- Test Code --------
+#- Generate samples  --
+x <- seq(0,1000)
+print(percentileTDEV(12,12,x))
 
