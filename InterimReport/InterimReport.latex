@@ -84,10 +84,50 @@ University of Bath}
 \end{acronym}
 \section{Executive Summary}
 \section{Introduction}
-- brief description of the project
-- project context / where it fits in to engineering
-\section{Aims and Objectives}
-- list all aims and objectives for project
+
+Synchronising time amongst a number of devices is very important in a wide range of applications, which include:
+
+\begin{description}
+\item[Automotive Industry] \hfill \\ complete
+\item[Power Transmission] \hfill \\ complete 
+\item[Geoscience] \hfill \\ complete
+\item[Telecommunications] \hfill\\ complete	
+\end{description}
+
+- Explain NTP, and how this was done traditionally
+
+Traditionally timing was implemented on a seperate channel running alongside an existing telecommunications channel.
+With the design of \ac{PTP}, existing Ethernet networks can be used instead. The problem with this however comes with how Ethernet works. 
+When standard switches are used, it is indeterminant on the packet delay from Node A to Node B. 
+This is bad for \ac{PTP} as this packet delay must be taken into account when working out the clock offset. 
+Specific timing switches (REFERENCE) can be used which will prioritise \ac{PTP} packets, but these may not be available in existing networks. 
+(LIST OTHER TYPES OF SWITCHES HERE TOO)
+\subsection{Project Description}
+As it can be seen from above, any industry where accurate timing would benefit from PTP, thus determining PTP performance across an network would be useful
+Therefore this project will investigate PTP performance across an existing ethernet network. 
+The project specification has been left intentionally open so other work can be carried out time permitting. The university network will be used for this project.
+
+\subsection{Aims and Objectives}
+
+The project can be split into a number of sub goals and objectives. 
+The following goals have been identified:
+\begin{description}
+\item[Learn about \ac{PTP} and other work in relation to the protocol] \hfill \\ 
+This stage would occur at the beginning of the project to understand how \ac{PTP} works.
+This is important so work can then be carried out to investigate \ac{PTP} performance.
+\item[Collect PTP Data] \hfill \\ 
+In tandem with the above PTP data can be collected. 
+This will be monitoring the performance of \ac{PTP} across the network as well as how using multiple types of grandmaster/slaves affect the performance. 
+Different clock locations in the network will also be considered.
+\item[Implement some packet metric scripts] \hfill \\ 
+To be able to understand the performance of the network, some packet metric scripts will be created. 
+A suitable language will be chosen once this part of the project begins.
+\item[Determine packet performance using these scripts] \hfill \\
+Multiple window sizes and types of metric will be used to quantify network performance.
+\item[Test Chronos' equipment and provide feedback] \hfill \\ 
+As Chronos has provided this project with some equipment, this equipment will also be thoroughly tested and any information gathered can be passed to them once the project is completed.
+\end{description}
+
 - list the deliverables based on this
 - Gantt chart produced from these results
 \section{Literature Review}
