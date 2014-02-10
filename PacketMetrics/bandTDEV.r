@@ -6,19 +6,22 @@
 bandTDEV <- function(nTo,N){
 To <- 0.1
 n <- nTo / To
-test = c(1,2,3)
-
+test <- c(1,2,3)
+window <- 15
+windowStep <- (window - 1) / 2
 outerStep <- 0
+a <- 20
+b <- 80
 for (j in 1:(N-3*n + 1)){
 	interimStep <- 0
 	for (i in j:(n+j - 1)){
-		interimStep <- interimStep + bandMean(x(i + 2*n)) - bandMean(2* x(i+n)) + bandMean(x(i)) 
+		interimStep <- interimStep + bandMean(x[i + 2*n - windowStep : i + 2*n + windowStep],a,b) - 2 * bandMean(x[i+n - windowStep : i + n + windowStep],a,b) + bandMean(x[i - windowStep : i + windowStep],a,b) 
 	}
 	interimStep = interimStep ^ 2
 	outerStep = outerStep + interimStep
 }
-outerStep = outerStep / (6 * n^2 * (N - 3*n + 1));
-result <- sqrt(6)
+outerStep = outerStep / (6 * n^2 * (N - 3*n + 1))
+result <- sqrt(outerStep)
 return(result) 
 }
 bandMean <- function(window,a,b){
