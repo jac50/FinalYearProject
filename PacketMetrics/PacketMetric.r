@@ -43,8 +43,9 @@ for (i in 1:maxn){
 rangeOfValues <- range(0,resultTDEV,resultMinTDEV)
 print(rangeOfValues)
 #Name pdf file..
-outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".pdf",sep = "")
-pdf(outputFileName)
+outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
+setEPS()
+postscript(outputFileName)
 plot(resultMinTDEV,type="o", col="red",log="xy")
 lines(resultTDEV,type="o",col="blue")
 legend(1,rangeOfValues[2],c("TDEV", "minTDEV"), cex = 0.8,col=c("blue","red"), pch=21:22, lty=1:2)
