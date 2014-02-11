@@ -12,7 +12,7 @@ source("minTDEV.r") #Imprt MinTDEV Script
 arguments  <- commandArgs()
 sampleSize <- arguments[6] #Command line args start from index 6
 
-fileName = paste("../PTPData/SampleSize_", sampleSize, ".txt",sep="")
+fileName = paste("../PTPData/TestData/SampleSize_", sampleSize, ".txt",sep="")
 print(fileName)
 
 print ("Reading CSV Data...")
@@ -30,17 +30,26 @@ N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the nul
 
 maxn = floor(N / 3)
 
-result = matrix(0,maxn)
+resultTDEV = matrix(0,maxn)
 resultMinTDEV = matrix(0,maxn)
 
 for (i in 1:maxn){
 	
-	#result[i] <- TDEV(To,i,N,delays)
+	resultTDEV[i] <- TDEV(To,i,N,delays)
 	resultMinTDEV[i] <-minTDEV(To,i,N,delays)
 }
 
-print(resultMinTDEV)
+#print(resultMinTDEV)
+rangeOfValues <- range(0,resultTDEV,resultMinTDEV)
+print(rangeOfValues)
+#Name pdf file..
+outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".pdf",sep = "")
+pdf(outputFileName)
+plot(resultMinTDEV,type="o", col="red",log="xy")
+lines(resultTDEV,type="o",col="blue")
+legend(1,rangeOfValues[2],c("TDEV", "minTDEV"), cex = 0.8,col=c("blue","red"), pch=21:22, lty=1:2)
 
+dev.off()
 #Create a CSV output file
 
 
