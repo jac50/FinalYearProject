@@ -23,7 +23,7 @@ TDEV <- function(To,n, N,x){
 		interimStep = interimStep ^ 2
 		outerStep = outerStep + interimStep
 	}
-	outerStep = outerStep / (6 * (N - 3*n + 1));
+	outerStep = outerStep / (6 * (N - (3*n) + 1));
 	result <- sqrt(outerStep)
 	return(result) 
 }
