@@ -32,3 +32,5 @@
 *.tdo
 *.swp
 PTPData/*
+*.o
+*.so
