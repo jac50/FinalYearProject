@@ -35,6 +35,33 @@
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  language=R,                     % the language of the code
+  basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line
+                                  % will be numbered
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                 % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},      % keyword style
+  commentstyle=\color{dkgreen},   % comment style
+  stringstyle=\color{mauve},      % string literal style
+  escapeinside={\%*}{*)},         % if you want to add a comment within your code
+  morekeywords={*,...}            % if you want to add more keywords to the set
+} 
 \newcommand{\degree}{\ensuremath{^\circ}}
 \renewcommand{\headrulewidth}{0pt} % remove the header rule
 \newcommand{\includecode}[2][c]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
@@ -68,6 +95,7 @@ University of Bath}
 \maketitle
 \renewcommand{\abstractname}{Executive Summary}
 \vfill
+\newpage
 \tableofcontents
 \newpage
 
@@ -77,36 +105,140 @@ University of Bath}
 \acro{GM}{Grandmaster}
 \acro{GPS}{Global Positioning System}
 \acro{IEEE}{Institute of Electrical and Electronic Engineers}
+\acro{LAN}{Local Area Network}
+\acro{NERC}{North American Electric Reliability Company}
 \acro{NTP}{Network Time Protocol}
+\acro{PPS}{Pulse per Second}
 \acro{PTP}{Precision Time Protocol}
 \acro{PTPd}{PTP Daemon}
+\acro{SNTP}{Simple Network Time Protocol}
+\acro{UTC}{Coordinated Universal Time}
 
 \end{acronym}
+\newpage
 \section{Executive Summary}
 \section{Introduction}
 
-Synchronising time amongst a number of devices is very important in a wide range of applications, which include:
+Synchronising time amongst a number of devices is very important in a wide range of applications.
+This can either be for implicit time keeping where timing is not referring to a physical clock, but rather on the order of a set of processes to occur.
+Explicit timing is where the exact time is required, for example in a communications system.
+The problem is that not every clock can be exactly correct, or it may not be financially feasible to install a very stable and accurate atomic clock in a particular system.\\
 
+Note that there are two types of clock inaccuracy when trying to synchronise clocks. 
+Firstly they may have initially started at a different time to the others, therefore there is an offset that needs to be corrected.
+This is called offset correction.
+The second effect that is noticed is that clocks do not necessarily run at exactly the same speed.
+Therefore clocks need to be consistantly adjusted, which is called drift correction.
+Some clock inaccuracy may be tolerable in some circumstances, but in a number of cases a system must be set up to correct for this instability. \\
+There are several industries that would benefit from an accurate timing network. 
+Descriptions of some of the industries are shown below.
+
+%---- Expand on descriptions slightly
 \begin{description}
-\item[Automotive Industry] \hfill \\ complete
-\item[Power Transmission] \hfill \\ complete 
-\item[Geoscience] \hfill \\ complete
-\item[Telecommunications] \hfill\\ complete	
+\item[Automation Industry] \hfill \\ Processes will need to be synchronised exactly, and can only be if their clocks are in sync with one another.
+If clocks are in sync then processes can be seperated away from communication between each machine and the processing of the control commands \cite{IEEEApplications}. 
+\item[Power Transmission] \hfill \\ Time synchronisation is very important in the power transmission industry, case in point in the North American blackout in August 2003 \cite{PTPFuturePower}. 
+It made it difficult for the investigation team to be able to sort through the data received when the timestamps were gathered from an inaccurate clock. 
+From the events of this blackout a regulation was put in place to define a minimum absolute accuracy for timestamped data.
+The adoption of \ac{NERC}  Standard PRC018\-1 in 2006 \cite{NERCPRC0181} made this law for any recorded substation data in the USA. This requires that timestamped data must be accurate to within 2ms in relation to UTC. % Mention Doble?
+\item[Telecommunications] \hfill\\ In telecommunications, timing protocols are being considered when networks need to be syncronised or if mobile base stations need synchronisation pulses. 
 \end{description}
 
-- Explain NTP, and how this was done traditionally
+\subsection{Existing Technology}
 
-Traditionally timing was implemented on a seperate channel running alongside an existing telecommunications channel.
-With the design of \ac{PTP}, existing Ethernet networks can be used instead. The problem with this however comes with how Ethernet works. 
-When standard switches are used, it is indeterminant on the packet delay from Node A to Node B. 
-This is bad for \ac{PTP} as this packet delay must be taken into account when working out the clock offset. 
-Specific timing switches (REFERENCE) can be used which will prioritise \ac{PTP} packets, but these may not be available in existing networks. 
-(LIST OTHER TYPES OF SWITCHES HERE TOO)
+There are currently a few technologies that will deliver time syncronisation to the above industries.
+These are: \ac{NTP}, \ac{SNTP}, synchronisation from \ac{GPS} satellites, and \ac{PPS} signals on a seperate channel.
+
+\begin{description}
+\item[\ac{NTP}] \hfill \\ This is a technology originally designed in 1985 that is used to synchronise clocks over a packet switched network. 
+It is able to achieve synchronisation with \ac{UTC} within a few millseconds, but can maintain sub-millisecond accuracy on a \ac{LAN} if ideal conditions are met. 
+Errors due to different packet routes or network congestion can decrease this accuracy by 100ms or more. \cite{NTPWhitePaper}
+\\
+\ac{NTP} uses a client-server hierarchy split into "stratums". 
+Figure \ref{fig:NTPHierarchy} below shows the stratums numbered from 0 to 3. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.6]{./Figures/NTPDiagram.eps}
+\caption{\ac{NTP} Network Hierarchy \cite{figRef:NTPHierarchy}}
+\label{fig:NTPHierarchy}
+\end{figure}
+The reference clocks which are in stratum 0 are high precision. 
+Examples of such type clocks are atomic or \ac{GPS}. 
+The clocks in stratum 2 will base their time off of the clocks in stratum 1. 
+A subset of the clocks in stratum 1 will be used so the overall time is more accurate and robust. 
+Within a stratum clocks may also synchronise for sanity checkup. 
+Any layers below stratum 2 will mirror the same algorithm, and there can be up to 15 layers. 
+Stratum 16 is reserved for clocks that are not synchronised with \ac{NTP}. 
+\\
+\ac{SNTP} is a similar protocol but it is complex than NTP as it does not store the state over long periods of time. 
+This is usually used in applications which do not require a high timing accuracy.
+The \ac{SNTP} specification can be found in the \ac{NTP} spec, cited here.  \cite{NTPV4Specification}
+\item[\ac{GPS} Synchronisation] \hfill \\ Time synchronisation can be performed using the high precision clocks found on \ac{GPS} satellites. 
+Even though this provides a high precision synchronisation, the extra cost and effort may restrict its use to only certain circumstances. \cite{IEEEPastSolutions}
+\end{description}
+%Ask watson about any other methods of timing
+
+The problem occurs if synchronisation across a packet network is needed but sub-millisecond accuracy is desired. 
+Therefore \ac{PTP} was developed as a successor to the existing \ac{NTP} standard. 
+Meeting this value of accuracy is very difficult however with a traditional Ethernet network. \\
+
+When standard switches are used, the packet delay between two nodes is indeterminant. 
+This may be because the packet route from A to B changes depending on network load, or a packet may be held in a switch for an unspecified amount of time whilst working with other data on the network. 
+Therefore this is undesired for \ac{PTP} when this packet delay must be taken into account when working out the clock offset. 
+Specific timing switches can be used which will prioritise \ac{PTP} packets, but these may not be available in existing networks or be too expensive to be suitable. 
+% List possible switches
+
+\subsection{Current Technology - PTP}
+
+\acf{PTP} was developed in 2003 as Version 1 with the intention to build on the existing \ac{NTP} standard. 
+The Version 1 improvement improved on \ac{NTP} in a number of different ways.
+A new \ac{PTP} standard was introduced in 2008 which again improved on Version 1 with some new features such as boundary clocks. 
+These changes have been  tabulated below, Table \ref{table:NTPPTP}.
+
+\begin{table}[H]
+\centering
+\caption{NTP Vs PTP Version 1 Vs PTP Version 2}
+\begin{tabular}{ |p{4cm} ||p{4cm} |p{4cm} | p{4cm}| }\hline
+\cellcolor{Black}\textcolor{White}{\textbf{ Feature }}  &  \cellcolor{Black}\textcolor{White}{\textbf{ \ac{PTP} V2 (IEEE1588-2008) }} & \cellcolor{Black}\textcolor{White}{\textbf{\ac{PTP} V1 (IEEE1588-2002)}} \\ \hline
+Transparent Clocks  &  Yes  &  No\\ \hline
+Unicast  &  Yes  &  No \\ \hline
+Domains  &  Domain Numbers  &  Subdomain Name Fields\\ \hline
+Clock Quality & Clock Accuracy / Clock Class & Data Field Stratum \\ \hline
+Selection Algorithm for best clock & Hierarchical & Selection based \\ \hline
+\multirow{5}{*}{Other Features} & Alternate Time Scale & \\ 
+ & Grandmaster Cluster & \\ 
+ & Unicast Masters & None\\ 
+ & Alternate Master & \\ 
+ & Path Trace & \\ \hline
+\label{table:NTPPTP}
+\end{tabular}
+\end{table}
+
+%Description on how the technology works?
 \subsection{Project Description}
-As it can be seen from above, any industry where accurate timing would benefit from PTP, thus determining PTP performance across an network would be useful
+As it can be seen from above, any industry where accurate timing would benefit from PTP, thus determining PTP performance across an network would be useful. 
 Therefore this project will investigate PTP performance across an existing ethernet network. 
-The project specification has been left intentionally open so other work can be carried out time permitting. The university network will be used for this project.
+The project specification has been left intentionally open so other work can be carried out time permitting. 
+The university network will be used for this project. \\
 
+The project will aim to quantify the performance of a \ac{PTP} system situated on a heavily used Ethernet network. Different packet metrics will be considered when doing this. Other work which may be considered to carry out includes (but not limited to):
+
+
+\begin{itemize}
+\item Hardware Slave Clock
+\item Security of a \ac{PTP} Network
+\item \ac{PTP} Simulation
+\end{itemize}
+\subsection{Deliverables}
+
+The following deliverables have been identified:
+
+\begin{itemize}
+\item Interim Report
+\item Packet Metric Scripts
+\item Final Year Report
+\end{itemize}
 \subsection{Aims and Objectives}
 
 The project can be split into a number of sub goals and objectives. 
@@ -128,58 +260,526 @@ Multiple window sizes and types of metric will be used to quantify network perfo
 As Chronos has provided this project with some equipment, this equipment will also be thoroughly tested and any information gathered can be passed to them once the project is completed.
 \end{description}
 
-- list the deliverables based on this
-- Gantt chart produced from these results
+Based on the goals above and taking into account the deliverables that need to be met for the Individual Design Project, the overall list of tasks is shown below in no particular order
+
+\begin{itemize}
+\item Research and Learn about \ac{PTP}
+\item List all available equipment available
+\item Set up a small \ac{PTP} network with one Grandmaster and one Slave clock. Start collecting Data
+\item Research into different packet metrics that may be used
+\item Implement these packet metrics in a suitable programming language
+\item Run these packet metrics with the collected data
+\item Set a number of slave clocks up throughout the network and run the same packet metric scripts on them.
+\item Attempt to quantify \ac{PTP} performance based on these metrics.
+\item Interim Report
+\item Final Year Report 
+\item Poster
+\end{itemize}
+
+These tasks have been converted into a Gantt chart which can be found in Figure \ref{fig:GanttChart}. 
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.6]{./Figures/GanttChart.eps}
+\caption{Gantt Chart for Individual Project}
+\label{fig:GanttChart}
+\end{figure}
+
+The timescales are only estimates, and thus there are some challenges involved if there are delays in any one of these areas. 
+These challenges have been discussed later on in this report.
 \section{Literature Review}
 During the first week of the project a number of different \ac{IEEE} reports were read and summarised in the logbook. 
-This section of the report will outline some of thedocuments that were used in order for work to begin. 
+This section of the report will outline some of the documents that were used in order for work to begin. 
 The reports were:
 
 \begin{description}
-\item[\ac{PTP} Specification \cite{}] IEEE1558-2004 specification
+\item[IEEE1588-2008 Specification \cite{IEEE1558}] The 2008 specification for \ac{PTP}. This was only used as a reference
 \item[Prevention of Packet Collisions \cite{IEEECollision}] A journal article describing an algorithm that aims to prevent packet collisions in an Ethernet network.
+\item [Definitions and terminology for synchronization in packet networks \cite{ITUPacketMetrics}] A standard regarding different packet metrics that could be used in order to try and quantify network delay. 
 \item[Sub-nanosecond synchronisation \cite{IEEEWhiteRabbit}] A conference paper describing a method of nanosecond accuracy synchonisation
 \item[Measurement of Egress and Ingress Delays \cite{IEEEEgress}]
 \end{description}
-
-\subsection{\ac{PTP} Specification}
+\begin{comment}
 \subsection{Prevention of Packet Collisions}
 
 The paper begins by explaining the drawbacks with \ac{CSMA/CD} that is used in Ethernet and hence explains that time critical packets (mainly \textit{Sync}, \textit{Delay\_resp} and \textit{Delay\_req}) would be effected if these packets collided. 
-It then goes on to explain briefly how the author developed a token passing system between the slave clocks. Tokens are passed during every two-way session (\textit{Delay\_req} and \textit{Delay\_resp}).
-\\
+It then goes on to explain briefly how the author developed a token passing system between the slave clocks. Tokens are passed during every two-way session (\textit{Delay\_req} and \textit{Delay\_resp}). \\
 Because the slave clocks don't require the two-session to be performed at regular interviews (only somewhere between 0 and some Tmax), the time being executions can be variable. 
 Therefore the next slave could be designed by random.
 The sender would therefore need some registry of all of the other slave clocks. 
 The author explains two ways in which this could be implemented: a centralised database or a local cache at each slave. 
-The centralised database would create a single point of falure and it would also be a mutual exclusion problem. 
+The centralised database would create a single point of failure and it would also be a mutual exclusion problem. 
 On the other hand having a local cache at each slave clock would be impractical to keep updating when slaves join and leave the network.
 Therefore the journal authors decided on a compromise by maintain a neighbourhood of clocks which are a subset of the total population of slave clocks.
-The property of "random walks" would still be maintained even though all of the clocks will not be in the list.
-\\
+The property of "random walks" would still be maintained even though all of the clocks will not be in the list. \\
+
 The authors also described a method in solving the issue if a particular slave clock (for example Clock Z) reached its maximum time between a two-way session. 
-If the current slave clock proposes to past the token to Slave Y, and the master notices that Clock Z has not been updated since the max time, it will reroute the token to Clock Z instead. 
-The current clock X will then update its neighbourhood with Y instead of Z.
-\\
-This method will exclude any occurance of collisions as only one two-way session occurs at any one time. 
+If the current slave clock proposes to past the token to Slave Y, and the master notices that Clock Z has not been updated since the maximum time, it will reroute the token to Clock Z instead. 
+The current clock X will then update its neighbourhood with Y instead of Z. \\
+
+This method will exclude any occurrence of collisions as only one two-way session occurs at any one time. 
 Also, at time t, the maximum number of slaves that are "starved" (ie have reached their maximum time between sessions) is one. 
 This is due to the maximum time between sessions being the same for all the clocks.
 \\
+\end{comment}
+\subsection{Definitions and Terminology for Synchronisation in Packet Networks \cite{ITUPacketMetrics}}
+\label{metricReview}
+
+The report defines a number of definitions and terms when dealing with Packet Synchronisation, but the section of interest for this report was Appendix I3 and I4.  
+These can be split into 3 sections: Packet Selection Methods, Packet Metrics without Pre-filtering and Packet Metrics with Pre-filtering.
+
+\subsubsection{Packet Selection Methods}
+
+There are two main methods of selecting packets: either using a selection technique at the same time as the packet metric calculation, or as a pre-processing technique. \\
+
+Packet selection, when integrated with the calculation, is very useful when the behaviour of a network is wanting to be determined with respect to its packet delay variation. 
+This is because it provides a generic method that is independent to a particular slave clock implementation \cite {ITUPacketMetrics}.
+This packet selection method is also known as a Class B metric. \\
+
+The other method is using a pre-processing technique which preselects packets from some time window. 
+By doing this the process will average out any inconsistencies in the delays, thus resembling a clock running in steady state. 
+Therefore this method is more suitable when trying to specify network limits (Class A metric). \\
 
 
-\subsection{Sub-Nanosecond Synchronisation}
-\subsection{Measurement of Egress and Ingress Delays}
+%Could expand this in more detail. Will ask Watson 
+There are four examples of packet selection methods that are mentioned in the recommendation report. 
+These are: Minimum Packet Selection Method, Percentile Packet Selection Method, Band Packet Selection Method and Cluster Range Packet Selection Method. 
+These will be discussed in turn and will be implemented.
+Implementation details are discussed later in the report.
+\subsubsection{Packet Metrics without Pre-filtering}
+
+The first packet method technique discussed is \ac{TDEV}. It is used to specify network wander limits for timing signals. 
+It is also applicable to packet data.
+\ac{TDEV} can be applied to both integrated and pre-processed packet selection methods. \\
+
+Instead of discussing each of these metrics in detail, the data will be tabulated.
+\begin{comment}
+\begin{table}[H]
+\centering
+\caption{Differences in different packet Metrics2}
+\begin{tabular}{ |p{4cm} ||p{4cm} |p{4cm} | p{4cm}| }\hline
+\cellcolor{Black}\textcolor{White}{\textbf{Criteria}}  & \multicol \cellcolor{Black}\textcolor{White}{\textbf{ \ac{PTP} V2 (IEEE1588-2008) }} & \cellcolor{Black}\textcolor{White}{\textbf{\ac{PTP} V1 (IEEE1588-2002)}} \\ \hline
+Transparent Clocks  &  Yes  &  No\\ \hline
+Unicast  &  Yes  &  No \\ \hline
+Domains  &  Domain Numbers  &  Subdomain Name Fields\\ \hline
+Clock Quality & Clock Accuracy / Clock Class & Data Field Stratum \\ \hline
+Selection Algorithm for best clock & Hierarchical & Selection based \\ \hline
+\multirow{5}{*}{Other Features} & Alternate Time Scale & \\ 
+ & Grandmaster Cluster & \\ 
+ & Unicast Masters & None\\ 
+ & Alternate Master & \\ 
+ & Path Trace & \\ \hline
+\label{table:NTPPTP}
+\end{tabular}
+\end{Comment}
+
+
+
 
 \section{Work Carried out so Far}
-- outline all work that has been carried out to date.
-- Review this. how well has it gone
+
+This section outlines all of the work that has been carried out up until now, as well as any results that have been gathered.\\
+
+Once the research phase of the project was completed (middle to end of Week 1), work began in implementing some of the packet metric equations that were read in ITU-T G.8260 \cite{ITUPacketMetrics}. 
+The Chronos Grandmaster and Slave clocks were also worked on in the first few weeks trying to get them to create a PTP network. 
+
+\subsection{Packet Metrics}
+
+The ITU recommendation document was thoroughly read through and the packet metrics described in that report were implemented. 
+It was decided early on that most, if not all of the packet metrics mentioned in the report would be implemented, and they can then be compared against each other. \\
+
+The first decision that had to be made was what suitable programming language would be picked for the project. 
+The most suitable language would have to meet the requirements for this section of the project.
+The following requirements were identified:
+\begin{itemize}
+\item Suitable for reading data, processing the data, and plotting without use of many third party libraries
+\item Well documented
+\item Reasonably fast with large data sets
+\end{itemize}
+
+With the above taken into consideration, the decision was to use R. 
+This was primarily because there were other scripts part of \ac{PTPd} that were written in R, but it was also noted to be a language that would be useful to learn.\\
+
+Once the language was chosen, the scripts were written based on the approximated equations found earlier in Section \ref{metricReview}.
+
+Note that git has been used as a version control system for all of these scripts. 
+Both reports written in LaTeX and any scripts created have been version controlled. 
+At time of writing, the following metrics have been written:
+
+\begin{enumerate}
+\item \ac{TDEV}
+\item minTDEV
+\item bandTDEV
+\item percentile TDEV
+\end{enumerate}
+
+There are other metrics such as cluster TDEV that were looked in to, but the implementation of these will be completed once better understanding of them has been made. 
+This may result in a meeting with some of the engineers in Chronos to discuss these metrics.
+
+\subsubsection{General Form}
+
+Referring to Equation \ref{eqn:GeneralForm}, this can be implemented in two nested for loops. 
+The quotient can be performed seperately. 
+The function will then return the result. \\
+
+
+Before the operation can be performed, the window side length needs to be determined. 
+This is to ensure that when the  operation is performed the current index value will be the centre of the mask. 
+The diagram below shows this more clearly in Figure \ref{fig:windowSide}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{Figures/Window.eps}
+\caption{Description of Window and WindowSide}
+\label{fig:windowSide}
+\end{figure}
+
+The full source code for each script will be in the appendix, but any relevant differences will be added to the main body of the report. 
+\subsubsection{TDEV}
+
+Because different sample sets can be used, the following input parameters to the function will be: To, n, N and x, with x being the dataset. The full source code can be found in Appendix \ref{app:TDEV}. \\
+
+The section of code which is different with TDEV is the section of code in the inner loop. 
+This performs a mean on the three terms. 
+This is shown in Listing \ref{code:TDEV}.
+\begin{lstlisting}[caption = TDEV Step]
+interimStep <- interimStep + mean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* mean(x[i+n - windowSide : i + n + windowSide]) + mean(x[i - windowSide : i + windowSide])
+\end{lstlisting}
+
+This is the inner section of Equation \ref{eq:TDEV} written in R. 
+
+\subsubsection{minTDEV}
+
+The minTDEV script is very similar to TDEV, but the difference is within the main loop. 
+Instead of calculating the mean of each window the minimum value is taken. 
+The code extract below shows the change. Appendix \ref{app:minTDEV} is the full TDEV source code. 
+
+\begin{lstlisting}[caption = minTDEV step]
+interimStep <- interimStep + min(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* min(x[i+n - windowSide : i + n + windowSide]) + min(x[i - windowSide : i + windowSide])
+\end{lstlisting}
+
+
+\subsubsection{bandTDEV}
+
+The bandTDEV is based off of the TDEV mentioned previously, but it uses a mean ver a particular band (from a to b) instead of a mean of the entire window. 
+Because a bandMean function was not built in to R, one was created in a seperate source file.
+This enabled the function to be used in a number of the scripts if required.
+The bandMean function will not be explicitly discussed, but the full source is shown in Appendix \ref{app:bandMean}. \\
+
+The full bandTDEV source code can be found in Appendix \ref{app:bandTDEV}, with the one line difference shown below. \\
+
+\begin{lstlisting}[caption = bandTDEV Step]
+interimStep <- interimStep + bandMean(x[i + 2*n - windowStep : i + 2*n + windowStep],a,b) - 2 * bandMean(x[i+n - windowStep : i + n + windowStep],a,b) + bandMean(x[i - windowStep : i + windowStep],a,b) 
+\end{lstlisting}
+
+
+\subsubsection{percentileTDEV}
+
+The percentileTDEV function is based very similar to be bandTDEV, except that the lower bad (a) is set to 0. 
+Therefore the code itself is very similar for both metrics. 
+A seperate source file has been created for ease of source code management, but these will be consolidated at a later date.
+
+\subsubsection{Overall Script}
+
+As multiple metrics will be run on the same source, an overarching script was created to handle the following operations:
+
+\begin{itemize}
+\item Takes in a text file input of the data sent from \ac{PTPd}
+\item Converts this data into a suitable form if necessary
+\item Calls the relevant packet metric functions
+\item Displays the data in a suitable form (plot and/or CSV output)
+\item Handles user input from the command line
+\end{itemize}
+
+The full script can be found in Appendix \ref{app:PacketMetric}. 
+All of the functionality above has not been added in to the script, but will be completed in the near future.
+
+\subsection{Packet Metric Results}
+
+Once the scripts were created, some results were gathered. The data gathering is discussed briefly in a later part of this report. \\
+
+The dataset available was a 1.2GB file between the Chronos TimePort \cite{dataSheetTimePort} and a software slave. 
+The locations in the network of these clocks were unknown, but most likely it would have been within the EEE department. 
+Any data collected from now onwards will be marked correctly.\\
+
+The scripts were initially run with the full dataset, but it was quickly realised that the script takes a very long length of time to run in its current state.
+Therefore a subset of the data was created using the Linux command head. 
+A set of data files were then created, ranging from 50 data points to the maximum. \\
+
+Note that even though 50 lines of data were collected, the first 4 were truncated.
+This was to get rid of the headers, two initialisation lines, and a null value. \\
+
+The plot below (Figure \ref{fig:TDEVminTDEV496}) shows the Packet Metric results using the script in Appendix \ref{app:PacketMetric}. 
+This was used to generate a TDEV and minTDEV for the first 496 data points. 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{./Figures/plotTDEVminTDEV500.eps}
+\caption{Plot of TDEV and minTDEV for a sample size of 496}
+\label{fig:TDEVminTDEV496}
+\end{figure}
+
+The raw data output in a tabular form is found in Appendix \ref{app:table500Sample}. \\
+
+In its current state a lot more data is required to make some sense of these results. 
+The scripts will be amended such that they run much faster (by performing the operation incrementally rather than the total operation on every point), and more data will be collected.\\
+
+The data was also processed briefly by scanning through the data and noticing if there are any sudden changes or fluctuations of delay.
+With the initial set of data (not included in this reprt due to it being a large data set), it seems as though the delay is fairly static across the timeframe looked at. 
+This is unusual considering that standard switches are used rather specific timing switches. More investigation into why this is the case and how the packet metrics described will affect this outcome. 
+
+
+\subsection{Chronos Clocks}
+
+For this project there are a number of different bits of equipment that can be used for \ac{PTP} timing. 
+A few days in week 1 were spent working with the Grandmaster TimePort clock from Chronos to see how it worked and what functionality it had.
+Unfortunately the clock was not able to start the ptp-console during week 2, so more \ac{PTP} data was not able to be gathered.
+Chronos will be contacted about this fault and it will be looked into. 
+
+\subsection{PTP Data Collection}
+
+The only data gathered has been from much earlier in Semester 1 and was provided by Dr Robert Watson.
+It is unknown under what conditions this data was gathered in (ie clock locations on the network) but it provides a suitable basis in which the packet metric scripts can be tested against.\\
+
+It is expected that a lot more data will be collected during the project.
 \section{Challenges}
+
+The challenges include (but not limited to): Chronos clock hardware failure, network related challenges, and processing the data. 
+The table below shows the risk of each of these challenges and what their mitigation strategies would be.
+\begin{table}[H]        
+\centering
+\caption{Risks to the Project}
+\begin{tabular}{ |p{4cm} ||p{4cm} |p{4cm} | p{4cm}| }\hline
+\cellcolor{Black}\textcolor{White}{\textbf{Risk}}  & \cellcolor{Black}\textcolor{White}{\textbf{Severity}} & \cellcolor{Black}\textcolor{White}{\textbf{Likelyhood}} & \cellcolor{Black}\textcolor{White}{\textbf{Mitigation}} \\ \hline
+Chronos Clock Failure  &  3  &  3 & Have backup clocks ready (Software or Hardware) \\ \hline
+  &  Yes  &  No \\ \hline
+
+% Need to ask watson about challenges..
 \section{Next Steps}
+
+The next steps for the project can be split into a few distinct areas and these will be discussed in turn. The identified next steps for this project are: complete packet metrics, collect data, process the data using the metrics, and any other work.
+
+\subsection{Complete Packet Metrics}
+
+The plan for this section will be to finish implementing all of the packet metrics mentioned in the paper discussed previously \cite{ITUPacketMetrics}. 
+These will be implemented fully and as efficiently as possible.
+Most likely they will be split into incremental functions rather than the current method at the moment whereby the values are calculated fairly inefficiently.
+This is important when larger datasets will be used.
+Another method in resolving this would be to split the workload amongst multiple processes. 
+
+\subsection{Data Collection}
+
+Throughout the project more \ac{PTP} data will be collected. A range of sets of data will be taken, which include: different clock types, different clock locations, different times of day, different clock topologies. \\
+
+%Need to expand
+
+\subsection{Data Processing}
+
+Once data has been collected, it will be processed and analysed. For each set of data each metric will be computed. 
+Note that one important step will be to understand what each metric does and what it means in terms of \ac{PTP} performance.
+These metrics can then be compared against each other and plotted.
+Other plotting techniques may also be used.
+
+%Need moar
+
+\subsection{Any other Work}
+
+There may be other work that can be completed. 
+%*need to ask watson for others*
+
+
 \section{Conclusion}
+
+In conclusion, ...
 
 \bibliographystyle{ieeetr}
 \bibliography{Bibliography}
 \begin{appendices}
+\section{TDEV Script}
+\begin{lstlisting}
+#!/usr/bin/env Rscript
+#-----------------------------------------------------
+#-----------------------------------------------------
+#--                Function Name: TDEV              --
+#--                Name: Time Deviation             --
+#--           Input: nTo - position in list         --
+#--                  N   - number of samples        -- 
+#--                  x   - vector of samples        --
+#--           Output : time deviation               --
+#-----------------------------------------------------
+#-----------------------------------------------------
+TDEV <- function(To,n, N,x){
+#	To <- 0.1 #time between samples
+#	n <- nTo / To #number of samples to current point
+	window <- 5 # Set window Size
+	windowSide <- (window - 1) / 2 # Set the length of Side of window
+	outerStep <- 0 
+	for (j in windowSide+1:(N-3*n + 1) - windowSide){
+		interimStep <- 0
+		for (i in j:(n+j - 1)){
+			interimStep <- interimStep + mean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* mean(x[i+n - windowSide : i + n + windowSide]) + mean(x[i - windowSide : i + windowSide])
+		}
+		interimStep = interimStep ^ 2
+		outerStep = outerStep + interimStep
+	}
+	outerStep = outerStep / (6 * (N - (3*n) + 1));
+	result <- sqrt(outerStep)
+	return(result) 
+}
+\end{lstlisting}
+
+\section{minTDEV Script}
+\begin{lstlisting}
+#!/usr/bin/env Rscript
+#-----------------------------------------------------
+#-----------------------------------------------------
+#--                Function Name: minTDEV           --
+#--                Name: Minimum Time Deviation     --
+#--           Input: nTo - position in list         --
+#--                  N   - number of samples        -- 
+#--                  x   - vector of samples        --
+#--           Output : time deviation               --
+#-----------------------------------------------------
+#-----------------------------------------------------
+minTDEV <- function(To,n, N,x){
+#	To <- 0.1 #time between samples
+#	n <- nTo / To #number of samples to current point
+	window <- 5 # Set window Size
+	windowSide <- (window - 1) / 2 # Set the length of Side of window
+	outerStep <- 0 
+	for (j in windowSide+1:(N-3*n + 1) - windowSide){
+		interimStep <- 0
+		for (i in j:(n+j - 1)){
+			interimStep <- interimStep + min(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* min(x[i+n - windowSide : i + n + windowSide]) + min(x[i - windowSide : i + windowSide])
+		}
+		interimStep = interimStep ^ 2
+		outerStep = outerStep + interimStep
+	}
+	outerStep = outerStep / (6 * (N - (3*n) + 1));
+	result <- sqrt(outerStep)
+	return(result) 
+}
+
+
+\end{lstlisting}
+\section{bandMean Scriot}
+\begin{lstlisting}
+#!/usr/bin/env Rscript
+#-----------------------------------------------------
+#-----------------------------------------------------
+#--                Function Name: bandMean          --
+#--                Name: Band Mean                  --
+#--           Input: window - the samples           --
+#--                     a   - lower band            -- 
+#--                     b   - upper band            --
+#--           Output : mean of window               --
+#-----------------------------------------------------
+#-----------------------------------------------------
+bandMean <- function(window,a,b){
+	sum = 0
+	for (i in a:b){
+		sum = sum + window(i) # sum window from a to b
+	}
+	average = sum / (b - a + 1)
+	return (average)
+}
+\end{lstlisting}
+
+\section{bandTDEV Script}
+\begin{lstlisting}
+#!/usr/bin/env Rscript
+
+#-----------------------------------------------------
+#-----------------------------------------------------
+#--              Function Name: bandTDEV            --
+#--             Name: band Time Deviation           --
+#--        Input: nTo - position in list            --
+#--                N   - number of samples          -- 
+#--                x   - vector of samples          --
+#--       Output : band time deviation              --
+#-----------------------------------------------------
+source("bandMean.r")
+
+bandTDEV <- function(nTo,N,x){
+	To <- 0.1 # set minimum step
+	n <- nTo / To #number of samples to current
+	window <- 15
+	windowStep <- (window - 1) / 2 #set side of window
+	outerStep <- 0
+	a <- 20
+	b <- 80
+	for (j in 1:(N-3*n + 1)){
+		interimStep <- 0
+		for (i in j:(n+j - 1)){
+			interimStep <- interimStep + bandMean(x[i + 2*n - windowStep : i + 2*n + windowStep],a,b) - 2 * bandMean(x[i+n - windowStep : i + n + windowStep],a,b) + bandMean(x[i - windowStep : i + windowStep],a,b) 
+		}
+		interimStep = interimStep ^ 2
+		outerStep = outerStep + interimStep
+	}
+	outerStep = outerStep / (6 * (N - 3*n + 1))
+	result <- sqrt(outerStep)
+	return(result) 
+}
+\end{lstlisting}
+\section{Packet Metric Script}
+\begin{lstlisting}
+#!/usr/bin/env Rscript
+
+# ----------------------------------------------------
+# -         Script Name: PacketMetric.r              -
+# -       Description: This script will calculate    -
+# -       the packet metrics for the given data set. -
+# ----------------------------------------------------
+
+source("TDEV.r") #Import TDEV Script
+source("minTDEV.r") #Imprt MinTDEV Script
+#---------- Import Data into script -----------
+arguments  <- commandArgs()
+sampleSize <- arguments[6] #Command line args start from index 6
+
+fileName = paste("../PTPData/TestData/SampleSize_", sampleSize, ".txt",sep="")
+print(fileName)
+
+print ("Reading CSV Data...")
+Data <- read.csv(file = fileName,head = TRUE, sep=",")
+print ("CSV Data has been written to Data variable")
+delays <- as.matrix(Data[4])
+# delays <-sort(delays) Sort if needed
+To <- 1/16 #Assume To = 1/16
+# ---- Removes Init Messages and the first value
+delays = delays[-1] 
+delays = delays[-1]
+delays = delays[-1]
+#print (delays)
+N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
+
+maxn = floor(N / 3)
+
+resultTDEV = matrix(0,maxn)
+resultMinTDEV = matrix(0,maxn)
+
+for (i in 1:maxn){
+	
+	resultTDEV[i] <- TDEV(To,i,N,delays)
+	resultMinTDEV[i] <-minTDEV(To,i,N,delays)
+}
+
+#print(resultMinTDEV)
+rangeOfValues <- range(0,resultTDEV,resultMinTDEV)
+print(rangeOfValues)
+#Name pdf file..
+outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
+setEPS()
+postscript(outputFileName)
+plot(resultMinTDEV,type="o", col="red",log="xy")
+lines(resultTDEV,type="o",col="blue")
+legend(1,rangeOfValues[2],c("TDEV", "minTDEV"), cex = 0.8,col=c("blue","red"), pch=21:22, lty=1:2)
+
+dev.off()
+
+
+\end{lstlisting}
+\section{Table for a sample size of 500}
+
 \end{appendices}
 \end{document}
 
