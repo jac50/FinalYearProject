@@ -5,7 +5,7 @@
 # -       Description: This script will calculate    -
 # -       the packet metrics for the given data set. -
 # ----------------------------------------------------
-
+source("../LaTeXScripts/generateLatexTable.r")
 source("TDEV.r") #Import TDEV Script
 source("minTDEV.r") #Imprt MinTDEV Script
 #---------- Import Data into script -----------
@@ -52,6 +52,10 @@ legend(1,rangeOfValues[2],c("TDEV", "minTDEV"), cex = 0.8,col=c("blue","red"), p
 
 dev.off()
 #Create a CSV output file
-
+result <- matrix(0,ncol = 3, nrow = maxn)
+result[,1] <- resultTDEV[,1]
+result[,2] <- resultTDEV[,2]
+result[,3] <- resultMinTDEV[,2]
+generateLatexTable(result,c("Index","TDEV", "minTDEV"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
 
 
