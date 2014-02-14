@@ -19,11 +19,9 @@ bandTDEV <- function(nTo,N,x){
 	outerStep <- 0
 	a <- 20
 	b <- 80
-	for (j in 1:(N-3*n + 1)){
+	for (i in 1:(N-3*n + 1)){
 		interimStep <- 0
-		for (i in j:(n+j - 1)){
 			interimStep <- interimStep + bandMean(x[i + 2*n - windowStep : i + 2*n + windowStep],a,b) - 2 * bandMean(x[i+n - windowStep : i + n + windowStep],a,b) + bandMean(x[i - windowStep : i + windowStep],a,b) 
-		}
 		interimStep = interimStep ^ 2
 		outerStep = outerStep + interimStep
 	}
@@ -32,8 +30,4 @@ bandTDEV <- function(nTo,N,x){
 	return(result) 
 }
 
-#--- Test Code --------
-#- Generate samples  --
-x <- seq(0,1000)
-print(bandTDEV(12,12,x))
 
