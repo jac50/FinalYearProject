@@ -9,7 +9,7 @@
 #--           Output : time deviation               --
 #-----------------------------------------------------
 #-----------------------------------------------------
-TDEVChange <- function(To,n, N,x){
+TDEV <- function(To,n, N,x){
 #	To <- 0.1 #time between samples
 #	n <- nTo / To #number of samples to current point
 	window <- 5 # Set window Size
