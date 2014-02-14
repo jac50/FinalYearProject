@@ -128,30 +128,31 @@ Note that there are two types of clock inaccuracy when trying to synchronise clo
 Firstly they may have initially started at a different time to the others, therefore there is an offset that needs to be corrected.
 This is called offset correction.
 The second effect that is noticed is that clocks do not necessarily run at exactly the same speed.
-Therefore clocks need to be consistantly adjusted, which is called drift correction.
+Therefore clocks need to be consistently adjusted, which is called drift correction.
 Some clock inaccuracy may be tolerable in some circumstances, but in a number of cases a system must be set up to correct for this instability. \\
+
 There are several industries that would benefit from an accurate timing network. 
 Descriptions of some of the industries are shown below.
 
 %---- Expand on descriptions slightly
 \begin{description}
 \item[Automation Industry] \hfill \\ Processes will need to be synchronised exactly, and can only be if their clocks are in sync with one another.
-If clocks are in sync then processes can be seperated away from communication between each machine and the processing of the control commands \cite{IEEEApplications}. 
+If clocks are in sync then processes can be separated away from communication between each machine and the processing of the control commands \cite{IEEEApplications}. 
 \item[Power Transmission] \hfill \\ Time synchronisation is very important in the power transmission industry, case in point in the North American blackout in August 2003 \cite{PTPFuturePower}. 
 It made it difficult for the investigation team to be able to sort through the data received when the timestamps were gathered from an inaccurate clock. 
 From the events of this blackout a regulation was put in place to define a minimum absolute accuracy for timestamped data.
 The adoption of \ac{NERC}  Standard PRC018\-1 in 2006 \cite{NERCPRC0181} made this law for any recorded substation data in the USA. This requires that timestamped data must be accurate to within 2ms in relation to UTC. % Mention Doble?
-\item[Telecommunications] \hfill\\ In telecommunications, timing protocols are being considered when networks need to be syncronised or if mobile base stations need synchronisation pulses. 
+\item[Telecommunications] \hfill\\ In telecommunications, timing protocols are being considered when networks need to be synchronised or if mobile base stations need synchronisation pulses. 
 \end{description}
 
 \subsection{Existing Technology}
 
-There are currently a few technologies that will deliver time syncronisation to the above industries.
-These are: \ac{NTP}, \ac{SNTP}, synchronisation from \ac{GPS} satellites, and \ac{PPS} signals on a seperate channel.
+There are currently a few technologies that will deliver time synchronisation to the above industries.
+These are: \ac{NTP}, \ac{SNTP}, synchronisation from \ac{GPS} satellites, and \ac{PPS} signals on a separate channel.
 
 \begin{description}
 \item[\ac{NTP}] \hfill \\ This is a technology originally designed in 1985 that is used to synchronise clocks over a packet switched network. 
-It is able to achieve synchronisation with \ac{UTC} within a few millseconds, but can maintain sub-millisecond accuracy on a \ac{LAN} if ideal conditions are met. 
+It is able to achieve synchronisation with \ac{UTC} within a few milliseconds, but can maintain sub-millisecond accuracy on a \ac{LAN} if ideal conditions are met. 
 Errors due to different packet routes or network congestion can decrease this accuracy by 100ms or more. \cite{NTPWhitePaper}
 \\
 \ac{NTP} uses a client-server hierarchy split into "stratums". 
@@ -169,8 +170,8 @@ The clocks in stratum 2 will base their time off of the clocks in stratum 1.
 A subset of the clocks in stratum 1 will be used so the overall time is more accurate and robust. 
 Within a stratum clocks may also synchronise for sanity checkup. 
 Any layers below stratum 2 will mirror the same algorithm, and there can be up to 15 layers. 
-Stratum 16 is reserved for clocks that are not synchronised with \ac{NTP}. 
-\\
+Stratum 16 is reserved for clocks that are not synchronised with \ac{NTP}.\\ 
+
 \ac{SNTP} is a similar protocol but it is complex than NTP as it does not store the state over long periods of time. 
 This is usually used in applications which do not require a high timing accuracy.
 The \ac{SNTP} specification can be found in the \ac{NTP} spec, cited here.  \cite{NTPV4Specification}
@@ -183,7 +184,7 @@ The problem occurs if synchronisation across a packet network is needed but sub-
 Therefore \ac{PTP} was developed as a successor to the existing \ac{NTP} standard. 
 Meeting this value of accuracy is very difficult however with a traditional Ethernet network. \\
 
-When standard switches are used, the packet delay between two nodes is indeterminant. 
+When standard switches are used, the packet delay between two nodes is indeterminate. 
 This may be because the packet route from A to B changes depending on network load, or a packet may be held in a switch for an unspecified amount of time whilst working with other data on the network. 
 Therefore this is undesired for \ac{PTP} when this packet delay must be taken into account when working out the clock offset. 
 Specific timing switches can be used which will prioritise \ac{PTP} packets, but these may not be available in existing networks or be too expensive to be suitable. 
@@ -214,31 +215,34 @@ Selection Algorithm for best clock & Hierarchical & Selection based \\ \hline
 \label{table:NTPPTP}
 \end{tabular}
 \end{table}
-
-%Description on how the technology works?
+- brief description on how it works
+- timing diagram (draw in Gimp)
+- 
 \subsection{Project Description}
 As it can be seen from above, any industry where accurate timing would benefit from PTP, thus determining PTP performance across an network would be useful. 
-Therefore this project will investigate PTP performance across an existing ethernet network. 
+Therefore this project will investigate PTP performance across an existing Ethernet network. 
 The project specification has been left intentionally open so other work can be carried out time permitting. 
 The university network will be used for this project. \\
 
 The project will aim to quantify the performance of a \ac{PTP} system situated on a heavily used Ethernet network. Different packet metrics will be considered when doing this. Other work which may be considered to carry out includes (but not limited to):
 
-
+%rewrite the above section. Move the list below into the paragraph above
 \begin{itemize}
 \item Hardware Slave Clock
 \item Security of a \ac{PTP} Network
 \item \ac{PTP} Simulation
 \end{itemize}
 \subsection{Deliverables}
-
+%Explain deliverables in more detail
 The following deliverables have been identified:
 
-\begin{itemize}
-\item Interim Report
-\item Packet Metric Scripts
-\item Final Year Report
-\end{itemize}
+\begin{description}
+\item [Interim Report]
+\item [Packet Metric Scripts]
+\item [Final Year Report]
+\end{description}
+
+One other deliverable which may be completed is some TimePort documentation. 
 \subsection{Aims and Objectives}
 
 The project can be split into a number of sub goals and objectives. 
@@ -373,7 +377,7 @@ Selection Algorithm for best clock & Hierarchical & Selection based \\ \hline
 \end{Comment}
 
 
-
+\subsubsection{Packet Metrics with Pre-filtering}
 
 \section{Work Carried out so Far}
 
