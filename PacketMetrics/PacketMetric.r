@@ -10,6 +10,7 @@ source("TDEV.r") #Import TDEV Script
 source("minTDEV.r") #Imprt MinTDEV Script
 source("TDEVAllMethods.r")
 dyn.load("TDEV.so")
+source("TDEVChange.r")
 
 #---------- Import Data into script -----------
 arguments  <- commandArgs()
@@ -42,22 +43,24 @@ b <- 80
 	
 print ("Calling C function")
 result <- 0
-.C("TDEV",To,as.integer(1),as.integer(N),delays,result)
-print (paste("Result: ", result))
+test <- 0
+#.C("TDEV",To,as.integer(1),as.integer(N),delays,result,test)
+print (paste("OMG TEST YES PLEASE PLEASE", test))
+print (paste("Result2: ", result))
+print("I AM DONE NOW")
 for (i in 1:maxn){
 	ptm <- proc.time()
-	#resultTDEV[i] <- TDEV(To,,N,delays)
+	resultTDEV[i] <- TDEVChange(To, i,N,delays)
 	#resultMinTDEV[i] <-minTDEV(To,i,N,delays)
-	RawResult = TDEVAll(To,i,N,delays,a,b)
-	#print(RawResult)
-	resultTDEV[i] = RawResult[1]
-	resultMinTDEV[i] = RawResult[2]
-	resultbandTDEV[i] = RawResult[3]
-	resultpercentTDEV[i] = RawResult[4]
-	time <- proc.time() - ptm
+	#RawResult = TDEVAll(To,i,N,delays,a,b)
+	#resultTDEV[i] = RawResult[1]
+	#resultMinTDEV[i] = RawResult[2]
+	#resultbandTDEV[i] = RawResult[3]
+	#resultpercentTDEV[i] = RawResult[4]
+	#print(paste("Result: -----------------", resultTDEV[i]))
 	#print (paste("Iteration", i,"complete in Time:", time[3], "..." ))
 }
-,
+print(resultTDEV)
 #print(resultMinTDEV)
 #rangeOfValues <- range(0,resultTDEV, resultMinTDEV,resultbandTDEV,resultpercentTDEV)
 #print(rangeOfValues)
@@ -73,10 +76,12 @@ lines(resultpercentTDEV,type="o",col="orange")
 
 dev.off()
 #Create a CSV output file
-result <- matrix(0,ncol = 3, nrow = maxn)
-#result[,1] <- seq(1,maxn)
-#result[,2] <- resultTDEV
-#result[,3] <- resultMinTDEV
-generateLatexTable(result,c("Index","TDEV", "minTDEV"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
+result <- matrix(0,ncol = 5, nrow = maxn)
+result[,1] <- seq(1,maxn)
+result[,2] <- resultTDEV
+result[,3] <- resultMinTDEV
+result[,4] <- resultbandTDEV
+result[,5] <- resultpercentTDEV
+generateLatex(result,c("Index","TDEV", "minTDEV"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
 
 
