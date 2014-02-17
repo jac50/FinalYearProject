@@ -93,12 +93,15 @@ University of Bath}
 \begin{document}
 
 \maketitle
-\renewcommand{\abstractname}{Executive Summary}
 \vfill
 \newpage
 \tableofcontents
 \newpage
-
+\begin{abstract}
+The ability to synchronise clocks accurately across a network is important in several industries. This report outlines the initial work into the investigation in \acf{PTP}. 
+Discussion on some reports have been made as well as the work completed so far on implementing the packet metrics.
+Finally the report explains what work will be completed next, and also highlights possible risks and mitigation strategies. 
+\end{abstract}
 \section*{Acronyms}
 \begin{acronym}
 \acro{CSMA/CD}{Carrier Sense Multiple Access with Collision Detection}
@@ -129,12 +132,11 @@ Firstly they may have initially started at a different time to the others, there
 This is called offset correction.
 The second effect that is noticed is that clocks do not necessarily run at exactly the same speed.
 Therefore clocks need to be consistently adjusted, which is called drift correction.
-Some clock inaccuracy may be tolerable in some circumstances, but in a number of cases a system must be set up to correct for this instability. \\
+Some clock inaccuracy may be tolerable in some circumstances, but in a number of cases a system must be set up to correct for this instability.\\
 
 There are several industries that would benefit from an accurate timing network. 
 Descriptions of some of the industries are shown below.
 
-%---- Expand on descriptions slightly
 \begin{description}
 \item[Automation Industry] \hfill \\ Processes will need to be synchronised exactly, and can only be if their clocks are in sync with one another.
 If clocks are in sync then processes can be separated away from communication between each machine and the processing of the control commands \cite{IEEEApplications}. 
@@ -142,28 +144,29 @@ If clocks are in sync then processes can be separated away from communication be
 It made it difficult for the investigation team to be able to sort through the data received when the timestamps were gathered from an inaccurate clock. 
 From the events of this blackout a regulation was put in place to define a minimum absolute accuracy for timestamped data.
 The adoption of \ac{NERC}  Standard PRC018\-1 in 2006 \cite{NERCPRC0181} made this law for any recorded substation data in the USA. This requires that timestamped data must be accurate to within 2ms in relation to UTC. % Mention Doble?
-\item[Telecommunications] \hfill\\ In telecommunications, timing protocols are being considered when networks need to be synchronised or if mobile base stations need synchronisation pulses. 
+\item[Telecommunications] \hfill\\ In telecommunications, timing protocols are being considered when networks need to be synchronised or if mobile base stations need synchronisation pulses.
+Plus, with the increase in \ac{GPS} jamming, systems such as 4G must reply on other timing methods incase \ac{GPS} is affected. 
 \end{description}
 
 \subsection{Existing Technology}
 
-There are currently a few technologies that will deliver time synchronisation to the above industries.
-These are: \ac{NTP}, \ac{SNTP}, synchronisation from \ac{GPS} satellites, and \ac{PPS} signals on a separate channel.
+There are currently a few technologies that will deliver time synchronisation to the above industry, such as: \ac{NTP}, \ac{SNTP}, synchronisation from \ac{GPS} satellites, or \ac{PPS} signals on a separate channel.
 
 \begin{description}
 \item[\ac{NTP}] \hfill \\ This is a technology originally designed in 1985 that is used to synchronise clocks over a packet switched network. 
 It is able to achieve synchronisation with \ac{UTC} within a few milliseconds, but can maintain sub-millisecond accuracy on a \ac{LAN} if ideal conditions are met. 
-Errors due to different packet routes or network congestion can decrease this accuracy by 100ms or more. \cite{NTPWhitePaper}
-\\
+Errors due to different packet routes or network congestion can decrease this accuracy by 100ms or more \cite{NTPWhitePaper}.\\
+
 \ac{NTP} uses a client-server hierarchy split into "stratums". 
 Figure \ref{fig:NTPHierarchy} below shows the stratums numbered from 0 to 3. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.6]{./Figures/NTPDiagram.eps}
+\includegraphics[scale = 0.5]{./Figures/NTPDiagram.eps}
 \caption{\ac{NTP} Network Hierarchy \cite{figRef:NTPHierarchy}}
 \label{fig:NTPHierarchy}
 \end{figure}
+
 The reference clocks which are in stratum 0 are high precision. 
 Examples of such type clocks are atomic or \ac{GPS}. 
 The clocks in stratum 2 will base their time off of the clocks in stratum 1. 
@@ -188,10 +191,9 @@ When standard switches are used, the packet delay between two nodes is indetermi
 This may be because the packet route from A to B changes depending on network load, or a packet may be held in a switch for an unspecified amount of time whilst working with other data on the network. 
 Therefore this is undesired for \ac{PTP} when this packet delay must be taken into account when working out the clock offset. 
 Specific timing switches can be used which will prioritise \ac{PTP} packets, but these may not be available in existing networks or be too expensive to be suitable. 
-% List possible switches
 
 \subsection{Current Technology - PTP}
-
+\subsubsection{Comparison with NTP}
 \acf{PTP} was developed in 2003 as Version 1 with the intention to build on the existing \ac{NTP} standard. 
 The Version 1 improvement improved on \ac{NTP} in a number of different ways.
 A new \ac{PTP} standard was introduced in 2008 which again improved on Version 1 with some new features such as boundary clocks. 
@@ -200,8 +202,133 @@ These changes have been  tabulated below, Table \ref{table:NTPPTP}.
 \begin{table}[H]
 \centering
 \caption{NTP Vs PTP Version 1 Vs PTP Version 2}
-\begin{tabular}{ |p{4cm} ||p{4cm} |p{4cm} | p{4cm}| }\hline
+\begin{tabular}{ |p{4cm} ||p{5cm} |p{5cm} | p{5cm}| }\hline
 \cellcolor{Black}\textcolor{White}{\textbf{ Feature }}  &  \cellcolor{Black}\textcolor{White}{\textbf{ \ac{PTP} V2 (IEEE1588-2008) }} & \cellcolor{Black}\textcolor{White}{\textbf{\ac{PTP} V1 (IEEE1588-2002)}} \\ \hline
+Transparent Clocks  &  Yes  &  No\\ \hline
+Unicast  &  Yes  &  No \\ \hline
+Domains  &  Domain Numbers  &  Subdomain Name Fields\\ \hline
+Clock Quality & Clock Accuracy / Clock Class & Data Field Stratum \\ \hline
+Selection Algorithm for best clock & Hierarchical & Selection based \\ \hline
+\multirow{4}{*}{Other Features} & Alternate Time Scale & \\ 
+ & Grandmaster Cluster & \\ 
+ & Unicast Masters & None\\ 
+ & Alternate Master & \\ 
+ & Path Trace & \\ \hline
+\label{table:NTPPTP}
+\end{tabular}
+\end{table}
+
+\subsubsection{Brief Description of PTP}
+
+\ac{PTP} uses a similar Master-Slave hierarchy of \ac{NTP}, but it doesn't use the stratum method. Instead it uses domains which seperate out \ac{PTP} synchronisation networks. 
+The master clock for the domain will broadcast out the current time to all of the other clocks on the network using a multicast message.
+In IEEE1558-2008 this can occur up to one message every 100 milliseconds. \\
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{./Figures/DelayPTP.eps}
+\label{fig:PTPTiming}
+\caption{PTP Timing Diagram \cite{PTPTiming}}
+\end{figure}
+
+The basic steps that the protocol take are the following:
+
+\begin{enumerate}
+\item Broadcast begins at T\textsubscript{1} where the master sends a \textit{sync} to all clocks on the domain.
+\item Each slave clock takes a note of when the message was received using their local clock. This is called Time T\textsubscript{1}\testsuperscript{'}.
+\item An optional \textit{follow\_up} message may be sent that includes an accurate timestamp of T\textsubscript{1}. This step occurs if the master clock does not have the capability to be able to create an accurate timestamp when sending the \textit{sync} message.
+\item In order for the slave to synchronise with the master, the round trip delay needs to be known. Therefore a \textit{delay\_req} message is sent bby the slave clock at Time T\textsubscript{2}. 
+\item The master will respond to this message with a \textit{delay\_res} message. 
+\end{enumerate}
+
+At this point T\subscript{1}, T\subscript{1}\superscript{'}, T\subscript{2} and T\subscript{2}\superscript{'} are now known. \\
+
+If we define $d$ as the transit time, and \widetilde{o} as the constant offset between the two clocks: 
+
+\begin{equation}
+\label{eqn:T1Delay}
+T_{1}^{'} - T_{2} = \widetilde{o} + d
+\end{equation}
+
+\begin{equation}
+\label{eqn:T2Delay}
+T_{2}^{'} - T_{2} = - \widetilde{o} + d
+\end{equation}
+
+If we rearrage \eqref{eqn:T2Delay} for $d$ : 
+
+\begin{equation}
+\label{eqn:3}
+d = T_{2}^{'}
+\end{equation}
+
+Substituting \eqref{eqn:3} into \eqref{eqn:T1Delay}: 
+
+\begin{equation}
+\label{eqn:final}
+
+T_{1}^{'} - T_{1} = \widetilde{o} + T_{2}^{'} - T_{2} + \widetilde{o}
+T_{1}^{'} - T_{1} -  T_{2}^{'} +  T_{2} = 2\widetilde{o}
+\widetilde{o} = \frac{T_{1}^{'} - T_{1} -  T_{2}^{'} +  T_{2}}{2}
+\end{equation}
+
+The offset is now known and can be adjusted for. 
+Note however that there are some assumptions in this calculation.
+These are:
+
+\begin{enumerate}
+\item message exchange is over such a short period of time that the delay is assumed to be constant
+\item transit time is symmetrical (i.e. time from Master to Slave is the same as Slave to Master)
+\item both the slave and the master can measure the transmit and receive times of messages accurately (ignoring clock drift)
+\end{enumerate}
+
+
+\section{Literature Review}
+During the first week of the project a number of different \ac{IEEE} reports were read and summarised in the logbook. 
+The reports were:
+
+\begin{description}
+\item[IEEE1588-2008 Specification \cite{IEEE1558}] The 2008 specification for \ac{PTP}. This was only used as a reference
+\item[Definitions and terminology for synchronization in packet networks \cite{ITUPacketMetrics}] A standard regarding different packet metrics that could be used in order to try and quantify network delay. 
+\item[Prevention of Packet Collisions \cite{IEEECollision}] A journal article describing an algorithm that aims to prevent packet collisions in an Ethernet network.
+\item[Sub-nanosecond synchronisation \cite{IEEEWhiteRabbit}] A conference paper describing a method of nanosecond accuracy synchonisation
+\end{description}
+\subsection{Definitions and Terminology for Synchronisation in Packet Networks \cite{ITUPacketMetrics}}
+\label{metricReview}
+
+Thi report defines a number of definitions and terms when dealing with Packet Synchronisation, but the section of interest for this report was Appendix I3 and I4.  
+These can be split into 3 sections: Packet Selection Methods, Packet Metrics without Pre-filtering and Packet Metrics with Pre-filtering.
+
+\subsubsection{Packet Selection Methods}
+
+There are two main methods of selecting packets: either using a selection technique at the same time as the packet metric calculation, or as a pre-processing technique. \\
+
+Packet selection, when integrated with the calculation, is very useful when the behaviour of a network is wanting to be determined with respect to its packet delay variation. 
+This is because it provides a generic method that is independent to a particular slave clock implementation \cite {ITUPacketMetrics}.
+This packet selection method is also known as a Class B metric. \\
+
+The other method is using a pre-processing technique which preselects packets from some time window. 
+By doing this the process will average out any inconsistencies in the delays, thus resembling a clock running in steady state. 
+Therefore this method is more suitable when trying to specify network limits (Class A metric). \\
+
+
+There are four examples of packet selection methods that are mentioned in the recommendation report. 
+These are: Minimum Packet Selection Method, Percentile Packet Selection Method, Band Packet Selection Method and Cluster Range Packet Selection Method. 
+These will be discussed in turn and will be implemented.
+Implementation details are discussed later in the report.
+\subsubsection{Packet Metrics without Pre-filtering}
+
+The first packet method technique discussed is \ac{TDEV}. It is used to specify network wander limits for timing signals. 
+It is also applicable to packet data.
+\ac{TDEV} can be applied to both integrated and pre-processed packet selection methods. \\
+
+Instead of discussing each of these metrics in detail, the data will be tabulated.
+\begin{comment}
+\begin{table}[H]
+\centering
+\caption{Differences in Packet Metrics}
+\begin{tabular}{ |p{4cm} ||p{4cm} |p{4cm} | p{4cm}| }\hline
+\cellcolor{Black}\textcolor{White}{\textbf{Criteria}}  & \multicol \cellcolor{Black}\textcolor{White}{\textbf{ \ac{PTP} V2 (IEEE1588-2008) }} & \cellcolor{Black}\textcolor{White}{\textbf{\ac{PTP} V1 (IEEE1588-2002)}} \\ \hline
 Transparent Clocks  &  Yes  &  No\\ \hline
 Unicast  &  Yes  &  No \\ \hline
 Domains  &  Domain Numbers  &  Subdomain Name Fields\\ \hline
@@ -214,32 +341,37 @@ Selection Algorithm for best clock & Hierarchical & Selection based \\ \hline
  & Path Trace & \\ \hline
 \label{table:NTPPTP}
 \end{tabular}
-\end{table}
-- brief description on how it works
-- timing diagram (draw in Gimp)
-- 
+\end{Comment}
+
+The implementation equations are quoted in the reference. The approximation equations were used when implementing the functions. 
+\subsubsection{Packet Metrics with Pre-filtering}
+
 \subsection{Project Description}
 As it can be seen from above, any industry where accurate timing would benefit from PTP, thus determining PTP performance across an network would be useful. 
+Also that the basic operation of \ac{PTP} relies on the symmetrical transit times which might not be true in the case of packet switched Ethernet Networks. 
 Therefore this project will investigate PTP performance across an existing Ethernet network. 
 The project specification has been left intentionally open so other work can be carried out time permitting. 
 The university network will be used for this project. \\
 
-The project will aim to quantify the performance of a \ac{PTP} system situated on a heavily used Ethernet network. Different packet metrics will be considered when doing this. Other work which may be considered to carry out includes (but not limited to):
+The project will aim to quantify the performance of a \ac{PTP} system situated on a heavily used Ethernet network. 
+Different packet metrics will be considered when doing this. 
+Other work which may be considered to carry out includes (but not limited to): Hardware Slave Clock, Security of a \ac{PTP} Network, or  \ac{PTP} Simulation. 
 
-%rewrite the above section. Move the list below into the paragraph above
-\begin{itemize}
-\item Hardware Slave Clock
-\item Security of a \ac{PTP} Network
-\item \ac{PTP} Simulation
-\end{itemize}
 \subsection{Deliverables}
-%Explain deliverables in more detail
 The following deliverables have been identified:
 
 \begin{description}
-\item [Interim Report]
-\item [Packet Metric Scripts]
-\item [Final Year Report]
+\item [Interim Report] A report due at the end of the third week. 
+Will contain mainly information about what the project is about, what work has currently been completed, and what further work will be done. 
+There is also a section on risks and challenges to the project. 
+\item [Log Book] This is a continuous log book of work kept throughout the project. 
+It has been used as both a place to document the work completed as well as a notebook of things to remember for the next day.
+This is due at the same time as the final year report.
+\item [Packet Metric Scripts] This is a deliverable internally for the project.
+It is important that these are completed in time for the data collection and analysing to commence. 
+\item [Final Year Report] Report which details all of the work completed throughout the project
+\item[Poster] A poster to summarise work completed.
+Plots are preferred over tables at this stage. 
 \end{description}
 
 One other deliverable which may be completed is some TimePort documentation. 
@@ -290,94 +422,6 @@ These tasks have been converted into a Gantt chart which can be found in Figure 
 
 The timescales are only estimates, and thus there are some challenges involved if there are delays in any one of these areas. 
 These challenges have been discussed later on in this report.
-\section{Literature Review}
-During the first week of the project a number of different \ac{IEEE} reports were read and summarised in the logbook. 
-This section of the report will outline some of the documents that were used in order for work to begin. 
-The reports were:
-
-\begin{description}
-\item[IEEE1588-2008 Specification \cite{IEEE1558}] The 2008 specification for \ac{PTP}. This was only used as a reference
-\item[Prevention of Packet Collisions \cite{IEEECollision}] A journal article describing an algorithm that aims to prevent packet collisions in an Ethernet network.
-\item [Definitions and terminology for synchronization in packet networks \cite{ITUPacketMetrics}] A standard regarding different packet metrics that could be used in order to try and quantify network delay. 
-\item[Sub-nanosecond synchronisation \cite{IEEEWhiteRabbit}] A conference paper describing a method of nanosecond accuracy synchonisation
-\item[Measurement of Egress and Ingress Delays \cite{IEEEEgress}]
-\end{description}
-\begin{comment}
-\subsection{Prevention of Packet Collisions}
-
-The paper begins by explaining the drawbacks with \ac{CSMA/CD} that is used in Ethernet and hence explains that time critical packets (mainly \textit{Sync}, \textit{Delay\_resp} and \textit{Delay\_req}) would be effected if these packets collided. 
-It then goes on to explain briefly how the author developed a token passing system between the slave clocks. Tokens are passed during every two-way session (\textit{Delay\_req} and \textit{Delay\_resp}). \\
-Because the slave clocks don't require the two-session to be performed at regular interviews (only somewhere between 0 and some Tmax), the time being executions can be variable. 
-Therefore the next slave could be designed by random.
-The sender would therefore need some registry of all of the other slave clocks. 
-The author explains two ways in which this could be implemented: a centralised database or a local cache at each slave. 
-The centralised database would create a single point of failure and it would also be a mutual exclusion problem. 
-On the other hand having a local cache at each slave clock would be impractical to keep updating when slaves join and leave the network.
-Therefore the journal authors decided on a compromise by maintain a neighbourhood of clocks which are a subset of the total population of slave clocks.
-The property of "random walks" would still be maintained even though all of the clocks will not be in the list. \\
-
-The authors also described a method in solving the issue if a particular slave clock (for example Clock Z) reached its maximum time between a two-way session. 
-If the current slave clock proposes to past the token to Slave Y, and the master notices that Clock Z has not been updated since the maximum time, it will reroute the token to Clock Z instead. 
-The current clock X will then update its neighbourhood with Y instead of Z. \\
-
-This method will exclude any occurrence of collisions as only one two-way session occurs at any one time. 
-Also, at time t, the maximum number of slaves that are "starved" (ie have reached their maximum time between sessions) is one. 
-This is due to the maximum time between sessions being the same for all the clocks.
-\\
-\end{comment}
-\subsection{Definitions and Terminology for Synchronisation in Packet Networks \cite{ITUPacketMetrics}}
-\label{metricReview}
-
-The report defines a number of definitions and terms when dealing with Packet Synchronisation, but the section of interest for this report was Appendix I3 and I4.  
-These can be split into 3 sections: Packet Selection Methods, Packet Metrics without Pre-filtering and Packet Metrics with Pre-filtering.
-
-\subsubsection{Packet Selection Methods}
-
-There are two main methods of selecting packets: either using a selection technique at the same time as the packet metric calculation, or as a pre-processing technique. \\
-
-Packet selection, when integrated with the calculation, is very useful when the behaviour of a network is wanting to be determined with respect to its packet delay variation. 
-This is because it provides a generic method that is independent to a particular slave clock implementation \cite {ITUPacketMetrics}.
-This packet selection method is also known as a Class B metric. \\
-
-The other method is using a pre-processing technique which preselects packets from some time window. 
-By doing this the process will average out any inconsistencies in the delays, thus resembling a clock running in steady state. 
-Therefore this method is more suitable when trying to specify network limits (Class A metric). \\
-
-
-%Could expand this in more detail. Will ask Watson 
-There are four examples of packet selection methods that are mentioned in the recommendation report. 
-These are: Minimum Packet Selection Method, Percentile Packet Selection Method, Band Packet Selection Method and Cluster Range Packet Selection Method. 
-These will be discussed in turn and will be implemented.
-Implementation details are discussed later in the report.
-\subsubsection{Packet Metrics without Pre-filtering}
-
-The first packet method technique discussed is \ac{TDEV}. It is used to specify network wander limits for timing signals. 
-It is also applicable to packet data.
-\ac{TDEV} can be applied to both integrated and pre-processed packet selection methods. \\
-
-Instead of discussing each of these metrics in detail, the data will be tabulated.
-\begin{comment}
-\begin{table}[H]
-\centering
-\caption{Differences in different packet Metrics2}
-\begin{tabular}{ |p{4cm} ||p{4cm} |p{4cm} | p{4cm}| }\hline
-\cellcolor{Black}\textcolor{White}{\textbf{Criteria}}  & \multicol \cellcolor{Black}\textcolor{White}{\textbf{ \ac{PTP} V2 (IEEE1588-2008) }} & \cellcolor{Black}\textcolor{White}{\textbf{\ac{PTP} V1 (IEEE1588-2002)}} \\ \hline
-Transparent Clocks  &  Yes  &  No\\ \hline
-Unicast  &  Yes  &  No \\ \hline
-Domains  &  Domain Numbers  &  Subdomain Name Fields\\ \hline
-Clock Quality & Clock Accuracy / Clock Class & Data Field Stratum \\ \hline
-Selection Algorithm for best clock & Hierarchical & Selection based \\ \hline
-\multirow{5}{*}{Other Features} & Alternate Time Scale & \\ 
- & Grandmaster Cluster & \\ 
- & Unicast Masters & None\\ 
- & Alternate Master & \\ 
- & Path Trace & \\ \hline
-\label{table:NTPPTP}
-\end{tabular}
-\end{Comment}
-
-
-\subsubsection{Packet Metrics with Pre-filtering}
 
 \section{Work Carried out so Far}
 
@@ -547,21 +591,30 @@ It is unknown under what conditions this data was gathered in (ie clock location
 It is expected that a lot more data will be collected during the project.
 \section{Challenges}
 
-The challenges include (but not limited to): Chronos clock hardware failure, network related challenges, and processing the data. 
+The challenges have been split into the two main sections of the project: data collection and packet metrics. 
 The table below shows the risk of each of these challenges and what their mitigation strategies would be.
 \begin{table}[H]        
 \centering
 \caption{Risks to the Project}
 \begin{tabular}{ |p{4cm} ||p{4cm} |p{4cm} | p{4cm}| }\hline
-\cellcolor{Black}\textcolor{White}{\textbf{Risk}}  & \cellcolor{Black}\textcolor{White}{\textbf{Severity}} & \cellcolor{Black}\textcolor{White}{\textbf{Likelyhood}} & \cellcolor{Black}\textcolor{White}{\textbf{Mitigation}} \\ \hline
-Chronos Clock Failure  &  3  &  3 & Have backup clocks ready (Software or Hardware) \\ \hline
-  &  Yes  &  No \\ \hline
+\cellcolor{Black}\textcolor{White}{\textbf{Risk}}  & \cellcolor{Black}\textcolor{White}{\textbf{Description}} & \cellcolor{Black}\textcolor{White}{\textbf{Severity}} & \cellcolor{Black}\textcolor{White}{\textbf{Likelyhood}} & \cellcolor{Black}\textcolor{White}{\textbf{Mitigation}} \\ \hline
+\multicolumn{5}{\cellcolor{Black}\textcolor{White}{\textbf{Data Collection}}} \\ \hline
+Time to Collect Data & Is there enough time to collect the data required? & 2 & 2 & Start collecting data early in the project \\ \hline
+Number of permutations of set ups & Are there enough different clock types and network layouts to be able to draw a conclusion from them? & 3 & 2 & Try as many combinations of clocks as possible. Start early \\ \hline
+Hardware clock Failures & A hardware clock failing would push the project completion date back & 4 & 3 & Have software clocks on standby in case. Speak to Chronos if needed \\ \hline
+Network Restrictions & Will the network be restricted? & 4 & 2 & Speak with BUCS ahead of time. \\ \hline
+\multicolumn{5}{\cellcolor{Black}\textcolor{White}{\textbf{Packet Metrics}}} \\ \hline
+Not enough Metrics & Not enough metrics to get a decent result & 2 & 1 & Research into other metrics. Speak to Chronos \\ \hline
+Metrics not efficient & Implementation of metrics are not efficient & 2 & 3 & Start calculating metrics early \\ \hline
+\end{tabular}
+\end{table}
 
-% Need to ask watson about challenges..
+As it can be seen above the majority of the risks above relate to making sure that the project is started as early as possible and that both data collection and packet metric implementions can be worked on in parallel.
+
 \section{Next Steps}
 
 The next steps for the project can be split into a few distinct areas and these will be discussed in turn. The identified next steps for this project are: complete packet metrics, collect data, process the data using the metrics, and any other work.
-
+The other work that might be included is cryptographically signing PTP packets. \\
 \subsection{Complete Packet Metrics}
 
 The plan for this section will be to finish implementing all of the packet metrics mentioned in the paper discussed previously \cite{ITUPacketMetrics}. 
@@ -574,7 +627,23 @@ Another method in resolving this would be to split the workload amongst multiple
 
 Throughout the project more \ac{PTP} data will be collected. A range of sets of data will be taken, which include: different clock types, different clock locations, different times of day, different clock topologies. \\
 
-%Need to expand
+The following tests will be performed:
+
+\begin{itemize}
+\item Chronos Grandmaster / Chronos Slave
+\item Chronos Grandmaster / Software Slave
+\item Chronos Grandmaster / Beaglebone Slave
+\item Software Grandmaster / Chronos Slave
+\item Software Grandmaster / Software Slave
+\item Software Grandmaster / Beaglebone Slave
+\end{itemize}
+
+Each of the above will be tested in a few locations throughout the university and at different times of day.\\
+
+An initial test on similarities between clock performances will be made.
+If they end up being very similar, only one set up will be used. 
+This can then be tested in different locations on the network.
+
 
 \subsection{Data Processing}
 
@@ -582,22 +651,50 @@ Once data has been collected, it will be processed and analysed. For each set of
 Note that one important step will be to understand what each metric does and what it means in terms of \ac{PTP} performance.
 These metrics can then be compared against each other and plotted.
 Other plotting techniques may also be used.
-
-%Need moar
-
-\subsection{Any other Work}
-
-There may be other work that can be completed. 
-%*need to ask watson for others*
-
-
 \section{Conclusion}
 
-In conclusion, ...
+In conclusion, an introduction into this project has been given, with a list of the reports that were you read initially.
+The work that has been completed thus far has been discussed with the next steps also broadly outlined.
+Finally risks to the project have been identified and the next steps also highlighted.
 
 \bibliographystyle{ieeetr}
 \bibliography{Bibliography}
 \begin{appendices}
+\section{Gantt Table}
+\begin{tabular}[H]
+\begin{table}{|c|c|c|c|c|c|} \hline \\
+ & Task Name & Duration & Start & Finish & Predecessors \\ \hline
+A & \textbf{Deliverables} & 72 & Mon 03/02/14 & Tues 13/05/14 & \\ \hline
+1 & Log Book & 65 & Mon 03/02/14 & Fri 02/05/14 & \\ \hline
+2 & Interim Report & 9 & Fri 07/02/14 & Wed 19/02/14 & B, 1 \\ \hline
+3 & Final Year Report & 17 & Mon 14/04/14 & Tues 06/05/14 & B,C,D,1,2 \\ \hline
+4 & Poster & 5 & Wed 07/05/14 & Tues 13/05/14 & 1,3 \\ 3 \hline
+B & \textbf{Preliminary Reading} & 7 & Mon 03/02/14 & Tues 11/02/14 & \\ \hline
+1 & Read up on PTP & 7 & Mon 03/02/14 & Tues 11/02/14 & \\ \hline
+2 & Reading about Metrics & 7 & Mon 03/02/14 & Tues 11/02/14 & \\ \hline
+C & \textbf{Packet Metrics} & 35 & Mon 10/02/14 & Fri 28/03/14 & \\ \hline
+1 & Decide on Language & 1 & Mon 10/02/14 & Mon 10/02/14 & \\ \hline
+2 & Decide on Metrics & 1 & Mon 10/02/14 & Mon 10/02/14 & \\ \hline
+3 & Implement Metrics & 24 & Mon 11/02/14 & 14/03/14 & 1,2 \\ \hline
+4 & Test all Metrics & 33 & Wed 12/02/14 & Fri 27/03/14 & 3 \\ \hline
+5 & Run some tests on sample Data & 8 & Wed 12/02/14 & Fri 21/02/14 & 3 \\ \hline 
+D & \textbf{Data Collection} & 45 & Mon 03/02/14 & Fri 04/04/14 & \\ \hline
+1 & Set up Equipment & 5 & Mon 03/02/14 & Fri 07/02/14 & \\ \hline
+2 & Run Tests w/ Chronos Equipment & 10 & Mon 24/02/14 & Fri 07/03/14 & 1\\ \hline
+3 & Run Tests w/ Software & 5 & Mon 10/03/14 & Fri 14/03/14 & 1 \\ \hline
+4 & Run Tests with w/ Mix & 5 & Mon 17/03/14 & Fri 21/03/14 & 1 \\ \hline
+5 & Other Tests & 10 & Mon 24/03/14 & 04/04/14 & 1 \\ \hline
+6 & Run scripts on Results & 30 & Mon 24/02/14 & Fri 04/04/14 &  2,3,4,5 \\ \hline
+E & Other Work and Buffer & 5 days & Mon 07/04/14 & 11/04/14 & \\ \hline
+\end{table}
+\end{tabular}
+\section{Gantt Chart}
+\begin{figure}
+\centering
+\includegraphics[angle=90][scale=0.6]{./Figures/Ganttchart.eps}
+\caption{Gantt Chart}
+\end{figure}
+
 \section{TDEV Script}
 \begin{lstlisting}
 #!/usr/bin/env Rscript
