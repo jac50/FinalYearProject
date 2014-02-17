@@ -10,7 +10,9 @@
 //-----------------------------------------------------
 #include <math.h>
 #include <stdio.h>
-void TDEV(int To, int* n, int* N ,double * x,double * result,int * foo){
+#include <R.h>
+
+void TDEV(int To, int* n, int* N ,double * x,double * result){
 	
 	int window = 5; // Set window Size
 	int windowSide =  (window - 1) / 2; // Set the length of Side of window
@@ -18,25 +20,24 @@ void TDEV(int To, int* n, int* N ,double * x,double * result,int * foo){
 	
 	double interimStep = 0;
 	double average[3] = {0,0,0};
-	*foo = 7;
-	for (int i=windowSide; i < *N - 3 * (*n) ; i++){
+	for (int i=windowSide; i < (*N -(3 * (*n))) - windowSide + 2; i++){
 		interimStep =  0;
 			for (int k=0;k < window;k++){
 				average[0] = average[0] + x[i + 2*(*n) - windowSide + k];
-				average[1] = average[1] + x[i - *n - windowSide + k];
+				average[1] = average[1] + x[i + (*n) - windowSide + k];
 				average[2] = average[2] + x[i - windowSide + k];
 			}
 			average[0] = average[0] / window;
 			average[1] = average[1] / window;
-			average[2] = average[2] / window;
-			interimStep = average[0] - 2 * average[1] + average[2];
+			average[2] = average[2] / window;			
+			Rprintf("Second Average: %f\n", average[1]);
+			interimStep = average[0] - (2 * average[1]) + average[2];
 			
 			//printf("InterimStep: %0.9f", interimStep * interimStep);
 			outerStep = outerStep + (interimStep * interimStep);
 
 			average[0] = average[1] = average[2] = 0;
 	}
-	
 	outerStep = outerStep / (6 * (*N - (3)*(*n) + 1));
 	*result = sqrt(outerStep);
 

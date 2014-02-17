@@ -10,7 +10,6 @@ source("TDEV.r") #Import TDEV Script
 source("minTDEV.r") #Imprt MinTDEV Script
 source("TDEVAllMethods.r")
 dyn.load("TDEV.so")
-source("TDEVChange.r")
 
 #---------- Import Data into script -----------
 arguments  <- commandArgs()
@@ -35,32 +34,33 @@ N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the nul
 maxn = floor(N / 3)
 RawResult = c(0,0,0,0)
 resultTDEV = matrix(0,maxn)
+resultTDEVC = matrix(0,maxn)
 resultMinTDEV = matrix(0,maxn)
 resultbandTDEV = matrix(0,maxn)
 resultpercentTDEV = matrix(0,maxn)
 a <- 20
 b <- 80
 	
-print ("Calling C function")
-result <- 0
-test <- 0
-#.C("TDEV",To,as.integer(1),as.integer(N),delays,result,test)
-print (paste("OMG TEST YES PLEASE PLEASE", test))
-print (paste("Result2: ", result))
-print("I AM DONE NOW")
+
 for (i in 1:maxn){
 	ptm <- proc.time()
-	resultTDEV[i] <- TDEVChange(To, i,N,delays)
-	#resultMinTDEV[i] <-minTDEV(To,i,N,delays)
+	resultTDEV[i] <- TDEV(To, i,N,delays)
+	resultMinTDEV[i] <-minTDEV(To,i,N,delays)
+	
+	temp <- .C("TDEV",To,as.integer(i),as.integer(N),delays,result = double(1))
+	
+	resultTDEVC[i] <-as.double(temp['result'])
 	#RawResult = TDEVAll(To,i,N,delays,a,b)
 	#resultTDEV[i] = RawResult[1]
 	#resultMinTDEV[i] = RawResult[2]
 	#resultbandTDEV[i] = RawResult[3]
 	#resultpercentTDEV[i] = RawResult[4]
 	#print(paste("Result: -----------------", resultTDEV[i]))
-	#print (paste("Iteration", i,"complete in Time:", time[3], "..." ))
+	print (paste("Iteration", i,"complete in Time:", "..." ))
 }
-print(resultTDEV)
+#print(resultTDEV)
+#print(resultTDEVC)
+#print(resultMinTDEV)
 #print(resultMinTDEV)
 #rangeOfValues <- range(0,resultTDEV, resultMinTDEV,resultbandTDEV,resultpercentTDEV)
 #print(rangeOfValues)
@@ -76,12 +76,14 @@ lines(resultpercentTDEV,type="o",col="orange")
 
 dev.off()
 #Create a CSV output file
-result <- matrix(0,ncol = 5, nrow = maxn)
+result <- matrix(0,ncol = 3, nrow = maxn)
 result[,1] <- seq(1,maxn)
 result[,2] <- resultTDEV
-result[,3] <- resultMinTDEV
-result[,4] <- resultbandTDEV
-result[,5] <- resultpercentTDEV
-generateLatex(result,c("Index","TDEV", "minTDEV"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
+result[,3] <- resultTDEVC
+#result[,4] <- resultMinTDEV
+#result[,5] <- resultbandTDEV
+#result[,6] <- resultpercentTDEV
+#generateLatex(result,c("Index","TDEV", "minTDEV"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
 
+print(result)
 
