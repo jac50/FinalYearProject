@@ -44,25 +44,26 @@ b <- 80
 
 for (i in 1:maxn){
 	ptm <- proc.time()
-	resultTDEV[i] <- TDEV(To, i,N,delays)
-	resultMinTDEV[i] <-minTDEV(To,i,N,delays)
+	#iresultTDEV[i] <- TDEV(To, i,N,delays)
+	#resultMinTDEV[i] <-minTDEV(To,i,N,delays)
 	
-	temp <- .C("TDEV",To,as.integer(i),as.integer(N),delays,result = double(1))
+	#temp <- .C("TDEV",To,as.integer(i),as.integer(N),delays,result = double(1))
 	
-	resultTDEVC[i] <-as.double(temp['result'])
-	#RawResult = TDEVAll(To,i,N,delays,a,b)
-	#resultTDEV[i] = RawResult[1]
-	#resultMinTDEV[i] = RawResult[2]
-	#resultbandTDEV[i] = RawResult[3]
-	#resultpercentTDEV[i] = RawResult[4]
+#	resultTDEVC[i] <-as.double(temp['result'])
+	RawResult = TDEVAll(To,i,N,delays,a,b)
+	resultTDEV[i] = RawResult[1]
+	resultMinTDEV[i] = RawResult[2]
+	resultbandTDEV[i] = RawResult[3]
+	resultpercentTDEV[i] = RawResult[4]
 	#print(paste("Result: -----------------", resultTDEV[i]))
 	print (paste("Iteration", i,"complete in Time:", "..." ))
+	
 }
 #print(resultTDEV)
 #print(resultTDEVC)
 #print(resultMinTDEV)
 #print(resultMinTDEV)
-#rangeOfValues <- range(0,resultTDEV, resultMinTDEV,resultbandTDEV,resultpercentTDEV)
+rangeOfValues <- range(0,resultTDEV, resultMinTDEV,resultbandTDEV,resultpercentTDEV)
 #print(rangeOfValues)
 #Name pdf file..
 outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
@@ -72,17 +73,18 @@ plot(resultMinTDEV,type="o", col="red",log="xy")
 lines(resultTDEV,type="o",col="blue")
 lines(resultbandTDEV,type="o",col="green")
 lines(resultpercentTDEV,type="o",col="orange")
-#legend(1,rangeOfValues[2],c("TDEV", "minTDEV","bandTDEV","percentTDEV"), cex = 0.8,col=c("blue","red","green","orange"), pch=21:22, lty=1:2)
+legend(1,rangeOfValues[2],c("TDEV", "minTDEV","bandTDEV","percentTDEV"), cex = 0.8,col=c("blue","red","green","orange"), pch=21:22, lty=1:2)
 
 dev.off()
 #Create a CSV output file
-result <- matrix(0,ncol = 3, nrow = maxn)
+result <- matrix(0,ncol = 6, nrow = maxn)
 result[,1] <- seq(1,maxn)
 result[,2] <- resultTDEV
-result[,3] <- resultTDEVC
-#result[,4] <- resultMinTDEV
-#result[,5] <- resultbandTDEV
-#result[,6] <- resultpercentTDEV
+#result[,3] <- resultTDEVC
+
+result[,4] <- resultMinTDEV
+result[,5] <- resultbandTDEV
+result[,6] <- resultpercentTDEV
 #generateLatex(result,c("Index","TDEV", "minTDEV"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
 
 print(result)
