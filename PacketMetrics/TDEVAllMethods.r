@@ -25,16 +25,16 @@ TDEVAll <- function(To,n, N,x,a,b){
 			
 			interimStep[2] <- interimStep[2] + min(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* min(x[i+n - windowSide : i + n + windowSide]) + min(x[i - windowSide : i + windowSide])
 			interimStep[3] <- interimStep[3] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],a,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],a,b) + bandMean(x[i - windowSide : i + windowSide],a,b)
-		#	interimStep[4] <- interimStep[4] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],0,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],0,b) + bandMean(x[i - windowSide : i + windowSide],0,b)
+		interimStep[4] <- interimStep[4] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],0,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],0,b) + bandMean(x[i - windowSide : i + windowSide],0,b)
 		
 		for (k in 1:4){
-			interimStep[i] <- interimStep[i] ^ 2
-			result[i] <- result[i] + interimStep[i]
+			interimStep[k] <- interimStep[k] ^ 2
+			result[k] <- result[k] + interimStep[k]
 		}
 	}
 	for (k in 1:4){
-		result[i] <- result[i] / (6 * (N - (3*n) + 1));
-		result[i] <- sqrt(result[i])
+		result[k] <- result[k] / (6 * (N - (3*n) + 1));
+		result[k] <- sqrt(result[k])
 	}
 	#print(result)
 	return(result) 
