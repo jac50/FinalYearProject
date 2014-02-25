@@ -166,16 +166,14 @@ Figure \ref{fig:NTPHierarchy} on the next page  shows the Stratums numbered from
 \label{fig:NTPHierarchy}
 \end{figure}
 
-The reference clocks located in Stratum 0 are high precision clocks such as  atomic or they use \ac{GPS} synchronisation.  
+The reference clocks located in Stratum 0 are high precision such as  atomic clocks or they use \ac{GPS} synchronisation.  
 The clocks in Stratum 2 will base their time off of the clocks in Stratum 1. 
 A number of the clocks in Stratum 1 will be used for time synchronising each clock in Stratum 2. This is done so that the time is more accurate and robust. 
-This is in case one of the clocks in a higher stratum is drifting more than the others. 
 Within a Stratum, clocks may also synchronise for sanity checking to ensure that all clocks within a Stratum are accurate between each other.
 Any layers below Stratum 2 will mirror the same algorithm, and there can be up to 15 layers. 
 Stratum 16 is reserved for clocks that are not synchronised with \ac{NTP} \cite{NTP}.
 
-\ac{SNTP} is a similar protocol but it is simpler than \ac{NTP} as it does not store the state over long periods of time. 
-This is usually used in applications which do not require a high timing accuracy.
+\ac{SNTP} is used in applications which do not require a high timing accuracy.
 It does this by ignoring drift values.
 Therefore it is recommended that SNTP is only used in the higher Stratums \cite{SNTP}.
 The \ac{SNTP} specification is part of the \ac{NTP} specification, cited here \cite{NTPV4Specification}. 
@@ -185,7 +183,7 @@ As this method is heavily reliant on the GPS system for synchronisation, this me
 \item[\ac{PPS} Synchronisation] \hfill \\ The final method of synchronisation is using a dedicated channel and a one pulse per second signal which synchronises all the clocks connected to that medium.
 \end{description}
 
-Issues arise when synchronising time over a packet switched network but sub millisecond accuracies are required.  
+Issues arise when synchronising time over a packet switched network where sub millisecond accuracies are required.  
 \ac{PTP} was developed as a successor to the existing \ac{NTP} standard which aims to reach sub millisecond accuracies. 
 Meeting this value of accuracy is very difficult however with a traditional Ethernet network. \\
 
@@ -279,7 +277,7 @@ Clock Quality & None & Data Field Stratum & Clock Accuracy / Clock Class \\ \hli
 Selection Algorithm for best clock & Unknown & Selection Based & Hierarchical \\ \hline
 \multirow{5}{*}{Unique Features} & & & Alternate Time Scale \\ 
  & & & Grandmaster Cluster \\ 
- & None & Noise &  Unicast Masters \\ 
+ & None & Noise Reduction&  Unicast Masters \\ 
  & & & Alternate Master \\ 
  & & & Path Trace \\  \hline  \end{tabular}
 
@@ -712,8 +710,6 @@ A & \textbf{Deliverables} & 72 & Mon 03/02/14 & Tues 13/05/14 & \\ \hline
 \includegraphics[angle=90,scale = 0.48]{./Figures/GanttChart.eps}
 \caption{Gantt Chart}
 \end{figure}
-\section{Gantt Chart}
-
 \section{TDEV Script}
 \label{app:TDEV}
 \begin{lstlisting}
@@ -857,7 +853,7 @@ bandTDEV <- function(nTo,N,x){
 # ----------------------------------------------------
 source("../LaTeXScripts/generateLatexTable.r")
 source("TDEV.r") #Import TDEV Script
-source("minTDEV.r") #Imprt MinTDEV Script
+source("minTDEV.r") #Import MinTDEV Script
 source("TDEVAllMethods.r")
 dyn.load("TDEV.so")
 
