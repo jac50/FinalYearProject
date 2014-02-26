@@ -9,6 +9,7 @@ source("../LaTeXScripts/generateLatexTable.r")
 source("TDEV.r") #Import TDEV Script
 source("minTDEV.r") #Imprt MinTDEV Script
 source("TDEVAllMethods.r")
+source("MATIEAllMethods.r")
 dyn.load("TDEV.so")
 
 #---------- Import Data into script -----------
@@ -32,12 +33,19 @@ delays = delays[-1]
 N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
 
 maxn = floor(N / 3)
+maxNMATIE = floor(N/2)
 RawResult = c(0,0,0,0)
+RawResultMATIE <- c(0,0,0,0)
+resultMATIE <-matrix(0,maxNMATIE)
+resultMinMATIE <-matrix(0,maxNMATIE)
+resultMAFE <-matrix(0,maxNMATIE)
+resultMinMAFE <-matrix(0,maxNMATIE)
+
 resultTDEV = matrix(0,maxn)
 resultTDEVC = matrix(0,maxn)
 resultMinTDEV = matrix(0,maxn)
-resultbandTDEV = matrix(0,maxn)
-resultpercentTDEV = matrix(0,maxn)
+resultBandTDEV = matrix(0,maxn)
+resultPercentTDEV = matrix(0,maxn)
 a <- 20
 b <- 80
 	
@@ -46,19 +54,33 @@ for (i in 1:maxn){
 	ptm <- proc.time()
 	#iresultTDEV[i] <- TDEV(To, i,N,delays)
 	#resultMinTDEV[i] <-minTDEV(To,i,N,delays)
-	
 	#temp <- .C("TDEV",To,as.integer(i),as.integer(N),delays,result = double(1))
 	
 #	resultTDEVC[i] <-as.double(temp['result'])
 	RawResult = TDEVAll(To,i,N,delays,a,b)
+	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
 	resultTDEV[i] = RawResult[1]
 	resultMinTDEV[i] = RawResult[2]
-	resultbandTDEV[i] = RawResult[3]
-	resultpercentTDEV[i] = RawResult[4]
+	resultBandTDEV[i] = RawResult[3]
+	resultPercentTDEV[i] = RawResult[4]
+	resultMATIE[i] = RawResultMATIE[1]
+	resultMinMATIE[i] = RawResultMATIE[2]
+	resultMAFE[i] = RawResultMATIE[3]
+	resultMinMAFE[i] = RawResultMATIE[4]
+
 	#print(paste("Result: -----------------", resultTDEV[i]))
 	print (paste("Iteration", i,"complete in Time:", "..." ))
 	
 }
+for (i in maxn + 1 : maxNMATIE) {
+	print(i) 
+	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
+	resultMATIE[i] = RawResultMATIE[1]
+	resultMinMATIE[i] = RawResultMATIE[2]
+	resultMAFE[i] = RawResultMATIE[3]
+	resultMinMAFE[i] = RawResultMATIE[4]
+}
+
 #print(resultTDEV)
 #print(resultTDEVC)
 #print(resultMinTDEV)
