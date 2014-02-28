@@ -1,0 +1,23 @@
+\begin{table}[H]
+\begin{tabular}{|l|l|l|l|l} \hline \\
+\multicol{5}{|c|}{Test: Timeport\_to\_Software Test One} \\ \hline
+ & \textbf{Test Name:} & TimePort\_To\_Software Test One & & \\ \hline
+ & \textbf{Test ID:} & 001 & & \\ \hline
+ & \textbf{Test Date} & 2014-02-27 & & \\ \hline
+ & \textbf{File Name:} & RawData.txt & & \\ \hline
+ & \textbf{Directory:} & ./PTPData/TimePort\_To\_Software\_Test1 & & \\ \hline
+ & \textbf{Start Time:} & 1037 & & \\ \hline
+ & \textbf{End Time:} & & & \\ \hline
+\textbf{Clock \#1 Type:} & Hardware & & \textbf{Clock \#2 Type:} & Software \\ \hline
+
+\textbf{Clock \#1 Name:} & TimePort\_1 & & \textbf{Clock \#2 Name:} & PTPd\_Netbook \\ \hline
+\textbf{Clock \#1 Model:} & TimePort & & \textbf{Clock \#2 Model:} & PTPd \\ \hline
+\textbf{Clock \#1 Location:} & Watson's Office & & \textbf{Clock \#2 Location:} & 2E 2.13 \\ \hline 
+& & & &\\ \hline
+\textbf{Network Activity:} & Normal & & & \\ \hline
+\textbf{Test Description:} & \multirow{4}{An initial test to collect data to supplement the example data already received. } \\ \hline
+\textbf{Comments} & \multirow{4}{1342: Data seems to be collecting fine. 3hrs20mins: 45MB} \\ \hline
+\end{tabular}
+\end{table}
+
+
