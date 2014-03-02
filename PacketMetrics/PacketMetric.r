@@ -5,6 +5,7 @@
 # -       Description: This script will calculate    -
 # -       the packet metrics for the given data set. -
 # ----------------------------------------------------
+options(warn = 1)
 source("../LaTeXScripts/generateLatexTable.r")
 source("TDEV.r") #Import TDEV Script
 source("minTDEV.r") #Imprt MinTDEV Script
@@ -32,8 +33,9 @@ delays = delays[-1]
 #print (delays)
 N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
 
-maxn = floor(N / 3)
-maxNMATIE = floor(N/2)
+maxn <- floor(N / 3)
+maxNMATIE <- floor(N/2)
+print(paste("maxNMATIE", maxNMATIE))
 RawResult = c(0,0,0,0)
 RawResultMATIE <- c(0,0,0,0)
 resultMATIE <-matrix(0,maxNMATIE)
@@ -72,8 +74,8 @@ for (i in 1:maxn){
 	print (paste("Iteration", i,"complete in Time:", "..." ))
 	
 }
-for (i in maxn + 1 : maxNMATIE) {
-	print(i) 
+for (i in (maxn + 1) : maxNMATIE) {
+	print (paste("Iteration", i,"complete in Time:", "..." ))
 	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
 	resultMATIE[i] = RawResultMATIE[1]
 	resultMinMATIE[i] = RawResultMATIE[2]
@@ -85,29 +87,33 @@ for (i in maxn + 1 : maxNMATIE) {
 #print(resultTDEVC)
 #print(resultMinTDEV)
 #print(resultMinTDEV)
-rangeOfValues <- range(0,resultTDEV, resultMinTDEV,resultbandTDEV,resultpercentTDEV)
+rangeOfValues <- range(0,resultTDEV, resultMinTDEV,resultBandTDEV,resultPercentTDEV)
 #print(rangeOfValues)
 #Name pdf file..
 outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
 setEPS()
-postscript(outputFileName)
+#postscript(outputFileName)
 plot(resultMinTDEV,type="o", col="red",log="xy")
 lines(resultTDEV,type="o",col="blue")
-lines(resultbandTDEV,type="o",col="green")
-lines(resultpercentTDEV,type="o",col="orange")
+lines(resultBandTDEV,type="o",col="green")
+lines(resultPercentTDEV,type="o",col="orange")
 legend(1,rangeOfValues[2],c("TDEV", "minTDEV","bandTDEV","percentTDEV"), cex = 0.8,col=c("blue","red","green","orange"), pch=21:22, lty=1:2)
 
 dev.off()
 #Create a CSV output file
-result <- matrix(0,ncol = 6, nrow = maxn)
-result[,1] <- seq(1,maxn)
-result[,2] <- resultTDEV
-#result[,3] <- resultTDEVC
+result <- matrix(0,ncol = 10, nrow = maxNMATIE)
+result[,1] <- seq(1,maxNMATIE)
+result[,2] <- c(resultTDEV, rep(0,maxNMATIE - maxn))
+result[,3] <- c(resultTDEVC, rep(0,maxNMATIE - maxn))
 
-result[,4] <- resultMinTDEV
-result[,5] <- resultbandTDEV
-result[,6] <- resultpercentTDEV
-#generateLatex(result,c("Index","TDEV", "minTDEV"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
+result[,4] <- c(resultMinTDEV, rep(0,maxNMATIE - maxn))
+result[,5] <- c(resultBandTDEV, rep(0,maxNMATIE - maxn))
+result[,6] <- c(resultPercentTDEV, rep(0,maxNMATIE - maxn))
+result[,7] <- resultMATIE
+result[,8] <- resultMinMATIE
+result[,9] <- resultMAFE
+result[,10] <- resultMinMATIE
+#generateLatex(result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
 
-print(result)
+#print(result)
 
