@@ -19,9 +19,9 @@ MATIEAllMethods <- function(To,n, N,x){
 	result <- matrix(0,4)
 	interimResult <- matrix(0,(N - 2*n + 10),4) #fudged because of the 4 truncated rows. will fix what N is. 
 	interimStep <- matrix(0,2) #only need MATIE and minMATIE
-	for (i in windowSide + 1:(N-2*n + 1) - windowSide ){
+	for (i in 1:(N-2*n + 1)){
 		interimStep <- c(0,0,0,0)
-		for (j in i:(n+i-1)){
+		for (j in i + windowSide:(n+i-1) - windowSide){
 			interimStep[0] <- interimStep[0] + mean(x[i+n - windowSide: i + n + windowSide]) +  mean(x[i - windowSide : i + windowSide])
 			interimStep[1] <- interimStep[1] + min(x[i + n - windowSide : i + n + windowSide]) + min(x[i - windowSide : i + windowSide])
 		}
@@ -29,10 +29,10 @@ MATIEAllMethods <- function(To,n, N,x){
 		
 			interimStep[k] <- abs(interimStep[k]) / n
 		}
-		interimResult[1][i] <- interimStep[1]
-		interimResult[2][i] <- interimStep[1] / (n * To)
-		interimResult[3][i] <- interimStep[2]
-		interimResult[4][i] <- interimStep[2] / (n * To)
+		interimResult[i,1] <- interimStep[1]
+		interimResult[i,2] <- interimStep[1] / (n * To)
+		interimResult[i,3] <- interimStep[2]
+		interimResult[i,4] <- interimStep[2] / (n * To)
 	}
 	result[1] <- max(interimResult[1])		
 	result[2] <- max(interimResult[2])		
