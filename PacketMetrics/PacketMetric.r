@@ -17,7 +17,7 @@ dyn.load("TDEV.so")
 arguments  <- commandArgs()
 sampleSize <- arguments[6] #Command line args start from index 6
 
-fileName = paste("../PTPData/TestData/SampleSize_", sampleSize, ".txt",sep="")
+fileName = paste("../PTPData/TestData/ExampleData/SampleSize_", sampleSize, ".txt",sep="")
 print(fileName)
 
 print ("Reading CSV Data...")
@@ -92,7 +92,7 @@ rangeOfValues <- range(0,resultTDEV, resultMinTDEV,resultBandTDEV,resultPercentT
 #Name pdf file..
 outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
 setEPS()
-#postscript(outputFileName)
+postscript(outputFileName)
 plot(resultMinTDEV,type="o", col="red",log="xy")
 lines(resultTDEV,type="o",col="blue")
 lines(resultBandTDEV,type="o",col="green")
@@ -115,5 +115,5 @@ result[,9] <- resultMAFE
 result[,10] <- resultMinMATIE
 #generateLatex(result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
 
-#print(result)
+print(result)
 
