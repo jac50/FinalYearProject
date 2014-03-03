@@ -18,9 +18,7 @@ MATIE <- function(To,n, N,x){
 	result = matrix(0,(N - 2*n + 1))
 	for (i in windowSide + 1:(N-2*n + 1) - windowSide){
 		interimStep <- 0
-		for (j in i:(n+k-1)){
-			interimStep <- interimStep + min(x[i+n - windowSide: i + n + windowSide]) +  min(x[i - windowSide : i + windowSide])
-		}
+		interimStep <- interimStep + min(x[i+n - windowSide: i + n + windowSide]) -  min(x[i - windowSide : i + windowSide])
 		interimStep = abs(interimStep)
 		interimStep = interimStep / n
 		result[i] = interimStep
