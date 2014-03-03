@@ -79,7 +79,7 @@
 }
 \pagestyle{fancy}
 
-\title {Final Year Project : Interim Report - Investigation into the Precision Time Protocol}
+\title {Final Year Report - Investigation into the Precision Time Protocol}
 \author {James Cox
 \\ Department of Electrical and Electronic Engineering \\
 \\
@@ -110,6 +110,7 @@ Abstract goes here
 \listoftables
 
 \section{Introduction}
+
 \subsection{Aims and Objectives}
 \subsection{Deliverables}
 \section{Literature Review? (kind of)}
