@@ -7,6 +7,7 @@
 # ----------------------------------------------------
 options(warn = 1)
 suppressPackageStartupMessages(library("argparse"))
+library("gnumeric")
 source("../LaTeXScripts/generateLatexTable.r")
 source("TDEV.r") #Import TDEV Script
 source("minTDEV.r") #Imprt MinTDEV Script
@@ -15,36 +16,41 @@ source("MATIEAllMethods.r")
 dyn.load("TDEV.so")
 
 #---------- Import Data into script -----------
-arguments  <- commandArgs()
-#sampleSize <- arguments[6] #Command line args start from index 6
 sampleSize <- 0
-SlaveType <- 0
+directory <- ""
 parser <- ArgumentParser(description='Perform some Packet Metrics')
 parser$add_argument('-nTest',metavar='00X',type='integer',
 			help = 'This is the test number',dest="nTest")
 parser$add_argument('-nLines',metavar='N',type='integer',dest="sampleSize",
 			help = 'How many lines of the test file do you want')
-parser$add_argument('-GMType', metavar='GM', type='integer', dest="GMType", help = "This is the type of the grandmaster. Timeport - 0 : PTPd - 1")
-parser$add_argument('-SlaveType', metavar='Slave', type='integer', dest="SlaveType", help = "This is the type of the slave. Software - 0 : Syncwatch - 1 : Beaglebone - 2")
-
+parser$add_argument('-directory',metavar='N',dest="directory",default="None")
 args <- parser$parse_args()
-print (args$nTest)
 sampleSize <- args$sampleSize
-parser$print_help()
+directory <- args$directory
+#-----------------------------
 
-#------------------------------------------------------------------
-if (args$nTest == 0) {
+testSheet <- read.gnumeric.sheet(file = "../PTPData/TestData/TestSheets.ods", 
+				 sheet.name="Summary Sheet",
+				top.left='B3',
+				bottom.right='D30')
+				
+if (directory != "None"){
+	fileName = paste("../PTPData/TestData/",directory,"/SampleSize_", sampleSize,".txt",sep="")
+
+} else if (args$nTest == 0) {
 	fileName = paste("../PTPData/TestData/ExampleData/SampleSize_", args$sampleSize, ".txt",sep="")
 
 } else {
-	fileName = paste("../PTPData/TestData/ExampleData/break/SampleSize_", args$sampleSize,".txt", sep="")
+	
+	fileName = paste("../PTPData/TestData/", testSheet[args$nTest,3], "/SampleSize_", args$sampleSize,".txt", sep="")
 }
 
-print(fileName)
+cat(paste("Filename to be read : ", fileName,"\n"))
 
-print ("Reading CSV Data...")
-Data <- read.csv(file = fileName,head = TRUE, sep=",")
-print ("CSV Data has been written to Data variable")
+cat ("Attempting to Read in CSV Data...\n")
+error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=","))
+if ("try-error" %in% class(error)) cat("There has been an error. please fix\n")
+cat ("CSV Data has been written to Data variable\n")
 delays <- as.matrix(Data[4])
 # delays <-sort(delays) Sort if needed
 To <- 1/16 #Assume To = 1/16
@@ -52,12 +58,10 @@ To <- 1/16 #Assume To = 1/16
 delays = delays[-1] 
 delays = delays[-1]
 delays = delays[-1]
-print (delays)
 N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
 
 maxn <- floor(N / 3)
 maxNMATIE <- floor(N/2)
-print(paste("maxNMATIE", maxNMATIE))
 RawResult = c(0,0,0,0)
 RawResultMATIE <- c(0,0,0,0)
 resultMATIE <-matrix(0,maxNMATIE)
@@ -93,16 +97,19 @@ for (i in 1:maxn){
 	resultMinMAFE[i] = RawResultMATIE[4]
 
 	#print(paste("Result: -----------------", resultTDEV[i]))
-	print (paste("Iteration", i,"complete in Time:", "..." ))
+	cat (paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3), "\n" ))
+	
 	
 }
 for (i in (maxn + 1) : maxNMATIE) {
-	print (paste("Iteration", i,"complete in Time:", "..." ))
+	ptm <- proc.time()
 	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
 	resultMATIE[i] = RawResultMATIE[1]
 	resultMinMATIE[i] = RawResultMATIE[2]
 	resultMAFE[i] = RawResultMATIE[3]
 	resultMinMAFE[i] = RawResultMATIE[4]
+	cat (paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
+	proc.time()[1] - ptm[1]
 }
 
 #print(resultTDEV)
