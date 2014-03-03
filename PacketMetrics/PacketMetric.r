@@ -6,6 +6,7 @@
 # -       the packet metrics for the given data set. -
 # ----------------------------------------------------
 options(warn = 1)
+suppressPackageStartupMessages(library("argparse"))
 source("../LaTeXScripts/generateLatexTable.r")
 source("TDEV.r") #Import TDEV Script
 source("minTDEV.r") #Imprt MinTDEV Script
@@ -15,9 +16,30 @@ dyn.load("TDEV.so")
 
 #---------- Import Data into script -----------
 arguments  <- commandArgs()
-sampleSize <- arguments[6] #Command line args start from index 6
+#sampleSize <- arguments[6] #Command line args start from index 6
+sampleSize <- 0
+SlaveType <- 0
+parser <- ArgumentParser(description='Perform some Packet Metrics')
+parser$add_argument('-nTest',metavar='00X',type='integer',
+			help = 'This is the test number',dest="nTest")
+parser$add_argument('-nLines',metavar='N',type='integer',dest="sampleSize",
+			help = 'How many lines of the test file do you want')
+parser$add_argument('-GMType', metavar='GM', type='integer', dest="GMType", help = "This is the type of the grandmaster. Timeport - 0 : PTPd - 1")
+parser$add_argument('-SlaveType', metavar='Slave', type='integer', dest="SlaveType", help = "This is the type of the slave. Software - 0 : Syncwatch - 1 : Beaglebone - 2")
 
-fileName = paste("../PTPData/TestData/ExampleData/SampleSize_", sampleSize, ".txt",sep="")
+args <- parser$parse_args()
+print (args$nTest)
+sampleSize <- args$sampleSize
+parser$print_help()
+
+#------------------------------------------------------------------
+if (args$nTest == 0) {
+	fileName = paste("../PTPData/TestData/ExampleData/SampleSize_", args$sampleSize, ".txt",sep="")
+
+} else {
+	fileName = paste("../PTPData/TestData/ExampleData/break/SampleSize_", args$sampleSize,".txt", sep="")
+}
+
 print(fileName)
 
 print ("Reading CSV Data...")
@@ -30,7 +52,7 @@ To <- 1/16 #Assume To = 1/16
 delays = delays[-1] 
 delays = delays[-1]
 delays = delays[-1]
-#print (delays)
+print (delays)
 N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
 
 maxn <- floor(N / 3)
