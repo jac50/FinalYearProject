@@ -42,12 +42,20 @@ if (sampleSize == 0){
 	sampleSize <-args$sampleSize
 }
 
+
 #Handle what to do with metric types here
+
 
 testSheet <- read.gnumeric.sheet(file = "../PTPData/TestData/TestSheets.ods", 
 				 sheet.name="Summary Sheet",
 				top.left='B3',
-				bottom.right='D30')
+				bottom.right='D30',
+				drop.empty.rows='bottom')
+
+if (is.na(testSheet[args$nTest,3]) == TRUE){
+	cat(paste("Test Number", args$nTest, "not found. Defaulting to example data\n"))
+	args$nTest <- 0
+}
 				
 if (directory != "None"){
 	fileName = paste("../PTPData/TestData/",directory,"/SampleSize_", sampleSize,".txt",sep="")
