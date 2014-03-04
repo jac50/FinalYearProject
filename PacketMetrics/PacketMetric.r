@@ -13,6 +13,11 @@ source("TDEV.r") #Import TDEV Script
 source("minTDEV.r") #Imprt MinTDEV Script
 source("TDEVAllMethods.r")
 source("MATIEAllMethods.r")
+
+runHead <- function(sampleSize, directory){
+	system(paste("head -n ", sampleSize, " /home/james/FinalYearProject/PTPData/TestData/", directory, "/RawData.txt", " > /home/james/FinalYearProject/PTPData/TestData/", directory, "/SampleSize_", sampleSize, ".txt", sep=""))
+	cat("Head has been run\n")
+}
 dyn.load("TDEV.so")
 cat("Loaded Required Scripts\n")
 #---------- Import Data into script -----------
@@ -36,7 +41,7 @@ if (directory == "None") {
 		return (1)
 	}
 }
-if (sampleSize == 0){
+if (sampleSize <= 0){
 	cat("Default sample size of 50 will be used\n")
 	args$sampleSize <- 50
 	sampleSize <-args$sampleSize
@@ -52,7 +57,7 @@ testSheet <- read.gnumeric.sheet(file = "../PTPData/TestData/TestSheets.ods",
 				bottom.right='D30',
 				drop.empty.rows='bottom')
 
-if (is.na(testSheet[args$nTest,3]) == TRUE){
+if (args$nTest == 0 || is.na(testSheet[args$nTest,3])){
 	cat(paste("Test Number", args$nTest, "not found. Defaulting to example data\n"))
 	args$nTest <- 0
 }
@@ -72,7 +77,18 @@ cat(paste("Filename to be read : ", fileName,"\n"))
 
 cat ("Attempting to Read in CSV Data...\n")
 error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=","))
-if ("try-error" %in% class(error)) cat("There has been an error. please fix\n")
+if ("try-error" %in% class(error)) {
+	cat("The file can not be found. This is most likely because the sample size file you requested does not exist. This file will be created.\n")
+	if (args$nTest == 0) runHead(args$sampleSize, "ExampleData")
+	else runHead(args$sampleSize,testSheet[args$nTest, 3])
+}
+
+error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=","))
+if ("try-error" %in% class(error)) {
+	cat("Error 2: Failed twice. will exit script\n")
+	return(2)
+}
+
 cat ("CSV Data has been written to Data variable\n")
 delays <- as.matrix(Data[4])
 # delays <-sort(delays) Sort if needed
