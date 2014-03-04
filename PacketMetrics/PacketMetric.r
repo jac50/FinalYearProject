@@ -12,7 +12,7 @@ options(warn = 1) # Enables warnings
 cat("Loading Required Scripts..\n")
 suppressPackageStartupMessages(library("argparse")) 
 suppressPackageStartupMessages(library("gnumeric"))
-library("logging") # Future proofing. wl add proper logging soon
+library("logging")
 source("../LaTeXScripts/generateLatexTable.r")
 source("TDEV.r") 
 source("minTDEV.r")
@@ -36,13 +36,13 @@ runHead <- function(sampleSize, directory){
 # ----- Initialise All Logging Information -------
 # ------------------------------------------------
 # ------------------------------------------------
-
 basicConfig()
 addHandler(writeToFile,logger="LoggerFile", file="Test.Log",level=10)
-addHandler(writeToConsole,logger="Logger", level=30)
+#addHandler(writeToConsole,logger="Logger", level=10)
 loginfo("Test")
-logwarn("Warning bud",logger="LoggerFile")
+logwarn("Warning bud")
 logdebug("CRITICAL BUD")
+logerror("OMG",logger="LoggerFile")
 # ----- Initialises Variables -----
 sampleSize <- 0
 directory <- ""
