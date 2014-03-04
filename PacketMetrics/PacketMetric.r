@@ -5,9 +5,9 @@
 # -       Description: This script will calculate    -
 # -       the packet metrics for the given data set. -
 # ----------------------------------------------------
-options(warn = 1)
-suppressPackageStartupMessages(library("argparse"))
-library("gnumeric")
+options(warn = 1) # Enables warnings
+suppressPackageStartupMessages(library("argparse")) 
+suppressPackageStartupMessages(library("gnumeric"))
 source("../LaTeXScripts/generateLatexTable.r")
 source("TDEV.r") #Import TDEV Script
 source("minTDEV.r") #Imprt MinTDEV Script
