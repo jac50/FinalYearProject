@@ -42,7 +42,7 @@ parser$add_argument('-nLines',metavar='N',type='integer',dest="sampleSize", defa
 			help = 'How many lines of the test file do you want - First N lines')
 parser$add_argument('-directory',metavar='dir',dest="directory",default="None", help = 'What directory is the test data in? Use a relative directory.')
 parser$add_argument('-metric', metavar='metric', dest="metrics", default="TDEV", help = 'List what metrics you want to add in.')
-
+parser$add_argument('-delayDir', metavar='direction', dest="direction", default="Master2Slave", help = "What direction of delays do you want to base the metrics off? Master to Slave or Slave to Master")
 # ----- Parses the arguments and checks to see if they are valid -----
 args <- parser$parse_args()
 sampleSize <- args$sampleSize
@@ -92,6 +92,16 @@ if (directory != "None"){
 	fileName = paste("../PTPData/TestData/", testSheet[args$nTest,3], "/SampleSize_", args$sampleSize,".txt", sep="")
 }
 
+index <- 4 #default index for Data delays. 4 for Master to Slave. 6 for Slave to Master
+if (args$direction == "Slave2Master") { 
+	index <- 6
+} else {
+	index <- 4
+}
+
+
+
+
 # ----- At this point all arguments have been parsed successfully -----
 # ----- Attempts to read RawData file -----
 cat(paste("Filename to be read : ", fileName,"\n"))
@@ -115,7 +125,8 @@ if ("try-error" %in% class(error)) { #This is run if there's an error with the t
 }	
 
 cat ("CSV Data has been written to Data variable\n")
-delays <- as.matrix(Data[4]) # Currently taking only one of the delaus
+
+delays <- as.matrix(Data[index]) # Currently taking only one of the delaus
 
 ##### - May need to be dynamic To ? or at least an option to change / work out #####
 
