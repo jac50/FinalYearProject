@@ -14,20 +14,35 @@ source("minTDEV.r") #Imprt MinTDEV Script
 source("TDEVAllMethods.r")
 source("MATIEAllMethods.r")
 dyn.load("TDEV.so")
-
+cat("Loaded Required Scripts\n")
 #---------- Import Data into script -----------
 sampleSize <- 0
 directory <- ""
 parser <- ArgumentParser(description='Perform some Packet Metrics')
-parser$add_argument('-nTest',metavar='00X',type='integer',
-			help = 'This is the test number',dest="nTest")
-parser$add_argument('-nLines',metavar='N',type='integer',dest="sampleSize",
-			help = 'How many lines of the test file do you want')
-parser$add_argument('-directory',metavar='N',dest="directory",default="None")
+parser$add_argument('-nTest',metavar='00X',type='integer',default= -1,
+			help = 'This is the test number found in the Summary test sheet',dest="nTest")
+parser$add_argument('-nLines',metavar='N',type='integer',dest="sampleSize", default = 0,
+			help = 'How many lines of the test file do you want - First N lines')
+parser$add_argument('-directory',metavar='dir',dest="directory",default="None", help = 'What directory is the test data in? Use a relative directory.')
+parser$add_argument('-metric', metavar='metric', dest="metrics", default="TDEV", help = 'List what metrics you want to add in.')
+
 args <- parser$parse_args()
 sampleSize <- args$sampleSize
 directory <- args$directory
 #-----------------------------
+if (directory == "None") {
+	if (args$nTest == -1){
+		cat("Error 1: You need either a directory or the test number\n")
+		return (1)
+	}
+}
+if (sampleSize == 0){
+	cat("Default sample size of 50 will be used\n")
+	args$sampleSize <- 50
+	sampleSize <-args$sampleSize
+}
+
+#Handle what to do with metric types here
 
 testSheet <- read.gnumeric.sheet(file = "../PTPData/TestData/TestSheets.ods", 
 				 sheet.name="Summary Sheet",
