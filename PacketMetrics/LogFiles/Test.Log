@@ -1,0 +1,248 @@
+2014-03-06 14:21:49 INFO::-------------------------------------------------
+2014-03-06 14:21:49 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:21:49 INFO::-------------------------------------------------
+2014-03-06 14:21:56 WARNING::Test Number 0 not found. Defaulting to example data
+2014-03-06 14:21:56 INFO::Filename to be read :  ../PTPData/TestData/ExampleData/SampleSize_50.txt
+2014-03-06 14:21:56 INFO::Attempting to Read in CSV Data...
+2014-03-06 14:21:56 INFO::CSV Data has been written to Data variable
+2014-03-06 14:21:57 INFO::Iteration 1 complete in Time: 0.132
+2014-03-06 14:21:57 INFO::Iteration 2 complete in Time: 0.12
+2014-03-06 14:21:57 INFO::Iteration 3 complete in Time: 0.116
+2014-03-06 14:21:57 INFO::Iteration 4 complete in Time: 0.108
+2014-03-06 14:21:57 INFO::Iteration 5 complete in Time: 0.096
+2014-03-06 14:21:57 INFO::Iteration 6 complete in Time: 0.104
+2014-03-06 14:21:57 INFO::Iteration 7 complete in Time: 0.088
+2014-03-06 14:21:57 INFO::Iteration 8 complete in Time: 0.076
+2014-03-06 14:21:57 INFO::Iteration 9 complete in Time: 0.076
+2014-03-06 14:21:57 INFO::Iteration 10 complete in Time: 0.068
+2014-03-06 14:21:58 INFO::Iteration 11 complete in Time: 0.064
+2014-03-06 14:21:58 INFO::Iteration 12 complete in Time: 0.06
+2014-03-06 14:21:58 INFO::Iteration 13 complete in Time: 0.056
+2014-03-06 14:21:58 INFO::Iteration 14 complete in Time: 0.04
+2014-03-06 14:21:58 INFO::Iteration 15 complete in Time: 0.036
+2014-03-06 14:21:58 INFO::Iteration 16 complete in Time: 0.028
+2014-03-06 14:21:58 INFO::Iteration 17 complete in Time: 0.028
+2014-03-06 14:21:58 INFO::Iteration 18 complete in Time: 0.024
+2014-03-06 14:21:58 INFO::Iteration 19 complete in Time: 0.02
+2014-03-06 14:21:58 INFO::Iteration 20 complete in Time: 0.016
+2014-03-06 14:21:58 INFO::Iteration 21 complete in Time: 0.008
+2014-03-06 14:21:58 INFO::Iteration 22 complete in Time: 0.008
+2014-03-06 14:21:58 INFO::Iteration 23 complete in Time: 0.004
+2014-03-06 14:21:58 INFO::Plot created
+2014-03-06 14:21:58 INFO::Result Array Created
+2014-03-06 14:28:27 INFO::-------------------------------------------------
+2014-03-06 14:28:27 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:28:27 INFO::-------------------------------------------------
+2014-03-06 14:28:38 INFO::-------------------------------------------------
+2014-03-06 14:28:38 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:28:38 INFO::-------------------------------------------------
+2014-03-06 14:31:06 INFO::-------------------------------------------------
+2014-03-06 14:31:06 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:31:06 INFO::-------------------------------------------------
+2014-03-06 14:31:32 INFO::-------------------------------------------------
+2014-03-06 14:31:32 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:31:32 INFO::-------------------------------------------------
+2014-03-06 14:31:44 INFO::-------------------------------------------------
+2014-03-06 14:31:44 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:31:44 INFO::-------------------------------------------------
+2014-03-06 14:31:55 INFO::-------------------------------------------------
+2014-03-06 14:31:55 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:31:55 INFO::-------------------------------------------------
+2014-03-06 14:32:32 INFO::-------------------------------------------------
+2014-03-06 14:32:32 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:32:32 INFO::-------------------------------------------------
+2014-03-06 14:34:35 INFO::-------------------------------------------------
+2014-03-06 14:34:35 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:34:35 INFO::-------------------------------------------------
+2014-03-06 14:34:43 WARNING::Test Number 0 not found. Defaulting to example data
+2014-03-06 14:34:43 INFO::Filename to be read :  ../PTPData/TestData/ExampleData/SampleSize_50.txt
+2014-03-06 14:34:43 INFO::Attempting to Read in CSV Data...
+2014-03-06 14:34:43 INFO::CSV Data has been written to Data variable
+2014-03-06 14:34:43 INFO::Iteration 1 complete in Time: 0.16
+2014-03-06 14:34:44 INFO::Iteration 2 complete in Time: 0.116
+2014-03-06 14:34:44 INFO::Iteration 3 complete in Time: 0.112
+2014-03-06 14:34:44 INFO::Iteration 4 complete in Time: 0.104
+2014-03-06 14:34:44 INFO::Iteration 5 complete in Time: 0.096
+2014-03-06 14:34:44 INFO::Iteration 6 complete in Time: 0.088
+2014-03-06 14:34:44 INFO::Iteration 7 complete in Time: 0.084
+2014-03-06 14:34:44 INFO::Iteration 8 complete in Time: 0.096
+2014-03-06 14:34:44 INFO::Iteration 9 complete in Time: 0.068
+2014-03-06 14:34:44 INFO::Iteration 10 complete in Time: 0.064
+2014-03-06 14:34:44 INFO::Iteration 11 complete in Time: 0.06
+2014-03-06 14:34:44 INFO::Iteration 12 complete in Time: 0.092
+2014-03-06 14:34:44 INFO::Iteration 13 complete in Time: 0.056
+2014-03-06 14:34:45 INFO::Iteration 14 complete in Time: 0.04
+2014-03-06 14:34:45 INFO::Iteration 15 complete in Time: 0.032
+2014-03-06 14:34:45 INFO::Iteration 16 complete in Time: 0.028
+2014-03-06 14:34:45 INFO::Iteration 17 complete in Time: 0.028
+2014-03-06 14:34:45 INFO::Iteration 18 complete in Time: 0.024
+2014-03-06 14:34:45 INFO::Iteration 19 complete in Time: 0.016
+2014-03-06 14:34:45 INFO::Iteration 20 complete in Time: 0.012
+2014-03-06 14:34:45 INFO::Iteration 21 complete in Time: 0.008
+2014-03-06 14:34:45 INFO::Iteration 22 complete in Time: 0.008
+2014-03-06 14:34:45 INFO::Iteration 23 complete in Time: 0
+2014-03-06 14:34:45 INFO::Plot created
+2014-03-06 14:34:45 INFO::Result Array Created
+2014-03-06 14:35:11 INFO::-------------------------------------------------
+2014-03-06 14:35:11 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:35:11 INFO::-------------------------------------------------
+2014-03-06 14:35:18 WARNING::Test Number 0 not found. Defaulting to example data
+2014-03-06 14:35:18 INFO::Filename to be read :  ../PTPData/TestData/ExampleData/SampleSize_50.txt
+2014-03-06 14:35:18 INFO::Attempting to Read in CSV Data...
+2014-03-06 14:35:18 INFO::CSV Data has been written to Data variable
+2014-03-06 14:35:19 INFO::Iteration 1 complete in Time: 0.132
+2014-03-06 14:35:19 INFO::Iteration 2 complete in Time: 0.116
+2014-03-06 14:35:19 INFO::Iteration 3 complete in Time: 0.116
+2014-03-06 14:35:19 INFO::Iteration 4 complete in Time: 0.104
+2014-03-06 14:35:19 INFO::Iteration 5 complete in Time: 0.096
+2014-03-06 14:35:19 INFO::Iteration 6 complete in Time: 0.116
+2014-03-06 14:35:19 INFO::Iteration 7 complete in Time: 0.084
+2014-03-06 14:35:19 INFO::Iteration 8 complete in Time: 0.084
+2014-03-06 14:35:19 INFO::Iteration 9 complete in Time: 0.072
+2014-03-06 14:35:19 INFO::Iteration 10 complete in Time: 0.064
+2014-03-06 14:35:20 INFO::Iteration 11 complete in Time: 0.056
+2014-03-06 14:35:20 INFO::Iteration 12 complete in Time: 0.052
+2014-03-06 14:35:20 INFO::Iteration 13 complete in Time: 0.052
+2014-03-06 14:35:20 INFO::Iteration 14 complete in Time: 0.044
+2014-03-06 14:35:20 INFO::Iteration 15 complete in Time: 0.04
+2014-03-06 14:35:20 INFO::Iteration 16 complete in Time: 0.036
+2014-03-06 14:35:20 INFO::Iteration 17 complete in Time: 0.036
+2014-03-06 14:35:20 INFO::Iteration 18 complete in Time: 0.024
+2014-03-06 14:35:20 INFO::Iteration 19 complete in Time: 0.024
+2014-03-06 14:35:20 INFO::Iteration 20 complete in Time: 0.02
+2014-03-06 14:35:20 INFO::Iteration 21 complete in Time: 0.012
+2014-03-06 14:35:20 INFO::Iteration 22 complete in Time: 0.008
+2014-03-06 14:35:20 INFO::Iteration 23 complete in Time: 0
+2014-03-06 14:35:20 INFO::Plot created
+2014-03-06 14:35:20 INFO::Result Array Created
+2014-03-06 14:38:10 INFO::-------------------------------------------------
+2014-03-06 14:38:10 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:38:10 INFO::-------------------------------------------------
+2014-03-06 14:38:15 INFO::-------------------------------------------------
+2014-03-06 14:38:15 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:38:15 INFO::-------------------------------------------------
+2014-03-06 14:38:23 WARNING::Test Number 0 not found. Defaulting to example data
+2014-03-06 14:38:23 INFO::Filename to be read :  ../PTPData/TestData/ExampleData/SampleSize_50.txt
+2014-03-06 14:38:23 INFO::Attempting to Read in CSV Data...
+2014-03-06 14:38:23 INFO::CSV Data has been written to Data variable
+2014-03-06 14:38:23 INFO::Iteration 1 complete in Time: 0.168
+2014-03-06 14:38:23 INFO::Iteration 2 complete in Time: 0.12
+2014-03-06 14:38:23 INFO::Iteration 3 complete in Time: 0.128
+2014-03-06 14:38:24 INFO::Iteration 4 complete in Time: 0.1
+2014-03-06 14:38:24 INFO::Iteration 5 complete in Time: 0.1
+2014-03-06 14:38:24 INFO::Iteration 6 complete in Time: 0.088
+2014-03-06 14:38:24 INFO::Iteration 7 complete in Time: 0.084
+2014-03-06 14:38:24 INFO::Iteration 8 complete in Time: 0.076
+2014-03-06 14:38:24 INFO::Iteration 9 complete in Time: 0.076
+2014-03-06 14:38:24 INFO::Iteration 10 complete in Time: 0.064
+2014-03-06 14:38:24 INFO::Iteration 11 complete in Time: 0.08
+2014-03-06 14:38:24 INFO::Iteration 12 complete in Time: 0.056
+2014-03-06 14:38:24 INFO::Iteration 13 complete in Time: 0.048
+2014-03-06 14:38:24 INFO::Iteration 14 complete in Time: 0.044
+2014-03-06 14:38:24 INFO::Iteration 15 complete in Time: 0.036
+2014-03-06 14:38:24 INFO::Iteration 16 complete in Time: 0.032
+2014-03-06 14:38:24 INFO::Iteration 17 complete in Time: 0.028
+2014-03-06 14:38:24 INFO::Iteration 18 complete in Time: 0.02
+2014-03-06 14:38:24 INFO::Iteration 19 complete in Time: 0.02
+2014-03-06 14:38:24 INFO::Iteration 20 complete in Time: 0.016
+2014-03-06 14:38:24 INFO::Iteration 21 complete in Time: 0.008
+2014-03-06 14:38:24 INFO::Iteration 22 complete in Time: 0.008
+2014-03-06 14:38:24 INFO::Iteration 23 complete in Time: 0.004
+2014-03-06 14:38:25 INFO::Plot created
+2014-03-06 14:38:25 INFO::Result Array Created
+2014-03-06 14:40:38 INFO::-------------------------------------------------
+2014-03-06 14:40:38 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:40:38 INFO::-------------------------------------------------
+2014-03-06 14:40:45 WARNING::Test Number 0 not found. Defaulting to example data
+2014-03-06 14:40:45 INFO::Filename to be read :  ../PTPData/TestData/ExampleData/SampleSize_50.txt
+2014-03-06 14:40:45 INFO::Attempting to Read in CSV Data...
+2014-03-06 14:40:45 INFO::CSV Data has been written to Data variable
+2014-03-06 14:40:46 INFO::Iteration 1 complete in Time: 0.14
+2014-03-06 14:40:46 INFO::Iteration 2 complete in Time: 0.12
+2014-03-06 14:40:46 INFO::Iteration 3 complete in Time: 0.12
+2014-03-06 14:40:46 INFO::Iteration 4 complete in Time: 0.104
+2014-03-06 14:40:46 INFO::Iteration 5 complete in Time: 0.1
+2014-03-06 14:40:46 INFO::Iteration 6 complete in Time: 0.104
+2014-03-06 14:40:46 INFO::Iteration 7 complete in Time: 0.088
+2014-03-06 14:40:46 INFO::Iteration 8 complete in Time: 0.084
+2014-03-06 14:40:46 INFO::Iteration 9 complete in Time: 0.076
+2014-03-06 14:40:46 INFO::Iteration 10 complete in Time: 0.072
+2014-03-06 14:40:47 INFO::Iteration 11 complete in Time: 0.056
+2014-03-06 14:40:47 INFO::Iteration 12 complete in Time: 0.052
+2014-03-06 14:40:47 INFO::Iteration 13 complete in Time: 0.052
+2014-03-06 14:40:47 INFO::Iteration 14 complete in Time: 0.04
+2014-03-06 14:40:47 INFO::Iteration 15 complete in Time: 0.036
+2014-03-06 14:40:47 INFO::Iteration 16 complete in Time: 0.032
+2014-03-06 14:40:47 INFO::Iteration 17 complete in Time: 0.028
+2014-03-06 14:40:47 INFO::Iteration 18 complete in Time: 0.028
+2014-03-06 14:40:47 INFO::Iteration 19 complete in Time: 0.02
+2014-03-06 14:40:47 INFO::Iteration 20 complete in Time: 0.016
+2014-03-06 14:40:47 INFO::Iteration 21 complete in Time: 0.012
+2014-03-06 14:40:47 INFO::Iteration 22 complete in Time: 0.004
+2014-03-06 14:40:47 INFO::Iteration 23 complete in Time: 0
+2014-03-06 14:40:47 INFO::Plot created
+2014-03-06 14:40:47 INFO::Result Array Created
+2014-03-06 14:41:08 INFO::-------------------------------------------------
+2014-03-06 14:41:08 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:41:08 INFO::-------------------------------------------------
+2014-03-06 14:41:16 WARNING::Test Number 0 not found. Defaulting to example data
+2014-03-06 14:41:16 INFO::Filename to be read :  ../PTPData/TestData/ExampleData/SampleSize_50.txt
+2014-03-06 14:41:16 INFO::Attempting to Read in CSV Data...
+2014-03-06 14:41:16 INFO::CSV Data has been written to Data variable
+2014-03-06 14:41:16 INFO::Iteration 1 complete in Time: 0.14
+2014-03-06 14:41:17 INFO::Iteration 2 complete in Time: 0.12
+2014-03-06 14:41:17 INFO::Iteration 3 complete in Time: 0.116
+2014-03-06 14:41:17 INFO::Iteration 4 complete in Time: 0.116
+2014-03-06 14:41:17 INFO::Iteration 5 complete in Time: 0.096
+2014-03-06 14:41:17 INFO::Iteration 6 complete in Time: 0.1
+2014-03-06 14:41:17 INFO::Iteration 7 complete in Time: 0.112
+2014-03-06 14:41:17 INFO::Iteration 8 complete in Time: 0.08
+2014-03-06 14:41:17 INFO::Iteration 9 complete in Time: 0.08
+2014-03-06 14:41:17 INFO::Iteration 10 complete in Time: 0.072
+2014-03-06 14:41:17 INFO::Iteration 11 complete in Time: 0.064
+2014-03-06 14:41:18 INFO::Iteration 12 complete in Time: 0.06
+2014-03-06 14:41:18 INFO::Iteration 13 complete in Time: 0.048
+2014-03-06 14:41:18 INFO::Iteration 14 complete in Time: 0.044
+2014-03-06 14:41:18 INFO::Iteration 15 complete in Time: 0.036
+2014-03-06 14:41:18 INFO::Iteration 16 complete in Time: 0.032
+2014-03-06 14:41:18 INFO::Iteration 17 complete in Time: 0.028
+2014-03-06 14:41:18 INFO::Iteration 18 complete in Time: 0.028
+2014-03-06 14:41:18 INFO::Iteration 19 complete in Time: 0.016
+2014-03-06 14:41:18 INFO::Iteration 20 complete in Time: 0.012
+2014-03-06 14:41:18 INFO::Iteration 21 complete in Time: 0.008
+2014-03-06 14:41:18 INFO::Iteration 22 complete in Time: 0.008
+2014-03-06 14:41:18 INFO::Iteration 23 complete in Time: 0.004
+2014-03-06 14:41:18 INFO::Plot created
+2014-03-06 14:41:18 INFO::Result Array Created
+2014-03-06 14:42:16 INFO::-------------------------------------------------
+2014-03-06 14:42:16 INFO::--- PacketMetric.R Log -------------------------
+2014-03-06 14:42:16 INFO::-------------------------------------------------
+2014-03-06 14:42:24 WARNING::Test Number 0 not found. Defaulting to example data
+2014-03-06 14:42:24 INFO::Filename to be read :  ../PTPData/TestData/ExampleData/SampleSize_50.txt
+2014-03-06 14:42:24 INFO::Attempting to Read in CSV Data...
+2014-03-06 14:42:24 INFO::CSV Data has been written to Data variable
+2014-03-06 14:42:24 INFO::Iteration 1 complete in Time: 0.132
+2014-03-06 14:42:24 INFO::Iteration 2 complete in Time: 0.12
+2014-03-06 14:42:24 INFO::Iteration 3 complete in Time: 0.112
+2014-03-06 14:42:24 INFO::Iteration 4 complete in Time: 0.116
+2014-03-06 14:42:24 INFO::Iteration 5 complete in Time: 0.096
+2014-03-06 14:42:24 INFO::Iteration 6 complete in Time: 0.092
+2014-03-06 14:42:24 INFO::Iteration 7 complete in Time: 0.084
+2014-03-06 14:42:24 INFO::Iteration 8 complete in Time: 0.08
+2014-03-06 14:42:25 INFO::Iteration 9 complete in Time: 0.072
+2014-03-06 14:42:25 INFO::Iteration 10 complete in Time: 0.064
+2014-03-06 14:42:25 INFO::Iteration 11 complete in Time: 0.068
+2014-03-06 14:42:25 INFO::Iteration 12 complete in Time: 0.056
+2014-03-06 14:42:25 INFO::Iteration 13 complete in Time: 0.052
+2014-03-06 14:42:25 INFO::Iteration 14 complete in Time: 0.052
+2014-03-06 14:42:25 INFO::Iteration 15 complete in Time: 0.036
+2014-03-06 14:42:25 INFO::Iteration 16 complete in Time: 0.032
+2014-03-06 14:42:25 INFO::Iteration 17 complete in Time: 0.028
+2014-03-06 14:42:25 INFO::Iteration 18 complete in Time: 0.024
+2014-03-06 14:42:25 INFO::Iteration 19 complete in Time: 0.02
+2014-03-06 14:42:25 INFO::Iteration 20 complete in Time: 0.016
+2014-03-06 14:42:25 INFO::Iteration 21 complete in Time: 0.008
+2014-03-06 14:42:25 INFO::Iteration 22 complete in Time: 0.004
+2014-03-06 14:42:25 INFO::Iteration 23 complete in Time: 0
+2014-03-06 14:42:25 INFO::Plot created
+2014-03-06 14:42:25 INFO::Result Array Created
