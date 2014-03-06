@@ -36,11 +36,6 @@ runHead <- function(sampleSize, directory){
 # ----- Initialise All Logging Information -------
 # ------------------------------------------------
 # ------------------------------------------------
-basicConfig()
-addHandler(writeToFile,file="LogFiles/Test.Log",level=10)
-loginfo("-------------------------------------------------")
-loginfo(" --- PacketMetric.R Log -------------------------")
-loginfo("-------------------------------------------------")
 
 
 # ----- Initialises Variables -----
@@ -59,8 +54,33 @@ parser$add_argument('--AllTestsForSampleSize', metavar='Sample Size', dest='AllS
 parser$add_argument('--AllSamplesSizesForTest', metavar = 'Test Number', dest='AllinTest', default="None", help = "USe this flag if you want all the sample sizes run for a particular test")
 parser$add_argument('-CSV',dest='CSV',action="store_true")
 parser$add_argument('-latex',dest='latex',action="store_true")
+parser$add_argument('-v', '--verbose', dest='verbose', action="store_true")
+parser$add_argument('-q', '--quiet', dest='quiet', action="store_true")
+#--------------------------------------------------------------------------------------------------
+
 # ----- Parses the arguments and checks to see if they are valid -----
+cat("Hello\n")
 args <- parser$parse_args()
+if ((args$verbose && args$quiet)|| (!args$verbose && !args$quiet)) {
+	basicConfig(level=20)
+	logwarn("Invalid Flags or no flags given. Normal level of verbosity has been set")
+} else if (args$verbose == TRUE) {
+	basicConfig(level=10)
+	loginfo("Verbose mode activated")
+} else if (args$quiet == TRUE) {
+	basicConfig(level=30)
+	loginfo("Quiet mode activated")
+}
+cat("Hello2\n")
+# ------------------------------------------------
+# ------------------------------------------------
+# ----- Initialise All Logging Information -------
+# ------------------------------------------------
+# ------------------------------------------------
+addHandler(writeToFile,file="LogFiles/Test.Log",level=10)
+loginfo("-------------------------------------------------")
+loginfo(" --- PacketMetric.R Log -------------------------")
+loginfo("-------------------------------------------------")
 sampleSize <- args$sampleSize
 directory <- args$directory
 if (directory == "None") {
