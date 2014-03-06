@@ -234,8 +234,15 @@ result[,8] <- resultMinMATIE
 result[,9] <- resultMAFE
 result[,10] <- resultMinMATIE
 loginfo("Result Array Created")
-write.csv(result,file = paste("ResultCSV/Result_Test_", args$nTest,"_Size_",  args$sampleSize, ".csv",sep=""))
-#generateLatex(result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
-
+if (args$CSV){
+	loginfo("CSV File Requested") 
+	write.csv(result,file = paste("ResultCSV/Result_Test_", args$nTest,"_Size_",  args$sampleSize, ".csv",sep=""))
+	loginfo("CSV File Written")
+if (args$latex) {
+	loginfo("LaTeX Table Requested")
+	fileName <- paste("ResultLaTeX/Table_Test_", args$nTest, "_Size_", args$sampleSize, ".latex", sep="")
+	generateLatex(fileName,result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
+	loginfo("LaTeX table written")
+}
 #print(result) #Test line to print result
 
