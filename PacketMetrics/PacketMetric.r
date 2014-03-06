@@ -37,12 +37,12 @@ runHead <- function(sampleSize, directory){
 # ------------------------------------------------
 # ------------------------------------------------
 basicConfig()
-addHandler(writeToFile,logger="LoggerFile", file="Test.Log",level=10)
-#addHandler(writeToConsole,logger="Logger", level=10)
-loginfo("Test")
-logwarn("Warning bud")
-logdebug("CRITICAL BUD")
-logerror("OMG",logger="LoggerFile")
+addHandler(writeToFile,file="LogFiles/Test.Log",level=10)
+loginfo("-------------------------------------------------")
+loginfo(" --- PacketMetric.R Log -------------------------")
+loginfo("-------------------------------------------------")
+
+
 # ----- Initialises Variables -----
 sampleSize <- 0
 directory <- ""
@@ -57,19 +57,20 @@ parser$add_argument('-metric', metavar='metric', dest="metrics", default="TDEV",
 parser$add_argument('-delayDir', metavar='direction', dest="direction", default="Master2Slave", help = "What direction of delays do you want to base the metrics off? Master to Slave or Slave to Master")
 parser$add_argument('--AllTestsForSampleSize', metavar='Sample Size', dest='AllSampleSize', default="None", help="Use this flag if you want all tests to run for a set sample size")
 parser$add_argument('--AllSamplesSizesForTest', metavar = 'Test Number', dest='AllinTest', default="None", help = "USe this flag if you want all the sample sizes run for a particular test")
-
+parser$add_argument('-CSV',dest='CSV',action="store_true")
+parser$add_argument('-latex',dest='latex',action="store_true")
 # ----- Parses the arguments and checks to see if they are valid -----
 args <- parser$parse_args()
 sampleSize <- args$sampleSize
 directory <- args$directory
 if (directory == "None") {
 	if (args$nTest == -1){
-		cat("Error 1: You need either a directory or the test number\n")
+		logerror("Error 1: You need either a directory or the test number\n")
 		return (1)
 	}
 }
 if (sampleSize <= 0){
-	cat("Default sample size of 50 will be used\n")
+	logwarn("Default sample size of 50 will be used\n")
 	args$sampleSize <- 50
 	sampleSize <-args$sampleSize
 	# ---- Note: Strange that I need to do the above. will investigate. possibly to do with deep/shallow copying?
@@ -91,7 +92,7 @@ testSheet <- read.gnumeric.sheet(file = "../PTPData/TestData/TestSheets.ods",
 # ----- Checks if either Test number is 0 or if the test has not been added to the sheet -----
 # ----- The latter is performed to check if the value in testSheet is NA                 -----
 if (args$nTest == 0 || is.na(testSheet[args$nTest,3])){
-	cat(paste("Test Number", args$nTest, "not found. Defaulting to example data\n"))
+	logwarn(paste("Test Number", args$nTest, "not found. Defaulting to example data\n"))
 	args$nTest <- 0
 }
 # ----- Creates the fileName. Currently a relative path ------
@@ -119,27 +120,27 @@ if (args$direction == "Slave2Master") {
 
 # ----- At this point all arguments have been parsed successfully -----
 # ----- Attempts to read RawData file -----
-cat(paste("Filename to be read : ", fileName,"\n"))
+loginfo(paste("Filename to be read : ", fileName,"\n"))
 
-cat ("Attempting to Read in CSV Data...\n")
+loginfo("Attempting to Read in CSV Data...\n")
 ##### Implement in a simple while loop? breaking if works or return if false
 error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=",")) # Catches the error if read.csv fails
 if ("try-error" %in% class(error)) { #This is run if there's an error with the try-catch
-	cat("The file can not be found. This is most likely because the sample size file you requested does not exist. This file will be created.\n")
+	loginfo("The file can not be found. This is most likely because the sample size file you requested does not exist. This file will be created.\n")
 	# ---- Calls Head on the non-standard sampleSize
 	if (args$nTest == 0) runHead(args$sampleSize, "ExampleData")
 	else runHead(args$sampleSize,testSheet[args$nTest, 3])
-	cat("New Sample Size has been added. \n")
+	loginfo("New Sample Size has been added. \n")
 
 	# ----- Reads the data again to see if the file was created successfully -----
 	error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=","))
 	if ("try-error" %in% class(error)) {
-		cat("Error 2: Failed twice. will exit script\n")
+		logerror("Error 2: Failed twice. will exit script\n")
 		return(2)
 	}
 }	
 
-cat ("CSV Data has been written to Data variable\n")
+loginfo("CSV Data has been written to Data variable\n")
 
 delays <- as.matrix(Data[index]) # Currently taking only one of the delaus
 
@@ -192,7 +193,7 @@ for (i in 1:maxn){
 	resultMinMATIE[i] = RawResultMATIE[2]
 	resultMAFE[i] = RawResultMATIE[3]
 	resultMinMAFE[i] = RawResultMATIE[4]
-	cat (paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3), "\n" )) # Print line which prints the iteration time
+	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3), "\n" )) # Print line which prints the iteration time
 	
 }
 # ----- Extension of the main loop to handle the extra iterations needed for MATIE / MAFE
@@ -203,7 +204,7 @@ for (i in (maxn + 1) : maxNMATIE) {
 	resultMinMATIE[i] = RawResultMATIE[2]
 	resultMAFE[i] = RawResultMATIE[3]
 	resultMinMAFE[i] = RawResultMATIE[4]
-	cat (paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
+	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
 }
 
 #### Plotting needs to be handled better. flags for what to plot, different ranges
@@ -218,7 +219,7 @@ lines(resultPercentTDEV,type="o",col="orange")
 legend(1,rangeOfValues[2],c("TDEV", "minTDEV","bandTDEV","percentTDEV"), cex = 0.8,col=c("blue","red","green","orange"), pch=21:22, lty=1:2)
 dev.off()
 
-
+loginfo("Plot created")
 # ----- Create a CSV output file ------
 result <- matrix(0,ncol = 10, nrow = maxNMATIE)
 result[,1] <- seq(1,maxNMATIE)
@@ -232,8 +233,9 @@ result[,7] <- resultMATIE
 result[,8] <- resultMinMATIE
 result[,9] <- resultMAFE
 result[,10] <- resultMinMATIE
-
+loginfo("Result Array Created")
+write.csv(result,file = paste("ResultCSV/Result_Test_", args$nTest,"_Size_",  args$sampleSize, ".csv",sep=""))
 #generateLatex(result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
 
-print(result) #Test line to print result
+#print(result) #Test line to print result
 
