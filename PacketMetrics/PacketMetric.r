@@ -59,7 +59,6 @@ parser$add_argument('-q', '--quiet', dest='quiet', action="store_true")
 #--------------------------------------------------------------------------------------------------
 
 # ----- Parses the arguments and checks to see if they are valid -----
-cat("Hello\n")
 args <- parser$parse_args()
 if ((args$verbose && args$quiet)|| (!args$verbose && !args$quiet)) {
 	basicConfig(level=20)
@@ -71,7 +70,6 @@ if ((args$verbose && args$quiet)|| (!args$verbose && !args$quiet)) {
 	basicConfig(level=30)
 	loginfo("Quiet mode activated")
 }
-cat("Hello2\n")
 # ------------------------------------------------
 # ------------------------------------------------
 # ----- Initialise All Logging Information -------
@@ -134,9 +132,6 @@ if (args$direction == "Slave2Master") {
 } else {
 	index <- 4
 }
-
-
-
 
 # ----- At this point all arguments have been parsed successfully -----
 # ----- Attempts to read RawData file -----
