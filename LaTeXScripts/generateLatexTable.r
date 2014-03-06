@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
-generateLatex <- function(tableToPrint, headings,caption,label) {
+generateLatex <- function(fileName,tableToPrint, headings,caption,label) {
 	print(tableToPrint)
-	filePointer <- file("Table.latex")
+	filePointer <- file(fileName)
 	#Work out how many columns
 	x <- matrix("",nrow =  6)
 	x[1] <-("\\begin{table}[H]")
