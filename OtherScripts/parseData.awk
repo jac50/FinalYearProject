@@ -13,13 +13,12 @@ gsub(/:/," ",arrayFirstField[2])
 gsub(/:/," ", arraySecond[2])
 gsub(/-/, " ", arrayFirstField[1])
 gsub(/-/, " ", arraySecond[1])
-
-delta[0] = add_ms(arrayFirstField[2])
-delta[1] = add_ms(arraySecond[2])
+timeDelta = add_ms(arrayFirstField,arraySecond)
 
 
 #printf "%s to %s %g %g Test: %s\n",firstfield,$1,sum[1]/num,sum[2]/num, delta[1]; 
-printf "%s to %s %g %g Test: %s\n",firstfield,$1,sum[1]/num,sum[2]/num, abs((mktime(arraySecond[1] " " arraySecond[2]) + delta[1])  - (mktime(arrayFirstField[1] " " arrayFirstField[2]) + delta[0]));\
+#printf "%s to %s %g %g Test: %s\n",firstfield,$1,sum[1]/num,sum[2]/num, abs((mktime(arraySecond[1] " " arraySecond[2]) + delta[1])  - (mktime(arrayFirstField[1] " " arrayFirstField[2]) + delta[0]));\
+printf "%s to %s %g %g Test: %s\n",firstfield,$1,sum[1]/num,sum[2]/num, abs(timeDelta);\
 sum[1] = 0; \
 sum[2] = 0; \
 num = 0;\
@@ -28,11 +27,11 @@ lastfield = $1\
 }\
 
 END {if (num!=0) printf "%s to %s %g %g\n",firstfield,lastfield,sum[1]/num, sum[2]/num}
-function add_ms(time, 	delta) { 
-	split(time,delta, ".")
-	return (delta[2] / 1000)
-			
-
+function add_ms(time, time2, 	delta, delta2) { 
+	split(time[2],delta, ".");\
+	split(time2[2],delta2,".");\
+	if (delta[2] > delta[1]) return( (mktime(time2[1] " " time2[2]) + (delta2[2] / 1000))) - (mktime(time[1] " " time[2]) + (delta[2] / 1000));
+	else return ((mktime(time[1] " " time[2]) + (delta[2] / 1000)) - mktime(time2[1] " " time2[2]) + (delta2[2] / 1000));
 }
 function abs(value)
 {
