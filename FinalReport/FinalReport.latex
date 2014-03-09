@@ -148,27 +148,10 @@ Abstract goes here
 \end{tabular}
 \end{table}
 \section{Test Sheet Summary Sheet}
-
-\begin{table}[H]
-\begin{tabular} {|l|l|l|l|l|l|l|l|l|} \hline \\
-\cellcolor{Black}\textcolor{White}{\textbf{Test Number}} & 
-\cellcolor{Black}\textcolor{White}{\textbf{Directory}} &
-\cellcolor{Black}\textcolor{White}{\textbf{Master}} &
-\cellcolor{Black}\textcolor{White}{\textbf{Slave}} &
-\cellcolor{Black}\textcolor{White}{\textbf{Location Master}} &
-\cellcolor{Black}\textcolor{White}{\textbf{Location Slave}} &
-\cellcolor{Black}\textcolor{White}{\textbf{Start Time}} &
-\cellcolor{Black}\textcolor{White}{\textbf{End Time}} &
-\cellcolor{Black}\textcolor{White}{\textbf{Status}} \\ \hline
-001 & 27/02/14 & TimePort-To-Software-Test1 & TimePort\_1 & PTPd\_Netbook & 2E .. & 2E 2.13 & 1037 & 1720 & \cellcolor{Green}{Finished} \\ \hline
-002 & 28/02/14 & TimePort-To-Software-Test2 & TimePort\_1 & PTPd\_Netbook & 2E .. & 2E 2.13 & 1140 & 1700 & \cellcolor{Green}{Finished} \\ \hline
-003 & 28/02/14 & TimePort-To-Software-Test3 & TimePort\_1 & PTPd\_Desktop & 2E .. & 2E 4. & 1015 & .. & \cellcolor{Yellow}{In Progress} \\ \hline
-004 & 03/03/14 & TimePort-To-Software-Test4 & TimePort\_1 & PTPd\_Netbook & 2E .. & 2E 2.13 & 0810 & 1400 & \cellcolor{Green}{Finished} \\ \hline
-005 & 03/03/14 & TimePort-To-Software-Test5 & TimePort\_1 & PTPd\_Netbook & 2E .. & Library & 0929 & 1702 & \cellcolor{Green}{Finished} \\ \hline
-006 & 03/03/14 & TimePort-To-Beaglebone-Test1 & TimePort\_1 & Beaglebone\_1 & 2E .. & 2E 4.. & Unknown &  & \cellcolor{Green}{Finished} \\ \hline
-007 & 04/03/14 & TimePort-To-Software-Test6 & TimePort\_1 & PTPd\_Netbook & 2E .. & 2E 2.13 & 1217 & 1728 & \cellcolor{Green}{Finished} \\ \hline
-008 & 05/03/14 & TimePort-To-Beaglebone-Test2 & TimePort\_1 & Beaglebone\_1 & 2E .. & 2E 2.13 & Unknown &  & \cellcolor{Green}{In Progress} \\ \hline
-009 & 05/03/14 & TimePort-To-Software-Test7 & TimePort\_1 & PTPd\_Netbook & 2E .. & 2E 2.13 &  &  & \cellcolor{Green}{In Progress} \\ \hline
+\input{SummaryTestSheet.latex}
+\section{Main Packet Metric Script}
+\section{TDEVAllMethods}
+\section{MATIEAllMethods}
 \end{appendices}
 \end{document}
 
