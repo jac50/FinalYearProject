@@ -18,5 +18,7 @@
 007 & 04/03/14 & TimePort-To-Software-Test6 & TimePort\_1 & PTPd\_Netbook & 2E .. & 2E 2.13 & 1217 & 1728 & \cellcolor{Green}{Finished} \\ \hline
 008 & 05/03/14 & TimePort-To-Beaglebone-Test2 & TimePort\_1 & Beaglebone\_1 & 2E .. & 2E 2.13 & Unknown &  & \cellcolor{Green}{In Progress} \\ \hline
 009 & 05/03/14 & TimePort-To-Software-Test7 & TimePort\_1 & PTPd\_Netbook & 2E .. & 2E 2.13 &  &  & \cellcolor{Green}{In Progress} \\ \hline
+\end{tabular}
+\end{table}
 
 
