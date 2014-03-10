@@ -41,4 +41,27 @@ createArguments <- function(sampleSize,directory){
 	#--------------------------------------------------------------------------------------------------
 	return (parser)
 }
+initLogger<- function(quiet,verbose){
+
+	if ((args$verbose && args$quiet)|| (!args$verbose && !args$quiet)) {
+		basicConfig(level=20)
+		logwarn("Invalid Flags or no flags given. Normal level of verbosity has been set")
+	} else if (args$verbose == TRUE) {
+		basicConfig(level=10)
+		loginfo("Verbose mode activated")
+	} else if (args$quiet == TRUE) {
+		basicConfig(level=30)
+		loginfo("Quiet mode activated")
+	}
+	# ------------------------------------------------
+	# -----------------------------------------------
+	# ----- Initialise All Logging Information -------
+	# ------------------------------------------------
+	# ------------------------------------------------
+	addHandler(writeToFile,file="LogFiles/Test.Log",level=10)
+	loginfo("-------------------------------------------------")
+	loginfo(" --- PacketMetric.R Log -------------------------")
+	loginfo("-------------------------------------------------")
+
+}
 
