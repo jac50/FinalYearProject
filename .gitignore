@@ -36,3 +36,5 @@ ptpd-2.2.0/
 *.tgz
 *.o
 *.so
+*.exe
+*.tar.gz
