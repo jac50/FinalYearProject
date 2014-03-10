@@ -21,11 +21,11 @@ TDEVAll <- function(To,n, N,x,a,b){
 	result <- c(0,0,0,0)
 	for (i in windowSide+1:(N-3*n + 1) - windowSide){
 		interimStep <- c(0,0,0,0)	
-			interimStep[1] <- interimStep[1] + mean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* mean(x[i+n - windowSide : i + n + windowSide]) + mean(x[i - windowSide : i + windowSide])
+			interimStep[1] <- interimStep[1] + mean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* mean(x[i+n - windowSide : i + n + windowSide]) + mean(x[i - windowSide : i + windowSide]) #TDEV (mean)
 			
-			interimStep[2] <- interimStep[2] + min(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* min(x[i+n - windowSide : i + n + windowSide]) + min(x[i - windowSide : i + windowSide])
-			interimStep[3] <- interimStep[3] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],a,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],a,b) + bandMean(x[i - windowSide : i + windowSide],a,b)
-		interimStep[4] <- interimStep[4] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],0,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],0,b) + bandMean(x[i - windowSide : i + windowSide],0,b)
+			interimStep[2] <- interimStep[2] + min(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* min(x[i+n - windowSide : i + n + windowSide]) + min(x[i - windowSide : i + windowSide]) #minTDEV
+			interimStep[3] <- interimStep[3] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],a,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],a,b) + bandMean(x[i - windowSide : i + windowSide],a,b) #bandTDEV
+		interimStep[4] <- interimStep[4] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],0,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],0,b) + bandMean(x[i - windowSide : i + windowSide],0,b) #percentileTDEV
 		
 		for (k in 1:4){
 			interimStep[k] <- interimStep[k] ^ 2
