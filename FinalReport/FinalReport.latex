@@ -105,17 +105,126 @@ Abstract goes here
 \end{acronym}
 
 \newpage
-\section*{Symbols}
+
+\section*{Acronyms}
+\begin{acronym}
+\acro{CSMA/CD}{Carrier Sense Multiple Access with Collision Detection}
+\acro{GM}{Grandmaster}
+\acro{GPS}{Global Positioning System}
+\acro{IEEE}{Institute of Electrical and Electronic Engineers}
+\acro{ITU}{International Telecommunication Union}
+\acro{LAN}{Local Area Network}
+\acro{NERC}{North American Electric Reliability Company}
+\acro{NTP}{Network Time Protocol}
+\acro{PPS}{Pulse per Second}
+\acro{PTP}{Precision Time Protocol}
+\acro{PTPd}{PTP Daemon}
+\acro{SNTP}{Simple Network Time Protocol}
+\acro{TDEV}{Time Deviation}
+\acro{UTC}{Coordinated Universal Time}
+\end{acronym}
+
 \listoffigures
 \listoftables
 
 \section{Introduction}
 
-\subsection{Aims and Objectives}
-\subsection{Deliverables}
+*Brief Introduction to synchronising time
+
+*Mention different technologies used to do the above. make sure to mention what this relies on (GPS)
+
+Explain PTP Briefly
+
+\subsection{Project Description}
+Explain the project in more detail
+
+List aims and objectives
+
+Deliverables
+
+\subsection{How PTP Works}
 \section{Literature Review? (kind of)}
+
+Explain why the lit review is required
+\subsection{Lit Review for Packet Metric}
+Lit review for packet metric 
+\subsection{Other Relevant Reading}
+Other Reports mentioned in interim report
+
+cryptography ?
+
+
 \section{Project Methods}
+
+*Split methods into 3 sections: data collection, packet methods, and Calculating Results
+\subsection{Data Collection}
+
+- explain briefly what will be collected
+- hardware available 
+\subsubsection{Hardware - Timeport \cite{TimePort}}
+
+brief explanation of the timeport (take from the datasheet + other sheets provided)
+
+Photo of clock with a labels on clock
+
+Explain how to interface with the clock, with commands to do the basic operations. *may put in appendix*
+\subsubsection{Hardware - Syncwatch \cite{Syncwatch}}
+
+Same as above
+\subsubsection{Hardware - Beaglebone Black \cite{BBB}}
+
+Same as above
+\subsubsection{Software - PTPd}
+
+Same as above
+
+\subsubsection{Test Sheets}
+
+explain brief reason as to why test sheets will be used.
+stored in excel
+
+post example of one of the overall test sheets and the individual test sheets.
+
+
+\subsubsection{Testing Schedule}
+
+*list types of tests wanting to be run
+*tabulate locations + clock types? (rough dates/times maybe)
+
+\subsection{Packet Methods}
+* explain briefly the packets are used, and refer to report
+*explain which packets will be chosen (why they were chosen)
+*list all metrics that will be implemented
+\subsubsection{Choosing a suitable language}
+
+*ranking tables to choose the correct language
+
+\subsubsection{General Packet Implementation}
+
+\subsubsection{TDEV and TDEV derivatives}
+
+\subsubsection{MATIE and MAFE derivatives}
+
+\subsubsection{Overall Packet Script}
+
+\subsubsection{Testing}
+
+\subsubsection{Optimisation}
+
+
+\subsection{Calculating Results}
+*explain workflow of collecting data
+\subsubsection{Other Utility Scripts}
+
+explain what utility scripts otherwise not mentioned above that will be used.
+
+Rsync Script
+
+Awk Data Parser
+
 \section{Results}
+
+*explain results
 \section{Milestones}
 \section{Discussion}
 \section{Conclusion}
