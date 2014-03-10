@@ -4,11 +4,7 @@ BEGIN {
 if (RATIO < 0 || RATIO > 1000000) print "Illegal value of ratio. Will default to 10\n" > "/dev/stderr";\
 if (RATIO == 0) print "RATIO variable not found. will default to 10" > "/dev/stderr" ;\
 if (!(RATIO ~ /^[0-9]+$/)) print "RATIO must be an integer. Defaulted to 10" > "/dev/stderr"; 
-
 FS = ","; RATIO==10; num=0; sum[0]=0; sum[1]=0;
-	
-
-
 };\
 {\
 if (num==0) { firstfield = $1}; \
