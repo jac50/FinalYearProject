@@ -477,3 +477,40 @@
 2014-03-10 17:01:50 INFO::Iteration 4 complete in Time: 0.16
 2014-03-10 17:01:50 INFO::Iteration 5 complete in Time: 0.176
 2014-03-10 17:01:50 INFO::Iteration 6 complete in Time: 0.152
+2014-03-10 17:09:24 INFO::-------------------------------------------------
+2014-03-10 17:09:24 INFO::--- PacketMetric.R Log -------------------------
+2014-03-10 17:09:24 INFO::-------------------------------------------------
+2014-03-10 17:09:32 WARNING::Test Number 0 not found. Defaulting to example data
+2014-03-10 17:09:32 INFO::Filename to be read :  ../PTPData/TestData/ExampleData/SampleSize_60.txt
+2014-03-10 17:09:32 INFO::Attempting to Read in CSV Data...
+2014-03-10 17:09:32 INFO::CSV Data has been written to Data variable
+2014-03-10 17:09:33 INFO::Iteration 1 complete in Time: 0.184
+2014-03-10 17:09:33 INFO::Iteration 2 complete in Time: 0.184
+2014-03-10 17:09:33 INFO::Iteration 3 complete in Time: 0.168
+2014-03-10 17:09:33 INFO::Iteration 4 complete in Time: 0.156
+2014-03-10 17:09:33 INFO::Iteration 5 complete in Time: 0.144
+2014-03-10 17:09:33 INFO::Iteration 6 complete in Time: 0.144
+2014-03-10 17:09:34 INFO::Iteration 7 complete in Time: 0.172
+2014-03-10 17:09:34 INFO::Iteration 8 complete in Time: 0.128
+2014-03-10 17:09:34 INFO::Iteration 9 complete in Time: 0.128
+2014-03-10 17:09:34 INFO::Iteration 10 complete in Time: 0.112
+2014-03-10 17:09:34 INFO::Iteration 11 complete in Time: 0.104
+2014-03-10 17:09:34 INFO::Iteration 12 complete in Time: 0.112
+2014-03-10 17:09:34 INFO::Iteration 13 complete in Time: 0.088
+2014-03-10 17:09:34 INFO::Iteration 14 complete in Time: 0.104
+2014-03-10 17:09:34 INFO::Iteration 15 complete in Time: 0.08
+2014-03-10 17:09:34 INFO::Iteration 16 complete in Time: 0.076
+2014-03-10 17:09:35 INFO::Iteration 17 complete in Time: 0.116
+2014-03-10 17:09:35 INFO::Iteration 18 complete in Time: 0.06
+2014-03-10 17:09:35 INFO::Iteration 19 complete in Time: 0.048
+2014-03-10 17:09:35 INFO::Iteration 20 complete in Time: 0.04
+2014-03-10 17:09:35 INFO::Iteration 21 complete in Time: 0.04
+2014-03-10 17:09:35 INFO::Iteration 22 complete in Time: 0.032
+2014-03-10 17:09:35 INFO::Iteration 23 complete in Time: 0.028
+2014-03-10 17:09:35 INFO::Iteration 24 complete in Time: 0.02
+2014-03-10 17:09:35 INFO::Iteration 25 complete in Time: 0.02
+2014-03-10 17:09:35 INFO::Iteration 26 complete in Time: 0.016
+2014-03-10 17:09:35 INFO::Iteration 27 complete in Time: 0.008
+2014-03-10 17:09:35 INFO::Iteration 28 complete in Time: 0.004
+2014-03-10 17:09:35 INFO::Plot created
+2014-03-10 17:09:35 INFO::Result Array Created
