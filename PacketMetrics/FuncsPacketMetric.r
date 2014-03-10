@@ -65,3 +65,45 @@ initLogger<- function(quiet,verbose){
 
 }
 
+parseFileName <- function(nTest,directory,column    ) {
+
+	# ----- Reads in the Summary Test Sheet -----
+	testSheet <- read.gnumeric.sheet(file = "../PTPData/TestData/TestSheets.ods", 
+				 sheet.name="Summary Sheet",
+				top.left='B3',
+				bottom.right='D30',
+				drop.empty.rows='bottom')
+
+	# Currenty using only 27 rows, but it may be possible to do this dynamically. Or maybe just use a large number provided that isn't too inefficient
+
+	# ----- Checks if either Test number is 0 or if the test has not been added to the sheet -----
+	# ----- The latter is performed to check if the value in testSheet is NA                 -----
+	if (nTest == 0 || is.na(testSheet[nTest,3])){
+		logwarn(paste("Test Number", args$nTest, "not found. Defaulting to example data\n"))
+		nTest <- 0
+	}
+	# ----- Creates the fileName. Currently a relative path ------
+	fileName <- ""				
+	if (directory != "None"){
+		fileName = paste("../PTPData/TestData/",directory,"/SampleSize_", sampleSize,".txt",sep="")
+
+	} else if (args$nTest == 0) {
+		fileName = paste("../PTPData/TestData/ExampleData/SampleSize_", args$sampleSize, ".txt",sep="")
+
+	} else {
+		
+		fileName = paste("../PTPData/TestData/", testSheet[args$nTest,3], "/SampleSize_", args$sampleSize,".txt", sep="")
+	}
+	index <- 4 #default index for Data delays. 4 for Master to Slave. 6 for Slave to Master
+	if (column == "Slave2Master") { 
+		index <- 6
+		#index <- 2 New data set
+	} else {
+		index <- 4
+	}
+	returnValue<- list("fileName" = fileName, "nTest" = nTest, "index" = index)
+	return (returnValue)
+
+}	
+
+
