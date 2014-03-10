@@ -16,8 +16,8 @@ gsub(/-/, " ", arraySecond[1])
 timeDelta = add_ms(arrayFirstField,arraySecond)
 
 
-#printf "%s to %s %g %g Test: %s\n",firstfield,$1,sum[1]/num,sum[2]/num, abs((mktime(arraySecond[1] " " arraySecond[2]) + delta[1])  - (mktime(arrayFirstField[1] " " arrayFirstField[2]) + delta[0]));\
-printf "%s to %s %g %g Test: %s\n",firstfield,$1,sum[1]/num,sum[2]/num, abs(timeDelta);\
+printf "%s %g %g \n",abs(timeDelta),sum[1]/num,sum[2]/num;\
+#printf "%s to %s %g %g Test: %s\n",firstfield,$1,sum[1]/num,sum[2]/num, abs(timeDelta);\
 sum[1] = 0; \
 sum[2] = 0; \
 num = 0;\
