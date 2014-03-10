@@ -25,7 +25,6 @@ gsub(/-/, " ", arrayFirstField[1])
 gsub(/-/, " ", arraySecond[1])
 timeDelta = add_ms(arrayFirstField,arraySecond)
 
-printf "Ratio is %g", RATIO
 printf "%s %g %g \n",abs(timeDelta),sum[1]/num,sum[2]/num;\
 #printf "%s to %s %g %g Test: %s\n",firstfield,$1,sum[1]/num,sum[2]/num, abs(timeDelta);\
 sum[1] = 0; \
