@@ -1,6 +1,16 @@
 #!/usr/bin/awk -f
 
-BEGIN {FS = ","; RATIO=10; num=0; sum[0]=0; sum[1]=0;};\
+BEGIN {
+if (RATIO < 0 || RATIO > 1000000) print "Illegal value of ratio. Will default to 10\n" > "/dev/stderr";\
+if (RATIO == 0) print "RATIO variable not found. will default to 10" > "/dev/stderr" ;\
+	
+
+
+FS = ","; RATIO=10; num=0; sum[0]=0; sum[1]=0;
+	
+
+
+};\
 {\
 if (num==0) { firstfield = $1}; \
 num = num + 1;\
@@ -15,7 +25,7 @@ gsub(/-/, " ", arrayFirstField[1])
 gsub(/-/, " ", arraySecond[1])
 timeDelta = add_ms(arrayFirstField,arraySecond)
 
-
+printf "Ratio is %g", RATIO
 printf "%s %g %g \n",abs(timeDelta),sum[1]/num,sum[2]/num;\
 #printf "%s to %s %g %g Test: %s\n",firstfield,$1,sum[1]/num,sum[2]/num, abs(timeDelta);\
 sum[1] = 0; \
