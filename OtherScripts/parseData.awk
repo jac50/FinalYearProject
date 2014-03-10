@@ -30,7 +30,21 @@ num = 0;\
 lastfield = $1\
 }\
 
-END {if (num!=0) printf "%s %g %g \n",abs(timeDelta),sum[1]/num, sum[2]/num}
+END {	
+	if (num != 0) {
+
+		split(firstfield,arrayFirstField," ")
+		split($1,arraySecond," ")
+		gsub(/:/," ",arrayFirstField[2])
+		gsub(/:/," ", arraySecond[2])
+		gsub(/-/, " ", arrayFirstField[1])
+		gsub(/-/, " ", arraySecond[1])
+		timeDelta = add_ms(arrayFirstField,arraySecond)
+		print num
+		printf "%s %g %g \n",abs(timeDelta),sum[1]/num, sum[2]/num
+	}
+
+}
 function add_ms(time, time2, 	delta, delta2) { 
 	split(time[2],delta, ".");\
 	split(time2[2],delta2,".");\
