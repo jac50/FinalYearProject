@@ -18,19 +18,9 @@ source("TDEV.r")
 source("minTDEV.r")
 source("TDEVAllMethods.r")
 source("MATIEAllMethods.r")
+source("FuncsPacketMetric.r")
 dyn.load("TDEV.so") # C function
 cat("Loaded Required Scripts\n")
-# ----------------------------------------------
-# -     Function: runHead                      -
-# -     Description: calls linux function head -
-# -     Input: sampleSize, directory           -
-# -     Output: none                           -
-# ----------------------------------------------
-runHead <- function(sampleSize, directory){
-	system(paste("head -n ", sampleSize, " /home/james/FinalYearProject/PTPData/TestData/", directory, "/RawData.txt", " > /home/james/FinalYearProject/PTPData/TestData/", directory, "/SampleSize_", sampleSize, ".txt", sep="")) # System call of head
-	cat("Head has been run\n")
-	return(0)
-}
 # ------------------------------------------------
 # ------------------------------------------------
 # ----- Initialise All Logging Information -------
@@ -167,6 +157,7 @@ time   <- as.matrix(Data[0]) #Taking the time in preparation for using new file 
 To <- 1/16 #Assume To = 1/16  
 # ---- Removes Init Messages and the first value -----
 
+#--------------------------------------------------------------------------
 delays = delays[-1] # remove for new file type
 delays = delays[-1]
 delays = delays[-1]
@@ -263,4 +254,3 @@ if (args$latex) {
 	loginfo("LaTeX table written")
 }
 #print(result) #Test line to print result
-
