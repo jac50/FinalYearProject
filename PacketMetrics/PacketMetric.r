@@ -167,7 +167,7 @@ time   <- as.matrix(Data[0]) #Taking the time in preparation for using new file 
 To <- 1/16 #Assume To = 1/16  
 # ---- Removes Init Messages and the first value -----
 
-delays = delays[-1] 
+delays = delays[-1] # remove for new file type
 delays = delays[-1]
 delays = delays[-1]
 N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
