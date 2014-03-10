@@ -1,0 +1,8 @@
+resultSimpleOps <- function(data,operations){
+	
+
+
+
+}
+
+
