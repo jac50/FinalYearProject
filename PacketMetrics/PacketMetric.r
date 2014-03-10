@@ -129,8 +129,10 @@ if (directory != "None"){
 index <- 4 #default index for Data delays. 4 for Master to Slave. 6 for Slave to Master
 if (args$direction == "Slave2Master") { 
 	index <- 6
+	#index <- 2 New data set
 } else {
 	index <- 4
+	#index <- 1 new data set
 }
 
 # ----- At this point all arguments have been parsed successfully -----
@@ -158,6 +160,7 @@ if ("try-error" %in% class(error)) { #This is run if there's an error with the t
 loginfo("CSV Data has been written to Data variable\n")
 
 delays <- as.matrix(Data[index]) # Currently taking only one of the delaus
+time   <- as.matrix(Data[0]) #Taking the time in preparation for using new file type
 
 ##### - May need to be dynamic To ? or at least an option to change / work out #####
 
