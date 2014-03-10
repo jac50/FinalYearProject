@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "Sample Size Script Generator Started.."
 echo "Awk Script to split file into its usable components Started."
-awk 'BEGIN { printf "Time   One Way Delay   OFfset From Master, Slave to Master, MAster to Slave" 
+awk 'BEGIN { printf "Time   One Way Delay   Offset From Master, Slave to Master, MAster to Slave" 
 		printf"-----------------------" }
 
 {print $2, $5 $6, $7, $8}' /home/james/FinalYearProject/PTPData/TestData/ExampleData/timeport_to_software_example.txt > Test.txt
