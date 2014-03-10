@@ -55,44 +55,6 @@ tempResult <- parseFileName(args$nTest, args$directory, args$direction)
 fileName <- tempResult$fileName
 args$nTest <- tempResult$nTest
 index <- tempResult$index
-# ----- Reads in the Summary Test Sheet -----
-
-#testSheet <- read.gnumeric.sheet(file = "../PTPData/TestData/TestSheets.ods", 
-#				 sheet.name="Summary Sheet",
-#				top.left='B3',
-#				bottom.right='D30',
-#				drop.empty.rows='bottom')
-
-# Currenty using only 27 rows, but it may be possible to do this dynamically. Or maybe just use a large number provided that isn't too inefficient
-
-# ----- Checks if either Test number is 0 or if the test has not been added to the sheet -----
-# ----- The latter is performed to check if the value in testSheet is NA                 -----
-#if (args$nTest == 0 || is.na(testSheet[args$nTest,3])){
-#	logwarn(paste("Test Number", args$nTest, "not found. Defaulting to example data\n"))
-#	args$nTest <- 0
-#}
-# ----- Creates the fileName. Currently a relative path ------
-				
-#if (directory != "None"){
-#	fileName = paste("../PTPData/TestData/",directory,"/SampleSize_", sampleSize,".txt",sep="")
-
-#} else if (args$nTest == 0) {
-#	fileName = paste("../PTPData/TestData/ExampleData/SampleSize_", args$sampleSize, ".txt",sep="")
-#
-#} else {
-#	
-#	fileName = paste("../PTPData/TestData/", testSheet[args$nTest,3], "/SampleSize_", args$sampleSize,".txt", sep="")
-#}
-
-#index <- 4 #default index for Data delays. 4 for Master to Slave. 6 for Slave to Master
-#if (args$direction == "Slave2Master") { 
-#	index <- 6
-	#index <- 2 New data set
-#}# else {
-#	index <- 4
-	#index <- 1 new data set
-#}
-#---------------------------------------------------------------------------------------------------------------------------------
 # ----- At this point all arguments have been parsed successfully -----
 # ----- Attempts to read RawData file -----
 cat(paste("Filename to be read : ", fileName,"\n"))
