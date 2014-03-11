@@ -68,6 +68,9 @@ delays <- dataPacket$delays
 time <- dataPacket$time
 N <- dataPacket$N
 
+#---- Currently To == Time, but will sort out once I understand what to do with To ----
+
+
 # ---- Set restrictions based on document ------
 maxn <- floor(N / 3)
 maxNMATIE <- floor(N/2)
