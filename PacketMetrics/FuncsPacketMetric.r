@@ -155,20 +155,25 @@ purgeData <- function(Data) {
 }
 
 plotArray <- function(values) {
+	#Global Vars: args$nTest, N, 
 	rangeOfValues <- range(0,values) #Determines a max range for the plot
-	outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
+	if (values == ResultsTDEV) metric = "TDEV" #TDEV
+	else metric = "MATIE/MAFE"
+	outputFileName = paste("../PTPData/Plots/Test: ", args$nTest, " - ", metric, " - ", N, " size.eps",sep = "")
 	postscript(outputFileName)
 	plottingColours = rainbow(ncol(values))
-	plot(values[,1], type='o',col=plottingColours[1],log="xy")
+	plot(values[,1], type='+',xaxt='n', l=plottingColours[1],log="xy")
 	for (i in 2:ncol(values)) { 
 		#if (values[1,i] == 0) {
 		#	loginfo("Column Ignored")
 		#	continue
 		#}
-		lines(values[,i], type='o',col=plottingColours[i])
+		lines(values[,i], type='+',col=plottingColours[i])
 	}
-	legend("topleft", rangeOfValues[2],colnames(values), cex = 0.8,col=plottingColours)
-	#dev.off()
+	legend(1,max(values[,1:]), rangeOfValues[2],c("Index", "Metric Value"), colnames(values), cex = 0.8,col=plottingColours, lty=1, pch=1, title="Metrics Legend",box.lwd = 0,box.col = "white",bg = "white") 
+	if (metric == "TDEV") title(main=paste("Packet Metrics - TDEV - Sample Size", sampleSize,ylab="Metric Value", xlab="Index/Time"))
+	else title(main=paste("Packet Metrics - MATIE/MAFE - Sample Size", sampleSize,ylab="Metric Value", xlab="Index/Time"))
+	dev.off()
 	loginfo("Plot Created")
 }
 
