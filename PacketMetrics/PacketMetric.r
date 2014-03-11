@@ -74,7 +74,7 @@ N <- dataPacket$N
 # ---- Set restrictions based on document ------
 maxn <- floor(N / 3)
 maxNMATIE <- floor(N / 2)
-# ---- Initialise Variables
+# -------------- Initialise Variables ----------------------
 RawResult <- c(0,0,0,0)
 RawResultMATIE <- c(0,0,0,0)
 ResultTDEV <- matrix(0, nrow = maxn, ncol = 5)
@@ -84,9 +84,6 @@ colnames(ResultMATIEMAFE) <- c("MATIE", "MAFE", "MinMATIE", "MinMAFE")
 
 a <- 20
 b <- 80
-### Might need to refactor the below into its own results matrix ###
-#------------------------------------------------------------------------
-# -------------------------------------------------------------------
 # ----- Main Loop. Loop from 1 to maxn -------
 for (i in 1:maxn){
 	ptm <- proc.time() # Read current time
@@ -122,17 +119,20 @@ for (i in (maxn + 1) : maxNMATIE) {
 #print(ResultTDEV)
 #### Plotting needs to be handled better. flags for what to plot, different ranges
 # ------ Plotting the results -------
-rangeOfValues <- range(0,ResultTDEV) #Determines a max range for the plot
-outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
-postscript(outputFileName)
-plot(ResultTDEV[,1],type="o", col="red",log="xy")
-lines(ResultTDEV[,3],type="o",col="blue")
-lines(ResultTDEV[,4],type="o",col="green")
-lines(ResultTDEV[,5],type="o",col="orange")
-legend(1,rangeOfValues[2],c("TDEV", "minTDEV","bandTDEV","percentTDEV"), cex = 0.8,col=c("blue","red","green","orange"), pch=21:22, lty=1:2)
-dev.off()
 
-loginfo("Plot created")
+plotArray(ResultTDEV)
+#plotArray(ResultMATIEMAFE)
+#rangeOfValues <- range(0,ResultTDEV) #Determines a max range for the plot
+#outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
+#postscript(outputFileName)
+#plot(ResultTDEV[,1],type="o", col="red",log="xy")
+#lines(ResultTDEV[,3],type="o",col="blue")
+#lines(ResultTDEV[,4],type="o",col="green")
+#lines(ResultTDEV[,5],type="o",col="orange")
+#legend(1,rangeOfValues[2],c("TDEV", "minTDEV","bandTDEV","percentTDEV"), cex = 0.8,col=c("blue","red","green","orange"), pch=21:22, lty=1:2)
+#dev.off()
+
+#loginfo("Plot created")
 # ----- Create a CSV output file ------
 result <- matrix(0,ncol = 10, nrow = maxNMATIE)
 result[,1] <- seq(1,maxNMATIE) #currently datapoints - not time axis
