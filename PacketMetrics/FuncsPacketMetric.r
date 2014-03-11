@@ -101,9 +101,33 @@ parseFileName <- function(nTest,directory,column    ) {
 	} else {
 		index <- 4
 	}
-	returnValue<- list("fileName" = fileName, "nTest" = nTest, "index" = index)
+	returnValue<- list("fileName" = fileName, "nTest" = nTest, "index" = index,"testSheet" = testSheet)
 	return (returnValue)
 
 }	
+
+readFile <- function(fileName, nTest, sampleSize, testSheet){
+
+	cat(paste("Filename to be read : ", fileName,"\n"))
+
+	loginfo("Attempting to Read in CSV Data...\n")
+	error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=",")) # Catches the error if read.csv fails
+	if ("try-error" %in% class(error)) { 
+		loginfo("The file can not be found. This is most likely because the sample size file you requested does not exist. This file will be created.\n")
+		# ---- Calls Head on the non-standard sampleSize
+		if (args$nTest == 0) runHead(args$sampleSize, "ExampleData")
+		else runHead(args$sampleSize,testSheet[args$nTest, 3])
+	
+		# ----- Reads the data again to see if the file was created successfully -----
+		error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=","))
+		if ("try-error" %in% class(error)) {
+			logerror("Error 2: Failed twice. will exit script\n")
+			return(2)
+		}
+	}
+	return(Data)	
+	loginfo("CSV Data has been written to Data variable\n")
+
+}
 
 
