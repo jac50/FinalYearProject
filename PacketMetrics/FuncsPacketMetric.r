@@ -130,4 +130,27 @@ readFile <- function(fileName, nTest, sampleSize, testSheet){
 
 }
 
+purgeData <- function(Data) {
+	#----- Work out what type of file is Data (ie new file type or old)
+	if (ncol(Data) == 9) {
+		loginfo("Parsing Old File Type.")
+		#Index is global. careful...
+		delays <- as.matrix(Data[index]) # Currently taking only one of the delays
+		time <- 1/16 #Fixed Value
+		delays = delays[-1] # remove for new file type
+		delays = delays[-1]
+		delays = delays[-1]
+		N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
+	} else if (ncol(Data == 3)) {
+		loginfo("Parsing New File Type.")
+	        time <- as.matrix(Data[0])
+		delays <- as.matrix(Data[index])
+		N <- as.numeric(dim(time))
+		
+	}
+	
+	returnValue<- list("delays" = delays, "N" = N, "time" = time)
+	return (returnValue)
+
+}
 
