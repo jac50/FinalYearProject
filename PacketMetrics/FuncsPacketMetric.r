@@ -154,3 +154,20 @@ purgeData <- function(Data) {
 
 }
 
+plotArray <- function(values) {
+	rangeOfValues <- range(0,values) #Determines a max range for the plot
+	outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
+	postscript(outputFileName)
+	plottingColours = rainbow(ncol(values))
+	plot(values[,1], type='o',col=plottingColours[1],log="xy")
+	for (i in 2:ncol(values)) { 
+		#if (values[1,i] == 0) {
+		#	loginfo("Column Ignored")
+		#	continue
+		#}
+		lines(values[,i], type='o',col=plottingColours[i])
+	}
+	legend("topleft", rangeOfValues[2],colnames(values), cex = 0.8,col=plottingColours)
+	#dev.off()
+	loginfo("Plot Created")
+}
