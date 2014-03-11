@@ -122,39 +122,20 @@ for (i in (maxn + 1) : maxNMATIE) {
 
 plotArray(ResultTDEV)
 #plotArray(ResultMATIEMAFE)
-#rangeOfValues <- range(0,ResultTDEV) #Determines a max range for the plot
-#outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
-#postscript(outputFileName)
-#plot(ResultTDEV[,1],type="o", col="red",log="xy")
-#lines(ResultTDEV[,3],type="o",col="blue")
-#lines(ResultTDEV[,4],type="o",col="green")
-#lines(ResultTDEV[,5],type="o",col="orange")
-#legend(1,rangeOfValues[2],c("TDEV", "minTDEV","bandTDEV","percentTDEV"), cex = 0.8,col=c("blue","red","green","orange"), pch=21:22, lty=1:2)
-#dev.off()
 
-#loginfo("Plot created")
+result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
+
+error <- outputTable(result,args$CSV, args$latex)
+
 # ----- Create a CSV output file ------
-result <- matrix(0,ncol = 10, nrow = maxNMATIE)
-result[,1] <- seq(1,maxNMATIE) #currently datapoints - not time axis
-result[,2] <- c(ResultTDEV[,1], rep(0,maxNMATIE - maxn))
-result[,3] <- c(ResultTDEV[,2], rep(0,maxNMATIE - maxn))
-
-result[,4] <- c(ResultTDEV[,3], rep(0,maxNMATIE - maxn))
-result[,5] <- c(ResultTDEV[,4], rep(0,maxNMATIE - maxn))
-result[,6] <- c(ResultTDEV[,5], rep(0,maxNMATIE - maxn))
-result[,7] <-  ResultMATIEMAFE[,1]
-result[,8] <-  ResultMATIEMAFE[,2]
-result[,9] <-  ResultMATIEMAFE[,3]
-result[,10] <- ResultMATIEMAFE[,4]
-loginfo("Result Array Created")
-if (args$CSV){
-	loginfo("CSV File Requested") 
-	write.csv(result,file = paste("ResultCSV/Result_Test_", args$nTest,"_Size_",  args$sampleSize, ".csv",sep=""))
-	loginfo("CSV File Written")
-if (args$latex) {
-	loginfo("LaTeX Table Requested")
-	fileName <- paste("ResultLaTeX/Table_Test_", args$nTest, "_Size_", args$sampleSize, ".latex", sep="")
-	generateLatex(fileName,result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
-	loginfo("LaTeX table written")
-}
+#if (args$CSV){
+#	loginfo("CSV File Requested") 
+#	write.csv(result,file = paste("ResultCSV/Result_Test_", args$nTest,"_Size_",  args$sampleSize, ".csv",sep=""))
+#	loginfo("CSV File Written")
+#if (args$latex) {
+#	loginfo("LaTeX Table Requested")
+#	fileName <- paste("ResultLaTeX/Table_Test_", args$nTest, "_Size_", args$sampleSize, ".latex", sep="")
+#	generateLatex(fileName,result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
+#	loginfo("LaTeX table written")
+#}
 #print(result) #Test line to print result
