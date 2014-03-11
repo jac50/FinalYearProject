@@ -184,3 +184,19 @@ generateResultArray <- function(ResultTDEV, ResultMATIEMAFE) {
 	return(result)
 
 }
+
+outputTable <- function(result, isCSV, isLatex){
+	#Global: args$nTest, args$sampleSize
+	# ----- Create a CSV output file ------
+	if (isCSV){
+		loginfo("CSV File Requested") 
+		write.csv(result,file = paste("ResultCSV/Result_Test_", args$nTest,"_Size_",  args$sampleSize, ".csv",sep=""))
+		loginfo("CSV File Written")
+	}
+	if (isLatex) {
+		loginfo("LaTeX Table Requested")
+		fileName <- paste("ResultLaTeX/Table_Test_", args$nTest, "_Size_", args$sampleSize, ".latex", sep="")
+		generateLatex(fileName,result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
+		loginfo("LaTeX table written")
+	}
+}
