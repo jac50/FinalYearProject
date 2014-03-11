@@ -171,3 +171,23 @@ plotArray <- function(values) {
 	#dev.off()
 	loginfo("Plot Created")
 }
+
+generateResultArray <- function(ResultTDEV, ResultMATIEMAFE) {
+
+	# Globals: maxNMATIE, maxn
+
+	result <- matrix(0,ncol = 10, nrow = maxNMATIE)
+	result[,1] <- seq(1,maxNMATIE) #currently datapoints - not time axis
+	result[1:maxn,2:5] <- c(ResultTDEV, matrix(0,maxNMATIE - maxn)
+	#result[,2] <- c(ResultTDEV[,1], rep(0,maxNMATIE - maxn))
+	#result[,3] <- c(ResultTDEV[,2], rep(0,maxNMATIE - maxn))
+	#result[,4] <- c(ResultTDEV[,3], rep(0,maxNMATIE - maxn))
+	#result[,5] <- c(ResultTDEV[,4], rep(0,maxNMATIE - maxn))
+	result[,6] <- c(ResultTDEV[,5], rep(0,maxNMATIE - maxn))
+	result[,7] <-  ResultMATIEMAFE[,1]
+	result[,8] <-  ResultMATIEMAFE[,2]
+	result[,9] <-  ResultMATIEMAFE[,3]
+	result[,10] <- ResultMATIEMAFE[,4]
+	return(result)
+
+}
