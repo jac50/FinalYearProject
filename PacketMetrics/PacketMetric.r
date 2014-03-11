@@ -37,7 +37,7 @@ initLogger(args$verbose, args$quiet)
 
 if (directory == "None") {
 	if (args$nTest == -1){
-		logerror("Error 1: You need either a directory or the test number\n")
+		logerror("Error 1: You need either a directory or the test number\n Program will exit. \n")
 		return (1)
 	}
 }
@@ -49,25 +49,23 @@ if (sampleSize <= 0){
 }
 
 ###### TO DO: Handle what to do with metric types here ######
-#list[fileName, args$nTest, index] <- parseFileName(args$nTest, args$directory, args$direction)
 
 tempResult <- parseFileName(args$nTest, args$directory, args$direction)
 fileName <- tempResult$fileName
 args$nTest <- tempResult$nTest
 index <- tempResult$index
+
 # ----- At this point all arguments have been parsed successfully -----
 # ----- Attempts to read RawData file -----
 cat(paste("Filename to be read : ", fileName,"\n"))
 
 loginfo("Attempting to Read in CSV Data...\n")
-##### Implement in a simple while loop? breaking if works or return if false
 error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=",")) # Catches the error if read.csv fails
-if ("try-error" %in% class(error)) { #This is run if there's an error with the try-catch
+if ("try-error" %in% class(error)) { 
 	loginfo("The file can not be found. This is most likely because the sample size file you requested does not exist. This file will be created.\n")
 	# ---- Calls Head on the non-standard sampleSize
 	if (args$nTest == 0) runHead(args$sampleSize, "ExampleData")
 	else runHead(args$sampleSize,testSheet[args$nTest, 3])
-	loginfo("New Sample Size has been added. \n")
 
 	# ----- Reads the data again to see if the file was created successfully -----
 	error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=","))
