@@ -175,19 +175,12 @@ plotArray <- function(values) {
 generateResultArray <- function(ResultTDEV, ResultMATIEMAFE) {
 
 	# Globals: maxNMATIE, maxn
-
+	# The indices below refer to the C result. Adjust the result indices by 1 when it gets removed.
+	#  C array is result[,2]
 	result <- matrix(0,ncol = 10, nrow = maxNMATIE)
 	result[,1] <- seq(1,maxNMATIE) #currently datapoints - not time axis
-	result[1:maxn,2:5] <- c(ResultTDEV, matrix(0,maxNMATIE - maxn)
-	#result[,2] <- c(ResultTDEV[,1], rep(0,maxNMATIE - maxn))
-	#result[,3] <- c(ResultTDEV[,2], rep(0,maxNMATIE - maxn))
-	#result[,4] <- c(ResultTDEV[,3], rep(0,maxNMATIE - maxn))
-	#result[,5] <- c(ResultTDEV[,4], rep(0,maxNMATIE - maxn))
-	result[,6] <- c(ResultTDEV[,5], rep(0,maxNMATIE - maxn))
-	result[,7] <-  ResultMATIEMAFE[,1]
-	result[,8] <-  ResultMATIEMAFE[,2]
-	result[,9] <-  ResultMATIEMAFE[,3]
-	result[,10] <- ResultMATIEMAFE[,4]
+	result[1:maxn,2:6] <- ResultTDEV
+	result[,7:10] <- ResultMATIEMAFE
 	return(result)
 
 }
