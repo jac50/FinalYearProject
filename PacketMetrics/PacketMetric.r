@@ -54,28 +54,12 @@ tempResult <- parseFileName(args$nTest, args$directory, args$direction)
 fileName <- tempResult$fileName
 args$nTest <- tempResult$nTest
 index <- tempResult$index
-
+testSheet <- tempResult$testSheet
 # ----- At this point all arguments have been parsed successfully -----
 # ----- Attempts to read RawData file -----
-cat(paste("Filename to be read : ", fileName,"\n"))
+Data <- readFile(fileName, nTest, sampleSize, testSheet)
+if (dim(Data)[0] ==1 && Data == 2) return (2)
 
-loginfo("Attempting to Read in CSV Data...\n")
-error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=",")) # Catches the error if read.csv fails
-if ("try-error" %in% class(error)) { 
-	loginfo("The file can not be found. This is most likely because the sample size file you requested does not exist. This file will be created.\n")
-	# ---- Calls Head on the non-standard sampleSize
-	if (args$nTest == 0) runHead(args$sampleSize, "ExampleData")
-	else runHead(args$sampleSize,testSheet[args$nTest, 3])
-
-	# ----- Reads the data again to see if the file was created successfully -----
-	error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=","))
-	if ("try-error" %in% class(error)) {
-		logerror("Error 2: Failed twice. will exit script\n")
-		return(2)
-	}
-}	
-
-loginfo("CSV Data has been written to Data variable\n")
 
 delays <- as.matrix(Data[index]) # Currently taking only one of the delaus
 time   <- as.matrix(Data[0]) #Taking the time in preparation for using new file type
