@@ -8,6 +8,7 @@
 # -----------------------------------------
 # - Import required functions + libraries -
 # -----------------------------------------
+system("clear") #Clear screen
 options(warn = 1) # Enables warnings
 cat("Loading Required Scripts..\n")
 suppressPackageStartupMessages(library("argparse")) 
