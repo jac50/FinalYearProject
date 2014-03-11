@@ -117,8 +117,6 @@ for (i in (maxn + 1) : maxNMATIE) {
 	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
 }
 #print(ResultTDEV)
-#### Plotting needs to be handled better. flags for what to plot, different ranges
-# ------ Plotting the results -------
 
 plotArray(ResultTDEV)
 #plotArray(ResultMATIEMAFE)
@@ -127,15 +125,3 @@ result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
 
 error <- outputTable(result,args$CSV, args$latex)
 
-# ----- Create a CSV output file ------
-#if (args$CSV){
-#	loginfo("CSV File Requested") 
-#	write.csv(result,file = paste("ResultCSV/Result_Test_", args$nTest,"_Size_",  args$sampleSize, ".csv",sep=""))
-#	loginfo("CSV File Written")
-#if (args$latex) {
-#	loginfo("LaTeX Table Requested")
-#	fileName <- paste("ResultLaTeX/Table_Test_", args$nTest, "_Size_", args$sampleSize, ".latex", sep="")
-#	generateLatex(fileName,result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
-#	loginfo("LaTeX table written")
-#}
-#print(result) #Test line to print result
