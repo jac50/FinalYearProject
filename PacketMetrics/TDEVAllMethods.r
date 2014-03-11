@@ -25,7 +25,7 @@ TDEVAll <- function(To,n, N,x,a,b){
 			
 			interimStep[2] <- interimStep[2] + min(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide]) - 2* min(x[i+n - windowSide : i + n + windowSide]) + min(x[i - windowSide : i + windowSide]) #minTDEV
 			interimStep[3] <- interimStep[3] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],a,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],a,b) + bandMean(x[i - windowSide : i + windowSide],a,b) #bandTDEV
-		interimStep[4] <- interimStep[4] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],0,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],0,b) + bandMean(x[i - windowSide : i + windowSide],0,b) #percentileTDEV
+		interimStep[4] <- interimStep[4] + bandMean(x[(i + (2*n)) - windowSide:(i + (2*n)) + windowSide],0,b) - 2* bandMean(x[i+n - windowSide : i + n + windowSide],0,b) + bandMean(x[i - windowSide : i + windowSide],0,b)
 		
 		for (k in 1:4){
 			interimStep[k] <- interimStep[k] ^ 2
@@ -39,5 +39,4 @@ TDEVAll <- function(To,n, N,x,a,b){
 	#print(result)
 	return(result) 
 }
-
 
