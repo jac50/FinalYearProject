@@ -15,7 +15,7 @@
 # ----------------------------------------------
 runHead <- function(sampleSize, directory){
 	system(paste("head -n ", sampleSize, " /home/james/FinalYearProject/PTPData/TestData/", directory, "/RawData.txt", " > /home/james/FinalYearProject/PTPData/TestData/", directory, "/SampleSize_", sampleSize, ".txt", sep="")) # System call of head
-	cat("Head has been run\n")
+	loginfo(paste("New filename SampleSize_", sampleSize, ".txt has been created.", sep=""))
 	return(0)
 }
 createArguments <- function(sampleSize,directory){
