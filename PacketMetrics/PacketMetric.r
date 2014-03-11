@@ -73,24 +73,19 @@ N <- dataPacket$N
 
 # ---- Set restrictions based on document ------
 maxn <- floor(N / 3)
-maxNMATIE <- floor(N/2)
+maxNMATIE <- floor(N / 2)
 # ---- Initialise Variables
-RawResult = c(0,0,0,0)
+RawResult <- c(0,0,0,0)
 RawResultMATIE <- c(0,0,0,0)
+ResultTDEV <- matrix(0, nrow = maxn, ncol = 5)
+colnames(ResultTDEV) <- c("TDEV", "TDEVC", "minTDEV", "bandTDEV", "percentileTDEV")
+ResultMATIEMAFE <- matrix(0, nrow = maxNMATIE, ncol = 4)
+colnames(ResultMATIEMAFE) <- c("MATIE", "MAFE", "MinMATIE", "MinMAFE")
+
 a <- 20
 b <- 80
 ### Might need to refactor the below into its own results matrix ###
 #------------------------------------------------------------------------
-resultMATIE <-matrix(0,maxNMATIE)
-resultMinMATIE <-matrix(0,maxNMATIE)
-resultMAFE <-matrix(0,maxNMATIE)
-resultMinMAFE <-matrix(0,maxNMATIE)
-
-resultTDEV = matrix(0,maxn)
-resultTDEVC = matrix(0,maxn)
-resultMinTDEV = matrix(0,maxn)
-resultBandTDEV = matrix(0,maxn)
-resultPercentTDEV = matrix(0,maxn)
 # -------------------------------------------------------------------
 # ----- Main Loop. Loop from 1 to maxn -------
 for (i in 1:maxn){
@@ -102,14 +97,15 @@ for (i in 1:maxn){
 	#resultTDEVC[i] <-as.double(temp['result']) #saves TDEVC results
 	RawResult = TDEVAll(To,i,N,delays,a,b) 
 	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
-	resultTDEV[i] = RawResult[1]
-	resultMinTDEV[i] = RawResult[2]
-	resultBandTDEV[i] = RawResult[3]
-	resultPercentTDEV[i] = RawResult[4]
-	resultMATIE[i] = RawResultMATIE[1]
-	resultMinMATIE[i] = RawResultMATIE[2]
-	resultMAFE[i] = RawResultMATIE[3]
-	resultMinMAFE[i] = RawResultMATIE[4]
+	ResultTDEV[i,1] = RawResult[1]
+#	ResultTDEV[i,2] = ResultTDEVC[i] 
+	ResultTDEV[i,3] = RawResult[2]
+	ResultTDEV[i,4] = RawResult[3]
+	ResultTDEV[i,5] = RawResult[4]
+	ResultMATIEMAFE[i,1] = RawResultMATIE[1]
+	ResultMATIEMAFE[i,3] = RawResultMATIE[2]
+	ResultMATIEMAFE[i,2] = RawResultMATIE[3]
+	ResultMATIEMAFE[i,4] = RawResultMATIE[4]
 	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3), "\n" )) # Print line which prints the iteration time
 	
 }
@@ -117,39 +113,39 @@ for (i in 1:maxn){
 for (i in (maxn + 1) : maxNMATIE) {
 	ptm <- proc.time()
 	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
-	resultMATIE[i] = RawResultMATIE[1]
-	resultMinMATIE[i] = RawResultMATIE[2]
-	resultMAFE[i] = RawResultMATIE[3]
-	resultMinMAFE[i] = RawResultMATIE[4]
+	ResultMATIEMAFE[i,1] = RawResultMATIE[1]
+	ResultMATIEMAFE[i,3] = RawResultMATIE[2]
+	ResultMATIEMAFE[i,2] = RawResultMATIE[3]
+	ResultMATIEMAFE[i,4] = RawResultMATIE[4]
 	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
 }
-
+#print(ResultTDEV)
 #### Plotting needs to be handled better. flags for what to plot, different ranges
 # ------ Plotting the results -------
-rangeOfValues <- range(0,resultTDEV, resultMinTDEV,resultBandTDEV,resultPercentTDEV) #Determines a max range for the plot
+rangeOfValues <- range(0,ResultTDEV) #Determines a max range for the plot
 outputFileName = paste("../PTPData/Plots/Packet Results - Sample Size - ",N,".eps",sep = "")
 postscript(outputFileName)
-plot(resultMinTDEV,type="o", col="red",log="xy")
-lines(resultTDEV,type="o",col="blue")
-lines(resultBandTDEV,type="o",col="green")
-lines(resultPercentTDEV,type="o",col="orange")
+plot(ResultTDEV[,1],type="o", col="red",log="xy")
+lines(ResultTDEV[,3],type="o",col="blue")
+lines(ResultTDEV[,4],type="o",col="green")
+lines(ResultTDEV[,5],type="o",col="orange")
 legend(1,rangeOfValues[2],c("TDEV", "minTDEV","bandTDEV","percentTDEV"), cex = 0.8,col=c("blue","red","green","orange"), pch=21:22, lty=1:2)
 dev.off()
 
 loginfo("Plot created")
 # ----- Create a CSV output file ------
 result <- matrix(0,ncol = 10, nrow = maxNMATIE)
-result[,1] <- seq(1,maxNMATIE)
-result[,2] <- c(resultTDEV, rep(0,maxNMATIE - maxn))
-result[,3] <- c(resultTDEVC, rep(0,maxNMATIE - maxn))
+result[,1] <- seq(1,maxNMATIE) #currently datapoints - not time axis
+result[,2] <- c(ResultTDEV[,1], rep(0,maxNMATIE - maxn))
+result[,3] <- c(ResultTDEV[,2], rep(0,maxNMATIE - maxn))
 
-result[,4] <- c(resultMinTDEV, rep(0,maxNMATIE - maxn))
-result[,5] <- c(resultBandTDEV, rep(0,maxNMATIE - maxn))
-result[,6] <- c(resultPercentTDEV, rep(0,maxNMATIE - maxn))
-result[,7] <- resultMATIE
-result[,8] <- resultMinMATIE
-result[,9] <- resultMAFE
-result[,10] <- resultMinMATIE
+result[,4] <- c(ResultTDEV[,3], rep(0,maxNMATIE - maxn))
+result[,5] <- c(ResultTDEV[,4], rep(0,maxNMATIE - maxn))
+result[,6] <- c(ResultTDEV[,5], rep(0,maxNMATIE - maxn))
+result[,7] <-  ResultMATIEMAFE[,1]
+result[,8] <-  ResultMATIEMAFE[,2]
+result[,9] <-  ResultMATIEMAFE[,3]
+result[,10] <- ResultMATIEMAFE[,4]
 loginfo("Result Array Created")
 if (args$CSV){
 	loginfo("CSV File Requested") 
