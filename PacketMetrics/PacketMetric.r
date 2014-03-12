@@ -119,7 +119,7 @@ for (i in (maxn + 1) : maxNMATIE) {
 }
 #print(ResultTDEV)
 
-plotArray(ResultTDEV)
+plotArray(ResultTDEV,0)
 #plotArray(ResultMATIEMAFE)
 
 result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
