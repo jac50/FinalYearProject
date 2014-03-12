@@ -60,7 +60,7 @@ initLogger<- function(quiet,verbose){
 	# ------------------------------------------------
 	addHandler(writeToFile,file="LogFiles/Test.Log",level=10)
 	loginfo("-------------------------------------------------")
-	loginfo(" --- PacketMetric.R Log -------------------------")
+	loginfo(" ---------- PacketMetric.R Log ------------------")
 	loginfo("-------------------------------------------------")
 
 }
