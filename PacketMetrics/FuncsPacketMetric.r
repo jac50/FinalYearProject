@@ -18,7 +18,7 @@ runHead <- function(sampleSize, directory){
 	loginfo(paste("New filename SampleSize_", sampleSize, ".txt has been created.", sep=""))
 	return(0)
 }
-createArguments <- function(sampleSize,directory){
+createArguments <- function(){
 
 	# ----- Sets up the Argument Parser and adds the required arguments -----
 	parser <- ArgumentParser(description='Perform some Packet Metrics')
@@ -154,25 +154,28 @@ purgeData <- function(Data) {
 
 }
 
-plotArray <- function(values) {
+plotArray <- function(values,whichPlot) {
 	#Global Vars: args$nTest, N, 
 	rangeOfValues <- range(0,values) #Determines a max range for the plot
-	if (values == ResultsTDEV) metric = "TDEV" #TDEV
+	if (whichPlot == 0) metric = "TDEV" #TDEV
 	else metric = "MATIE/MAFE"
 	outputFileName = paste("../PTPData/Plots/Test: ", args$nTest, " - ", metric, " - ", N, " size.eps",sep = "")
 	postscript(outputFileName)
 	plottingColours = rainbow(ncol(values))
-	plot(values[,1], type='+',xaxt='n', l=plottingColours[1],log="xy")
+	plot(values[,1], type='o',xaxt='n', yaxt='n',pch='+',col=plottingColours[1],log="xy",xlab="", ylab="")
 	for (i in 2:ncol(values)) { 
 		#if (values[1,i] == 0) {
 		#	loginfo("Column Ignored")
 		#	continue
 		#}
-		lines(values[,i], type='+',col=plottingColours[i])
+		lines(values[,i], type='o',pch='+',col=plottingColours[i])
 	}
-	legend(1,max(values[,1:]), rangeOfValues[2],c("Index", "Metric Value"), colnames(values), cex = 0.8,col=plottingColours, lty=1, pch=1, title="Metrics Legend",box.lwd = 0,box.col = "white",bg = "white") 
-	if (metric == "TDEV") title(main=paste("Packet Metrics - TDEV - Sample Size", sampleSize,ylab="Metric Value", xlab="Index/Time"))
-	else title(main=paste("Packet Metrics - MATIE/MAFE - Sample Size", sampleSize,ylab="Metric Value", xlab="Index/Time"))
+	legend(1,max(values[,2:ncol(values)]),colnames(values) , col=plottingColours, cex = 0.8,lty=1, pch='+', title="Metrics Legend",box.lwd = 0,box.col = "white",bg = "white") 
+	if (metric == "TDEV") title(main=paste("Packet Metrics - TDEV - Sample Size", sampleSize),ylab="", xlab="Index/Time")
+	else title(main=paste("Packet Metrics - MATIE/MAFE - Sample Size", sampleSize),ylab="", xlab="Index/Time")
+	mtext(side = 2, text="    Index/Time", line = 3)
+	axis(side = 1)
+	axis(side = 2, las = 1)
 	dev.off()
 	loginfo("Plot Created")
 }
