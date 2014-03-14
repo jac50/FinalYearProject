@@ -33,7 +33,7 @@ parser <- createArguments()
 args <- parser$parse_args()
 sampleSize <- args$sampleSize
 directory <- args$directory
-initLogger(args$verbose, args$quiet)
+initLogger()
 
 
 if (directory == "None") {
@@ -85,6 +85,8 @@ colnames(ResultMATIEMAFE) <- c("MATIE", "MAFE", "MinMATIE", "MinMAFE")
 
 a <- 20
 b <- 80
+loginfo("Starting main loop")
+
 # ----- Main Loop. Loop from 1 to maxn -------
 for (i in 1:maxn){
 	ptm <- proc.time() # Read current time
@@ -120,7 +122,7 @@ for (i in (maxn + 1) : maxNMATIE) {
 #print(ResultTDEV)
 
 plotArray(ResultTDEV,0)
-#plotArray(ResultMATIEMAFE)
+plotArray(ResultMATIEMAFE,1)
 
 result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
 
