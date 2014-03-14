@@ -8,16 +8,24 @@
 #--------------------------------------------------
 
 # ----------------------------------------------
-# -     Function: runHead                      -
+# -     Name: runHead                          -
 # -     Description: calls linux function head -
 # -     Input: sampleSize, directory           -
 # -     Output: none                           -
+# - 	GlobalVarDepend: None                  -
 # ----------------------------------------------
 runHead <- function(sampleSize, directory){
 	system(paste("head -n ", sampleSize, " /home/james/FinalYearProject/PTPData/TestData/", directory, "/RawData.txt", " > /home/james/FinalYearProject/PTPData/TestData/", directory, "/SampleSize_", sampleSize, ".txt", sep="")) # System call of head
 	loginfo(paste("New filename SampleSize_", sampleSize, ".txt has been created.", sep=""))
 	return(0)
 }
+# --------------------------------------------------------------
+# -             Name: createArguments                          -
+# -             Description: creates arguments using argparse  -
+# -             Input: None                                    -
+# -             Output: parser                                 -
+# -             GlobalVarDepend: None                          -
+# --------------------------------------------------------------
 createArguments <- function(){
 
 	# ----- Sets up the Argument Parser and adds the required arguments -----
@@ -41,7 +49,15 @@ createArguments <- function(){
 	#--------------------------------------------------------------------------------------------------
 	return (parser)
 }
-initLogger<- function(quiet,verbose){
+
+# --------------------------------------------------------------
+# -             Name: initLogger                               -
+# -             Description: initialises the logger            -
+# -             Input: None                                    -
+# -             Output: None                                   -
+# -             GlobalVarDepend: args$verbose, args$quiet      -
+# --------------------------------------------------------------
+initLogger<- function(){ #removed quiet/verbose. rely globally
 
 	if ((args$verbose && args$quiet)|| (!args$verbose && !args$quiet)) {
 		basicConfig(level=20)
@@ -65,7 +81,16 @@ initLogger<- function(quiet,verbose){
 
 }
 
-parseFileName <- function(nTest,directory,column    ) {
+# --------------------------------------------------------------
+# -             Name: parseFileName                            -
+# -             Description: generates file test path from     -
+# -`	             test results sheet                        -
+# -             Input: nTest, directory, column                -
+# -             Output: returnValue :filename, Index,          -
+# -                                  nTest, testSheet          -
+# -             GlobalVarDepend: None                          -
+# --------------------------------------------------------------
+parseFileName <- function(nTest,directory,column) {
 
 	# ----- Reads in the Summary Test Sheet -----
 	testSheet <- read.gnumeric.sheet(file = "../PTPData/TestData/TestSheets.ods", 
@@ -88,11 +113,11 @@ parseFileName <- function(nTest,directory,column    ) {
 		fileName = paste("../PTPData/TestData/",directory,"/SampleSize_", sampleSize,".txt",sep="")
 
 	} else if (args$nTest == 0) {
-		fileName = paste("../PTPData/TestData/ExampleData/SampleSize_", args$sampleSize, ".txt",sep="")
+		fileName = paste("../PTPData/TestData/ExampleData/SampleSize_", sampleSize, ".txt",sep="")
 
 	} else {
 		
-		fileName = paste("../PTPData/TestData/", testSheet[args$nTest,3], "/SampleSize_", args$sampleSize,".txt", sep="")
+		fileName = paste("../PTPData/TestData/", testSheet[args$nTest,3], "/SampleSize_", sampleSize,".txt", sep="")
 	}
 	index <- 4 #default index for Data delays. 4 for Master to Slave. 6 for Slave to Master
 	if (column == "Slave2Master") { 
@@ -106,6 +131,14 @@ parseFileName <- function(nTest,directory,column    ) {
 
 }	
 
+# --------------------------------------------------------------
+# -             Name: readFile                                 -
+# -             Description: Reads the filename.               -
+# -			    If file doesn't exist, create it   -
+# -             Input: fileName, nTest, sampleSize, testSheet  -
+# -             Output: Data                                   -
+# -             GlobalVarDepend: None                          -
+# --------------------------------------------------------------
 readFile <- function(fileName, nTest, sampleSize, testSheet){
 
 	cat(paste("Filename to be read : ", fileName,"\n"))
@@ -125,11 +158,19 @@ readFile <- function(fileName, nTest, sampleSize, testSheet){
 			return(2)
 		}
 	}
-	return(Data)	
 	loginfo("CSV Data has been written to Data variable\n")
+	return(Data)	
 
 }
 
+# --------------------------------------------------------------
+# -             Name: purgeData                                -
+# -             Description: Purges the initial values in the  -
+# -				file                           -
+# -             Input: Data                                    -
+# -             Output: returnValue (delays, N, time)          -
+# -             GlobalVarDepend: None                          -
+# --------------------------------------------------------------
 purgeData <- function(Data) {
 	#----- Work out what type of file is Data (ie new file type or old)
 	if (ncol(Data) == 9) {
@@ -154,6 +195,13 @@ purgeData <- function(Data) {
 
 }
 
+# --------------------------------------------------------------
+# -             Name: plotArray                                -
+# -             Description: Plots the data                    -
+# -             Input: values, whichPlot                       -
+# -             Output: None                                   -
+# -             GlobalVarDepend: None                          -
+# --------------------------------------------------------------
 plotArray <- function(values,whichPlot) {
 	#Global Vars: args$nTest, N, 
 	rangeOfValues <- range(0,values) #Determines a max range for the plot
@@ -172,7 +220,7 @@ plotArray <- function(values,whichPlot) {
 	}
 	legend(1,max(values[,2:ncol(values)]),colnames(values) , col=plottingColours, cex = 0.8,lty=1, pch='+', title="Metrics Legend",box.lwd = 0,box.col = "white",bg = "white") 
 	if (metric == "TDEV") title(main=paste("Packet Metrics - TDEV - Sample Size", sampleSize),ylab="", xlab="Index/Time")
-	else title(main=paste("Packet Metrics - MATIE/MAFE - Sample Size", sampleSize),ylab="", xlab="Index/Time")
+	else title(main=paste("Packet Metrics - MATIE-MAFE - Sample Size", sampleSize),ylab="", xlab="Index/Time")
 	mtext(side = 2, text="    Index/Time", line = 3)
 	axis(side = 1)
 	axis(side = 2, las = 1)
@@ -180,6 +228,13 @@ plotArray <- function(values,whichPlot) {
 	loginfo("Plot Created")
 }
 
+# --------------------------------------------------------------
+# -             Name: generateResultArray                      -
+# -             Description: returns the combined result array -
+# -             Input: ResultTDEV, ResultMATIEMAFE             -
+# -             Output: resu                                   -
+# -             GlobalVarDepend: None                          -
+# --------------------------------------------------------------
 generateResultArray <- function(ResultTDEV, ResultMATIEMAFE) {
 
 	# Globals: maxNMATIE, maxn
@@ -193,6 +248,13 @@ generateResultArray <- function(ResultTDEV, ResultMATIEMAFE) {
 
 }
 
+# --------------------------------------------------------------
+# -             Name: outputTable                              -
+# -             Description: writes CSV and latex file         -
+# -             Input: result, isCSV, isLatex                  -
+# -             Output: None                                   -
+# -             GlobalVarDepend: None                          -
+# --------------------------------------------------------------
 outputTable <- function(result, isCSV, isLatex){
 	#Global: args$nTest, args$sampleSize
 	# ----- Create a CSV output file ------
