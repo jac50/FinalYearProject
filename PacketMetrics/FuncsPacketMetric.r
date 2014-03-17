@@ -46,6 +46,9 @@ createArguments <- function(){
 	parser$add_argument('-latex',dest='latex',action="store_true")
 	parser$add_argument('-v', '--verbose', dest='verbose', action="store_true")
 	parser$add_argument('-q', '--quiet', dest='quiet', action="store_true")
+	parser$add_argument('--hist',dest='hist', action="store_true")
+	parser$add_argument('--cHist', dest='chist', action="store_true")
+	parser$add_argument('--plotDelay', dest='pdelay', action="store_true")	
 	#--------------------------------------------------------------------------------------------------
 	return (parser)
 }
