@@ -27,5 +27,6 @@ Packet Metrics / Simple Calculations
 - data will be passed to these functions instead of relying on global scope
 - added in 3 arguments for each function
 - currently I'm creating both MATIE and TDEV plots for histogram. this may be changed at a later date
+- Plotting delays and histograms to a new folder and filename. sample size and test number is in the file name
 
 
