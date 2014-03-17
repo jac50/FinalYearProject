@@ -126,8 +126,7 @@ plotArray(ResultTDEV,0)
 plotArray(ResultMATIEMAFE,1)
 
 if (args$hist) {
-	plotHistogram(ResultTDEV,0)
-	plotHistogram(ResultMATIEMAFE,1)
+	plotHistogram(delays)
 }
 
 if (args$chist) {
@@ -136,9 +135,14 @@ if (args$chist) {
 }
 
 if (args$pdelay) {
-	plotDelay(ResultTDEV,0)
-	plotDelay(ResultMATIEMAFE,1)
+	plotDelay(delays)
 }
+if (args$save) { 
+fname = paste("../PTPData/DelayData/Data : Test: ", args$nTest, "Sample Size:", N, ".txt")
+write.table(delays,file=fname,sep="\t", col.names = F, row.names = F)
+loginfo("Data written to file")
+}
+
 
 
 result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
