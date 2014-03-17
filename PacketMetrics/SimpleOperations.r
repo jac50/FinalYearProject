@@ -1,6 +1,15 @@
-resultSimpleOps <- function(data,operations){
-	
 
+plotHistogram <- function(data,resultSet) { 
+	hist(data)
+
+}
+
+
+plotDelay <- function(delay,resultSet) {
+	plot(delay)
+}
+
+plotCHistogram <- function () { 
 
 
 }
