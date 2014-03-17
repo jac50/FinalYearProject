@@ -98,16 +98,7 @@ Abstract goes here
 \newpage
 \section*{Acronyms}
 \begin{acronym}
-\acro{CSMA/CD}{Carrier Sense Multiple Access with Collision Detection}
-\acro{GM}{Grandmaster}
-\acro{GPS}{Global Positioning System}
-\acro{IEEE}{Institute of Electrical and Electronic Engineers}
-\end{acronym}
-
-\newpage
-
-\section*{Acronyms}
-\begin{acronym}
+\acro{CSAC}{
 \acro{CSMA/CD}{Carrier Sense Multiple Access with Collision Detection}
 \acro{GM}{Grandmaster}
 \acro{GPS}{Global Positioning System}
@@ -129,8 +120,11 @@ Abstract goes here
 
 \section{Introduction}
 
-*Brief Introduction to synchronising time
+In several applications, maintaining a high level of time accuracy is very important. 
+This may either be a physical timestamp or that there is a need to synchronise process occuring at specific times.
+Some examples of these applications are: telecommunications, the automation industry, or the power transmission industry.\\
 
+There are currently only a few methods to realise this, which depends heavily on the application. For example, if there is space and the budget, a high accuracy atomic clock (CSAC) could be used. 
 *Mention different technologies used to do the above. make sure to mention what this relies on (GPS)
 
 Explain PTP Briefly
@@ -257,6 +251,41 @@ Awk Data Parser
 \end{tabular}
 \end{table}
 \section{Test Sheet Summary Sheet}
+n{table}[H]
+\centering
+\caption{ Raw results of 500 samples for TDEV and minTDEV }
+\begin{tabular}{ |>\centering\arraybackslash}p{3cm} |>\centering\arraybackslash}p{3cm} |>\centering\arraybackslash}p{3cm} |>\centering\arraybackslash}p{3cm} |>\centering\arraybackslash}p{3cm} |>\centering\arraybackslash}p{3cm} |>\centering\arraybackslash}p{3cm} |>\centering\arraybackslash}p{3cm} |>\centering\arraybackslash}p{3cm} |>\centering\arraybackslash}p{3cm} }\hline
+\cellcolor{Black}\textcolour{White}{\textbf{ Index }}  &  \cellcolor{Black}\textcolour{White}{\textbf{ TDEV }}  &  \cellcolor{Black}\textcolour{White}{\textbf{ minTDEV }}  &  \cellcolor{Black}\textcolour{White}{\textbf{ BandTDEV }}  &  \cellcolor{Black}\textcolour{White}{\textbf{ PercentTDEV }}  &  \cellcolor{Black}\textcolour{White}{\textbf{ MATIE }}  &  \cellcolor{Black}\textcolour{White}{\textbf{ minMATIE }}  &  \cellcolor{Black}\textcolour{White}{\textbf{ MAFE }}  &  \cellcolor{Black}\textcolour{White}{\textbf{ minMAFE }} \\ \hline
+1  &  7.41057401454069e-06  &  0  &  1.29665531646703e-05  &  7.55267683753152e-06  &  7.285945485719e-06  &  0.001399084  &  0.001879422  &  0.000942257  &  0.0027825 \\ \hline
+2  &  1.02397293370779e-05  &  0  &  1.56898703054746e-05  &  1.10397506040661e-05  &  1.05498937922029e-05  &  0.000351626  &  0.0014046585  &  0.000949775  &  0.001832596 \\ \hline
+3  &  1.37075334494529e-05  &  0  &  1.64208448775651e-05  &  1.48072281796955e-05  &  1.37475569622961e-05  &  0.000458893333333333  &  0.00123544933333333  &  0.000931055  &  0.00152078333333333 \\ \hline
+4  &  1.6784578147398e-05  &  0  &  1.90413399007217e-05  &  1.93489304266777e-05  &  1.8001990220479e-05  &  0.000513384  &  0.00115585125  &  0.000927227  &  0.001368705 \\ \hline
+5  &  2.31235462910192e-05  &  0  &  2.39466013398595e-05  &  2.57539029877923e-05  &  2.39970571718219e-05  &  0.0005672368  &  0.001095654  &  0.000951761  &  0.0012562914 \\ \hline
+6  &  2.83637593470359e-05  &  0  &  2.43610573956858e-05  &  2.95768463333733e-05  &  2.72211956315418e-05  &  0.0005578275  &  0.00105799633333333  &  0.000912108  &  0.00119242933333333 \\ \hline
+7  &  3.2466082326189e-05  &  0  &  2.73714753722841e-05  &  3.39830601711346e-05  &  3.12622119159844e-05  &  0.000571169142857143  &  0.00103603771428571  &  0.000909079  &  0.00113853214285714 \\ \hline
+8  &  3.86375763569436e-05  &  0  &  2.96617325803242e-05  &  3.96453472121133e-05  &  3.60106099819373e-05  &  0.000575371125  &  0.00098410725  &  0.000900282  &  0.00107720875 \\ \hline
+9  &  4.26268715452898e-05  &  0  &  3.20005159021781e-05  &  4.2566785729199e-05  &  3.88837927093107e-05  &  0.000563385777777778  &  0.000971086666666667  &  0.000876524  &  0.00104774511111111 \\ \hline
+10  &  4.48324944132805e-05  &  0  &  3.48291043334858e-05  &  4.49880296259875e-05  &  4.14459705652419e-05  &  0.0005663592  &  0.0009564027  &  0.000872003  &  0.0010286952 \\ \hline
+11  &  4.86190961959988e-05  &  0  &  3.90746105337099e-05  &  4.97129863545945e-05  &  4.56275753621559e-05  &  0.000586125454545455  &  0.000932144727272727  &  0.000887453  &  0.000992045363636364 \\ \hline
+12  &  5.38101354744246e-05  &  0  &  4.11030730984305e-05  &  5.17659502026963e-05  &  4.79287827177527e-05  &  0.000560509583333333  &  0.000919316666666667  &  0.00085418  &  0.0009725555 \\ \hline
+13  &  5.38463328644155e-05  &  0  &  4.43022753736988e-05  &  5.02566000520437e-05  &  4.72308988477229e-05  &  0.000559071692307692  &  0.000910893846153847  &  0.000848376  &  0.000957294230769231 \\ \hline
+14  &  5.14933843393578e-05  &  0  &  4.62065586654103e-05  &  4.62424950065615e-05  &  4.41661115335956e-05  &  0.000558718642857143  &  0.000901999285714286  &  0.000844411999999999  &  0.000948177142857143 \\ \hline
+15  &  4.2158180369342e-05  &  0  &  4.34051700250417e-05  &  3.77337731529489e-05  &  3.95299876527398e-05  &  0.000565852933333333  &  0.000937016533333334  &  0.000880999  &  0.000981740933333334 \\ \hline
+16  &  4.49078949355245e-05  &  0  &  5.14939384550367e-05  &  4.66223933836042e-05  &  4.91799346709382e-05  &  0.0005989134375  &  0.000957848000000001  &  0.000909359  &  0.00092271825 \\ \hline
+17  &  7.28205196332661e-05  &  0  &  5.38648810932916e-05  &  7.00698924338162e-05  &  6.97549073729328e-05  &  0.000557398588235294  &  0.000877982823529412  &  0.000834951  &  0.000897183352941176 \\ \hline
+18  &  7.91829053139342e-05  &  0  &  5.50424745113565e-05  &  7.70296572891667e-05  &  7.44510562208469e-05  &  0.0005428525  &  0.000830854166666666  &  0.0008175  &  0.000861015555555555 \\ \hline
+19  &  0  &  0  &  0  &  0  &  0  &  0.000518168842105263  &  0.000850428421052632  &  0.000814822  &  0.00087945347368421 \\ \hline
+20  &  0  &  0  &  0  &  0  &  0  &  0.0005393511  &  0.0008477238  &  0.000812435  &  0.0008351409 \\ \hline
+21  &  0  &  0  &  0  &  0  &  0  &  0.000505962857142857  &  0.000808164761904762  &  0.000773975999999999  &  0.000831525571428571 \\ \hline
+22  &  0  &  0  &  0  &  0  &  0  &  0.000527847409090909  &  0.000826249909090909  &  0.000795698  &  0.000845232 \\ \hline
+23  &  0  &  0  &  0  &  0  &  0  &  0.000523062434782609  &  0.000821224695652174  &  0.000789553  &  0.000842169565217391 \\ \hline
+24  &  0  &  0  &  0  &  0  &  0  &  0.000525246208333333  &  0.000808967708333334  &  0.000814194  &  0.000809406 \\ \hline
+25  &  0  &  0  &  0  &  0  &  0  &  0.00049841856  &  0.00078578344  &  0.000761900999999999  &  0.00078681996 \\ \hline
+26  &  0  &  0  &  0  &  0  &  0  &  0.000481325961538462  &  0.000769238307692308  &  0.000743294  &  0.000784578307692308 \\ \hline
+27  &  0  &  0  &  0  &  0  &  0  &  0.00050654837037037  &  NA  &  0.000790646  &  0 \\ \hline
+28  &  0  &  0  &  0  &  0  &  0  &  NA  &  0  &  0  &  0 \\ \hline
+\end{tabular}
+\end{table}
 \input{SummaryTestSheet.latex}
 \section{Main Packet Metric Script}
 \section{TDEVAllMethods}
