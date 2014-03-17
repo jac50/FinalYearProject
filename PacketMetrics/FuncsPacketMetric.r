@@ -209,7 +209,7 @@ plotArray <- function(values,whichPlot) {
 	#Global Vars: args$nTest, N, 
 	rangeOfValues <- range(0,values) #Determines a max range for the plot
 	if (whichPlot == 0) metric = "TDEV" #TDEV
-	else metric = "MATIE/MAFE"
+	else metric = "MATIE-MAFE"
 	outputFileName = paste("../PTPData/Plots/Test: ", args$nTest, " - ", metric, " - ", N, " size.eps",sep = "")
 	postscript(outputFileName)
 	plottingColours = rainbow(ncol(values))
