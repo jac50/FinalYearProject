@@ -20,6 +20,7 @@ source("minTDEV.r")
 source("TDEVAllMethods.r")
 source("MATIEAllMethods.r")
 source("FuncsPacketMetric.r")
+source("SimpleOperations.r")
 dyn.load("TDEV.so") # C function
 cat("Loaded Required Scripts\n")
 
@@ -120,9 +121,25 @@ for (i in (maxn + 1) : maxNMATIE) {
 	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
 }
 #print(ResultTDEV)
-
+#------ Plotting and other Outpit forms are plotted here
 plotArray(ResultTDEV,0)
 plotArray(ResultMATIEMAFE,1)
+
+if (args$hist) {
+	plotHistogram(ResultTDEV,0)
+	plotHistogram(ResultMATIEMAFE,1)
+}
+
+if (args$chist) {
+	plotCHistogram(ResultTDEV,0)
+	plotCHistogram(ResultMATIEMAFE,1)
+}
+
+if (args$pdelay) {
+	plotDelay(ResultTDEV,0)
+	plotDelay(ResultMATIEMAFE,1)
+}
+
 
 result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
 
