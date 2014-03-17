@@ -1,0 +1,31 @@
+Monday 17th March
+
+- left logbook at home. writing log book on computer
+- Watson is not on campus half way through the week
+- There is a task list in my log book, but as I don't have it. the tasks below is what will be worked on
+
+Task list for Monday:
+
+	+ Work on Report
+	+ Brainstorm different simple calculations to perform on the 
+	  delays
+	+ look into syncwatch some more
+	+ 
+
+Simple Calculations
+==================
+
+- histogram of delays
+- plot of delay with time
+- histogram of delay colour plot (what Watson has done)
+- 
+
+Packet Metrics / Simple Calculations
+====================================
+
+- a few functions were made to implement the functions above.
+- data will be passed to these functions instead of relying on global scope
+- added in 3 arguments for each function
+- currently I'm creating both MATIE and TDEV plots for histogram. this may be changed at a later date
+
+
