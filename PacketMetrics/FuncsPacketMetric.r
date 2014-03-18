@@ -65,16 +65,15 @@ createArguments <- function(){
 # --------------------------------------------------------------
 initLogger<- function(){ #removed quiet/verbose. rely globally
 
-	if ((args$verbose && args$quiet)|| (!args$verbose && !args$quiet)) {
-		basicConfig(level=20)
-		logwarn("Invalid Flags or no flags given. Normal level of verbosity has been set")
-	} else if (args$verbose == TRUE) {
+	if (args$verbose == TRUE) {
 		basicConfig(level=10)
 		loginfo("Verbose mode activated")
 	} else if (args$quiet == TRUE) {
 		basicConfig(level=30)
 		loginfo("Quiet mode activated")
-	}
+	} else {
+		basicConfig(level=20)
+	}	
 	# ------------------------------------------------
 	# -----------------------------------------------
 	# ----- Initialise All Logging Information -------
