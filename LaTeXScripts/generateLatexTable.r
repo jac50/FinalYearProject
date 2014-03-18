@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-generateLatex <- function(fileName,tableToPrint, headings,caption,label) {
+generateLatexMetrics <- function(fileName,tableToPrint, headings,caption,label) {
 	print(tableToPrint)
 	filePointer <- file(fileName)
 	#Work out how many columns
