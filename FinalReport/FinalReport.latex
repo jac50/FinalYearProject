@@ -124,22 +124,60 @@ In several applications, maintaining a high level of time accuracy is very impor
 This may either be a physical timestamp or that there is a need to synchronise process occuring at specific times.
 Some examples of these applications are: telecommunications, the automation industry, or the power transmission industry.\\
 
-There are currently only a few methods to realise this, which depends heavily on the application. For example, if there is space and the budget, a high accuracy atomic clock (CSAC) could be used. 
-*Mention different technologies used to do the above. make sure to mention what this relies on (GPS)
+There are currently only a few methods to realise this, which depends heavily on the application. 
+For example, if there is space and the budget, a high accuracy atomic clock \ac{CSAC} could be used. 
+If this is not possible, then a \ac{GPS} receiver could be used and time can then be synchronised to the accurate clocks onboard the \ac{GPS} satellites.\\
 
+This leads to some issues when heavily relying on \ac{GPS} for time synchronisation. 
+There would be catastrophic consequences in some applications if timing is not kept accurate.
+The issues relate to the ease of jamming of a \ac{GPS receiver}. [reference]\\
+
+Due to the jammability of GPS, there must be either be a backup solution or an alternative method of time synchronisation in order for accurate timing to still be possible. \\
+
+One way of realising this is by using a distributed timing system, such as \ac{NTP} or \ac{PTP}. 
+
+
+\subsection{How PTP Works}
 Explain PTP Briefly
 
 \subsection{Project Description}
-Explain the project in more detail
+This project aims to investigate \ac{PTP} performance on a heavily used Ethernet network, and to attempt to quantify \ac{PTP} performance using packet metrics. \\
+There are also some deliverables as part of the Final Year Project. 
+These include: an interim report, a log book, a final year report and a poster. 
+These deliverables, along with the sub tasks involved in order to complete them have been detailed in the Gantt chart, as seen in Appendix \ref{ganttchart}. \\
 
-List aims and objectives
+The following project objectives have been identified:
 
-Deliverables
 
-\subsection{How PTP Works}
-\section{Literature Review? (kind of)}
+\begin{description}
+\item[Learn about \ac{PTP} and other work in relation to the protocol] \hfill \\ 
+This stage would occur at the beginning of the project to understand how \ac{PTP} works.
+This is important so work can then be carried out to investigate \ac{PTP} performance on a network. 
+\item[Collect PTP Data] \hfill \\ 
+In parallel with the above, PTP data can be collected. 
+This will be monitoring the performance of \ac{PTP} across the network as well as how using multiple types of grandmaster/slaves affect the performance. 
+Different clock locations in the network will also be considered.
+\item[Implement some packet metric scripts] \hfill \\ 
+To be able to understand the performance of the network, some packet metric scripts will be created. 
+A suitable language will be chosen once this part of the project begins.
+\item[Determine packet performance using these scripts] \hfill \\
+Multiple window sizes and types of metric will be used to quantify network performance.
+\item[Test Chronos' equipment and provide feedback] \hfill \\ 
+As Chronos has provided this project with some equipment, this equipment will also be thoroughly tested and any information gathered can be passed to them once the project is completed.
+\end{description}
 
-Explain why the lit review is required
+
+\section{Literature Review)}
+
+With the following objectives and tasks in mind, a literature review was performed with some suitable documentation: mainly packet metric related, but also on cryptographically signing PTP packets.\\
+
+The reports below will be discussed in some detail:
+\begin{description}
+\item[Definitions and terminology for synchronization in packet networks \cite{ITUPacketMetrics}] A standard regarding different packet metrics that could be used in order to try and quantify network delay. 
+\item[Prevention of Packet Collisions \cite{IEEECollision}] A journal article describing an algorithm that aims to prevent packet collisions in an Ethernet network.
+\end{description}
+
+
 \subsection{Lit Review for Packet Metric}
 Lit review for packet metric 
 \subsection{Other Relevant Reading}
@@ -227,6 +265,8 @@ Awk Data Parser
 \bibliographystyle{ieeetr}
 \bibliography{Bibliography}
 \begin{appendices}
+\section{Gantt Chart and Table}
+\label{ganttchart}
 \section{Test Sheet Example}
 
 \begin{table}[H]
