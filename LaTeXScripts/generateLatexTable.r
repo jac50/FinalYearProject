@@ -38,4 +38,10 @@ generateLatexMetrics <- function(fileName,tableToPrint, headings,caption,label) 
 	writeLines(x,filePointer)
 	close(filePointer)
 }
+tabulateStats <- function(delay){
+	filename <- paste("Stats_Test",args$nTest,"_Sample",sampleSize,sep="")
+	x <- matrix("",nrow =  6)
+	# Incomplete. Will finish if time permitting
+	
+}
 
