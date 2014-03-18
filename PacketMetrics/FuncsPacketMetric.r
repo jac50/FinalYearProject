@@ -50,6 +50,8 @@ createArguments <- function(){
 	parser$add_argument('--cHist', dest='chist', action="store_true")
 	parser$add_argument('--plotDelay', dest='pdelay', action="store_true")	
 	parser$add_argument('--save', dest='save', action="store_true")
+	parser$add_argument('--load', dest='file')
+	parser$add_argument('--stats', dest='stats', action="store_true")
 	#--------------------------------------------------------------------------------------------------
 	return (parser)
 }
@@ -270,7 +272,7 @@ outputTable <- function(result, isCSV, isLatex){
 	if (isLatex) {
 		loginfo("LaTeX Table Requested")
 		fileName <- paste("ResultLaTeX/Table_Test_", args$nTest, "_Size_", args$sampleSize, ".latex", sep="")
-		generateLatex(fileName,result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
+		generateLatexMetrics(fileName,result,c("Index","TDEV", "minTDEV","BandTDEV", "PercentTDEV", "MATIE", "minMATIE", "MAFE", "minMAFE"), "Raw results of 500 samples for TDEV and minTDEV", "table:500sample")
 		loginfo("LaTeX table written")
 	}
 }
