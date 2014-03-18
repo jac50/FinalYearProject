@@ -29,4 +29,14 @@ Packet Metrics / Simple Calculations
 - currently I'm creating both MATIE and TDEV plots for histogram. this may be changed at a later date
 - Plotting delays and histograms to a new folder and filename. sample size and test number is in the file name
 
++ Saving of the delay variable now exists.
 
++ Coloured histogram plot is being worked on. 
++ plots something that looks like it. I need the vertical data though.. have emailed watson.
+
+Tuesday 18th March
+==================
+
+- aim for today is to get some of the report done. 
+- will also look into some of the other simple calculations that could be performed. 
+	+ stddev, mean, median, mode, variance. 
