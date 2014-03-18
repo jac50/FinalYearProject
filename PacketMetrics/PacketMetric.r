@@ -146,6 +146,7 @@ loginfo("Data written to file")
 if (args$stats) {
 	stats <- calculateStats(delays)
 	tabulateStats(stats)
+}
 
 result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
 
