@@ -130,8 +130,8 @@ if (args$hist) {
 }
 
 if (args$chist) {
-	plotCHistogram(ResultTDEV,0)
-	plotCHistogram(ResultMATIEMAFE,1)
+	plotCHistogram(delays)
+	plotCHistogram(delays)
 }
 
 if (args$pdelay) {
@@ -143,7 +143,9 @@ write.table(delays,file=fname,sep="\t", col.names = F, row.names = F)
 loginfo("Data written to file")
 }
 
-
+if (args$stats) {
+	stats <- calculateStats(delays)
+	tabulateStats(stats)
 
 result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
 
