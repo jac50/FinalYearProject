@@ -39,4 +39,19 @@ Tuesday 18th March
 
 - aim for today is to get some of the report done. 
 - will also look into some of the other simple calculations that could be performed. 
-	+ stddev, mean, median, mode, variance. 
+	+ stddev, mean, median, mode, variance.
+	 	+ implemented all functions 
+ 
+- will focus on report today. need to get a chunk of it done.
+- finished some sections, but will need to ask Watson about if I need to expand the introduction
+
+Wednesday 19th March
+====================
+
+- late start today - will work until 8pm or so.
+- aiming to get part of the method section of the report completed. 
+- will also note down what diagrams and pictures are required.
+- need to create images of the outside and inside of the TimePort, BeagleBOne, and the Syncwatch
+
+
+ 
