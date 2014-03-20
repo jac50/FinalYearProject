@@ -29,6 +29,7 @@
 %\usepackage[table]{xcolor}
 \usepackage{hhline}
 \usepackage{pdfpages}
+\usepackage{footnotes}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -168,7 +169,7 @@ As Chronos has provided this project with some equipment, this equipment will al
 \end{description}
 
 
-\section{Literature Review)}
+\section{Literature Review}
 
 With the following objectives and tasks in mind, a literature review was performed with some suitable documentation: mainly packet metric related, but also on cryptographically signing PTP packets.\\
 
@@ -199,7 +200,7 @@ Focus on the implementation will be made in this section rather than the metrics
 \item[Calculating/Analysing Results] \hfill \\ Once the metrics have been implemented fully, there needs to be some supplementary scripts written to process some of this data. 
 \end{description}
 
-\subsection{Data Collection}
+\section{Data Collection}
 
 The first step to perform with this part of the project is to work out what hardware is available. 
 The following hardware was identifed as being available to use for the duration of this project.
@@ -212,7 +213,9 @@ The following hardware was identifed as being available to use for the duration 
 \item Software Slave - \ac{PTPd}
 \end{itemize}
 
-\subsubsection{Hardware - Timeport \cite{TimePort}}
+\subsection{Hardware - Timeport \cite{TimePort}}
+
+\subsubsection{Description} 
 
 The Chronos CTL4540 Timeport is a low powered portable device that is able to maintain its time to a high accuracy when disconnected from a synchronisation source.
 It is able to maintain accuracy within a couple hundred nanoseconds without needing to be connected to \ac{GPS}. 
@@ -232,13 +235,13 @@ Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 Tim
 \centering
 \begin{subfigure}{\textwidth}
 	\centering
-	\includegraphics{Figures/TimePortOutside.eps"}
+%	\includegraphics{Figures/TimePortOutside.eps"}
 	\label{TimePortOutside}
 	\caption{Chronos TimePort Outside}
 \end{subfigure}%
 \begin{subfigure}{\textwidth}
 	\centering
-	\includegraphics{Figures/TimePortInside.eps}
+%	\includegraphics{Figures/TimePortInside.eps}
 	\label{TimePortInside}
 	\caption{Chronos TimePort Inside}
 \end{subfigure}
@@ -254,21 +257,167 @@ This clock will mainly be kept in the same position on the network and will acct
 
 In terms of documentation there is not much available for this device apart from some emails sent between Chronos and Dr Robert Watson. 
 Therefore Appendix \ref{TimePortDocumentation} shows some documentation put together for my own use during this project. 
-The documentation includes details on how to interface with the clock and a list of basic commands. 
+The documentation includes details on how to interface with the clock and a list of basic commands. \\
 
-\subsubsection{Hardware - Syncwatch \cite{Syncwatch}}
+To access the device it needs to be accessed locally over a USB to Serial connection. 
+SSH is unavailable as the control port has not been implemented yet.
+\subsubsection{How to Set Up the TimePort}
 
-Same as above
+- notes in logbook.
+- will complete this section Thursday. 
+- screenshots too
+\subsection{Hardware - Chronos Syncwatch \cite{Syncwatch}}
+\subsubsection{Description}
+The Chronos Syncwatch is a hardware slave clock used to synchronise time in  a number of different applications.
+It operates in all of the current synchronisation technologies. SyncE, ESMC,  PTPv2, 1PPS+TOD, 1PPS, Frequencies(64k-200MHz), T1 \& E1 protocols and interfaces are supported. \\
+
+It can be used on both legacy and modern Ethernet/IP networks. 
+It can simultaneously operate on a number of the protocols above. 
+It can also operate in both local and remote modes. \\
+
+It is a small modular device with a simple user interface. 
+It also integrates with with Symmetricom's TimeMonitor software. \\
+
+The device markets include telecommunications, TV and radio broadcasting, and the power industry. \\
+
+The table shown in Appendix \ref{app:SyncwatchSpec} details the Syncwatch specifications. 
+The figures below show labelled diagrams of the inside and outside of the Chronos Syncwatch. \\
+
+\begin{figure}
+\centering
+\begin{subfigure}{\textwidth}
+	\centering
+%	\includegraphics{Figures/SyncwatchOutside.eps"}
+	\label{SyncwatchOutside}
+	\caption{Chronos Syncwatch Outside}
+\end{subfigure}%
+
+\begin{subfigure}{\textwidth}
+	\centering
+%	\includegraphics{Figures/SyncwatchInside.eps}
+	\label{SyncwatchInside}
+	\caption{Chronos Syncwatch Inside}
+\end{subfigure}
+\label{SyncwatchDiagrams}
+\caption{Chronos Syncwatch Labelled Diagrams}
+\end{figure}
+This product is similar to the TimePort in the fact that there isn't much documentation around for it. 
+Therefore Appendix \ref{app:SyncwatchDocumentation} shows the documentation written up for the Syncwatch.\\
+
+The Syncwatch will be mainly kept in the upstairs Level 3 Communications lab as it is a larger device. 
+As this device is a release product, all of the ports are working.
+Therefore the syncwatch can be set up via SSH or using the program. 
+This is all explained in the documentation in Appendix \ref{app:SyncwatchDocumentation}.\\
+
+\subsubsection{How to Set Up the SyncWatch}
+- notes in logbook.
+- will complete this section Thursday. 
+- screenshots too
 \subsubsection{Hardware - Beaglebone Black \cite{BBB}}
+\subsubsection{Description}
+The Beaglebone Black is a hardware device but it is running a software PTP Daemon (called PTPd). \\
+
+In terms of hardware capabilities it has an ARM Cortex A-8 processor with 512MB of DDR3 RAM.
+It runs a cut down version of Linux called Angstrom Linux.
+It has Ethernet connectivity and runs off of a 5V DC supply.\\
+
+As it runs Linux and can be connected to the network, an SSH server has been set up on it with a static IP address. 
+This made it easy to start the PTP daemon. \\
+
+Below (Figure \ref{fig:BBBLabelled} is a labelled picture of the BeagleBone Black.
+
+\begin{figure}
+\centering
+%\includegraphics{Figures\BBB.eps}
+\caption{Labelled BeagleBone Black}
+\label{fig:BBBLabelled}
+\end{figure}
+
+The Beaglebone will be a useful device to use as a slave clock because of its portability.
+It would be able to be placed anywhere on the network without any disruption to that particular lecture room or lab space.
+
+\subsubsection{How to Set up the Beaglebone Black}
+
+When the project was started, Robert Watson had the BeagleBone Black working with PTPd already, so there was only some work to be done in order to automate the process. \\
+
+To set up the Beaglebone Black:
+
+\begin{enumerate}
+\item Plug in the Beaglebone Black to the 5V adapter.
+\item Plug in the Ethernet cable
+\item Once the Beaglebone boots you can then access the device over SSH.
+\end{enumerate}
+
+Type:
+
+\begin{lstlisting}
+ssh jac50@eepc-rjw-beaglebone.bath.ac.uk
+\end{lstlisting}
+
+to log in, replacing jac50 with the username on the device. 
+The users on the device were eerjw, jac50, and root.\\
+
+The screenshot below (Figure \ref{SSH_To_Beaglebone}) demonstrates this.
+The ls command was typed to show that the connection was successful.
+
+\begin{figure}
+\centering
+\includegraphics{Figures/Screenshots/SSH_To_Beaglebone.eps}
+\caption{SSH to Beaglebone}
+\label{SSH_To_Beaglebone}
+\end{figure}
+
+Once SSH'd into the device, then the device can be accessed like any other linux machine.
+Note however that there is a restricted command set.\\
+
+When the BeagleBone boots, it was required that the SD card used to store the test data on would be automounted and that the PTP daemon automatically runs.\\
+
+
+Several attempts in trying to automount the SD card using conventional means such as adding in an entry to fstab were attempted, but this did not work.\\
+
+The method in getting round this was by creating a script in /etc/init.d. 
+Any script located in that folder will automatically be loaded once the device boots. 
+The PTP daemon was also run from this same script.
+The script would also need to automatically name the data file or the data would be overwritten every time the device was turned on.
+A convention of $timeport\_YYYY\_MM\_DD.txt$ was decided.\\
+
+The full bash script is shown below, in Code Extract \ref{lst:bashBBB}
+
+\begin{lstlisting}[label = lst:bashBBB, language = bash, caption=Bash Script in init.d for Beaglebone Black]
+#!/bin/bash
+mount /dev/mmcblk1p1 /mnt/sd
+
+date=$(date +"%Y_%m_%d")
+sudo /home/eesrjw/ptpd2 -i eth0 -C -S -g -d 17 -V > /mnt/sd/eesrjw/timeport_$date.txt
+\end{lstlisting}
+
+\subsection{Software - PTPd}
 
 Same as above
-\subsubsection{Software - PTPd}
+\subsection{Data Collection Overview}
+%explain use of static IPs. introduce the table below
 
-Same as above
-\subsubsection{Data Collection Overview}
+The summary table below shows what hardware is available, based on class, movability, and ease of transferring data off of it. 
 
-\subsubsection{Testing Schedule}
-\subsubsection{Test Sheets}
+\begin{table}[H]
+\caption{Hardware Summary}
+\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
+\textbf{Clock ID} & \textbf{Name} & \textbf{Type} & \textbf{Role} & \textbf{Location Mobility} & \textbf{PTP IP} & \textbf{Control IP}  & \textbf{MAC Address} \\ \hline
+001 & Chronos TimePort & Hardware & Grandmaster & Mobile &TimePort & USB over Serial & ... \\ \hline
+002 & Chronos SyncWatch & Hardware & Slave & Mobile & syncwatchptp & eepc-rjw-syncwatch & ... \\ \hline
+003 & BeagleBone Black & Hardware & Slave & Mobile & beaglebone & eepc-rjw-beaglebone & ... \\ \hline
+004 & PTPd\_Desktop & Software & Slave & Fixed &  ... & ... & ... \\ \hline 
+005 & PTPd\_Netbook & Software & Slave & Mobile & ... & ... & ... \\ \hline
+\label{table:hardwareSummary}
+\end{tabular}
+\end{table}
+
+The clock ID was used with internal documentation to know which clock was used where. 
+Note that the IPs listed are just part of the full name. 
+To access one of them on the university network, add the prefix eepc-rjw- and the suffix .bath.ac.uk.
+
+\subsection{Locations for Clocks}
+\subsection{Test Sheets}
 
 explain brief reason as to why test sheets will be used.
 stored in excel
@@ -276,21 +425,21 @@ stored in excel
 post example of one of the overall test sheets and the individual test sheets.
 
 
-\subsubsection{Testing Schedule}
+\subsection{Testing Schedule}
 
 This part of the project will run in parallel with the implementation stage of the packet metrics, as this does not rely on them being completed.
 *list types of tests wanting to be run
 *tabulate locations + clock types? (rough dates/times maybe)
 
-\subsection{Packet Methods}
+\section{Packet Methods}
 * explain briefly the packets are used, and refer to report
 *explain which packets will be chosen (why they were chosen)
 *list all metrics that will be implemented
-\subsubsection{Choosing a suitable language}
+\subsection{Choosing a suitable language}
 
 *ranking tables to choose the correct language
 
-\subsubsection{General Packet Implementation}
+\subsection{General Packet Implementation}
 
 \subsubsection{TDEV and TDEV derivatives}
 
@@ -328,7 +477,7 @@ Awk Data Parser
 \label{ganttchart}
 \begin{figure}
 \centering
-\includegraphics[scale=0.4]{Figures/GanttChart.eps}
+%\includegraphics[scale=0.4]{Figures/GanttChart.eps}
 \caption{Gantt Chart}
 \end{figure}
 \begin{table}[H]
