@@ -52,6 +52,10 @@ Wednesday 19th March
 - aiming to get part of the method section of the report completed. 
 - will also note down what diagrams and pictures are required.
 - need to create images of the outside and inside of the TimePort, BeagleBOne, and the Syncwatch
+- ask watson about the documentation: added in report or seperate
+- Need to decide on ways to format the Syncwatch specification table
+- Ask watson if  I can take pictures of the hardwar
+
 
 
  
