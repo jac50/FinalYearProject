@@ -54,7 +54,22 @@ Wednesday 19th March
 - need to create images of the outside and inside of the TimePort, BeagleBOne, and the Syncwatch
 - ask watson about the documentation: added in report or seperate
 - Need to decide on ways to format the Syncwatch specification table
-- Ask watson if  I can take pictures of the hardwar
+- Ask watson if  I can take pictures of the hardware
+
+Thursday 20th March
+===================
+
+- Report will be continued today
+- time permitting I'll clean up the data output for the null values at the end. 
+- will try and see watson too regarding the plot.
+- get info from BUCS
+- ask to run ptpd on a different domain
+- instead of looking at the scripts today, I will look into cryptographically signing PTP messages
+- Report currently at 3.3k
+
+- Reached up to ranking table. need to sort tomorrow.
+
+
 
 
 
