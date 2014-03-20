@@ -29,7 +29,6 @@
 %\usepackage[table]{xcolor}
 \usepackage{hhline}
 \usepackage{pdfpages}
-\usepackage{footnotes}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -58,7 +57,8 @@
   commentstyle=\color{dkgreen},   % comment style
   stringstyle=\color{mauve},      % string literal style
   morekeywords={*,...}            % if you want to add more keywords to the set
-} 
+}
+\renewcommand{\lstlistingname}{Code Extract} 
 \newcommand{\degree}{\ensuremath{^\circ}}
 \renewcommand{\headrulewidth}{0pt} % remove the header rule
 \newcommand{\includecode}[2][c]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
@@ -119,7 +119,7 @@ Abstract goes here
 
 \listoffigures
 \listoftables
-
+\newpage
 \section{Introduction}
 
 In several applications, maintaining a high level of time accuracy is very important. 
@@ -362,7 +362,7 @@ The ls command was typed to show that the connection was successful.
 
 \begin{figure}
 \centering
-\includegraphics{Figures/Screenshots/SSH_To_Beaglebone.eps}
+\includegraphics[scale=0.5]{Figures/Screenshots/SSH_To_Beaglebone.eps}
 \caption{SSH to Beaglebone}
 \label{SSH_To_Beaglebone}
 \end{figure}
@@ -386,29 +386,116 @@ The full bash script is shown below, in Code Extract \ref{lst:bashBBB}
 \begin{lstlisting}[label = lst:bashBBB, language = bash, caption=Bash Script in init.d for Beaglebone Black]
 #!/bin/bash
 mount /dev/mmcblk1p1 /mnt/sd
-
 date=$(date +"%Y_%m_%d")
 sudo /home/eesrjw/ptpd2 -i eth0 -C -S -g -d 17 -V > /mnt/sd/eesrjw/timeport_$date.txt
 \end{lstlisting}
 
+Line 1 is the bash shebang which lets the operating system know that the following script is written in bash. 
+The second line mounts the SD card to the correct location. 
+In this case the SD card is device mmcblk1p1, and the mount location is /mnt/sd/.\\
+
+The third line defines a date variable in Year\_Month\_Day format. 
+The forth line runs the PTPd2 daemon. 
+As the script is not saved in the PATH variable, the full path to the script is used. 
+The flags will be discussed in more detail in the later section as similar flags will be used.\\
+
+Once the script above is run (or if the PTPd2 script is run on its own from the terminal), the output is stored in the text file mentioned on Line 5.\\
+
+Once the test is completed, the script can be killed by using $kill -9$ on ptpd2. 
+The final step is to transfer the text file from the beaglebone to the local machine ready for packet metrics to be run on it. 
+
+\subsubsection{Sending Data to the Local Machine}
+
+There are two ways to retrieve the data from the Beaglebone: either pulling out the SD card and using an SD card reader to transfer the text file, or remotely using a utility such as rsync. \\
+
+It was decided that as all other commands are sent to the device remotely, that a short rsync script will be made. 
+Code Extract \ref{lst:rsync} below is the rsync script used. 
+
+\begin{lstlisting}[language=bash, label = lst:rsync,caption=Rsync Script]
+#!/bin/bash
+echo "RSync List-only will run"
+rsync --list-only jac50@eepc-rjw-beaglebone.bath.ac.uk:/mnt/sd/eesrjw/ ./
+echo "Type filename here: "
+read fileName
+rsync -v --progress jac50@eepc-rjw-beaglebone.bath.ac.uk:/mnt/sd/eesrjw/i\$fileName ./NotSorted
+\end{lstlisting}
+
+The script above prompts the user to type in the filename. 
+It lists the files in the correct directory on the beaglebone in case the user does not know the correct file name. 
+Line 6 then performs the sync operation, using the verbose and the progress flag. \\
+
+The only issue with this script is that it prompts the user twice for the password. 
+As this script was not run very often it was not an issue.
+If it was however more research would have been done to see if that could be fixed. 
+A screenshot below (Figure \ref{fig:rsync} shows the rsync script transferring across a gzipped data file.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{Figures/Screenshots/Rsync_From_Beaglebone.eps}
+\label{fig:rsync}
+\caption{Rsync Example}
+\end{figure}
+
+It was important to gzip the file beforehand or the transfer would have taken a lot longer. 
+%--------------------------------------------------------------------------
+The rate of data collection is around RATE OF DATA HERE
+%--------------------------------------------------------------------------
+
 \subsection{Software - PTPd}
 
-Same as above
-\subsection{Data Collection Overview}
-%explain use of static IPs. introduce the table below
+The final type of clock that can be used is a software daemon called PTPd (or sometimes PTPd2). 
+It is a program written in C that meets most aspects of the IEEE1588 specification. 
+PTPd2 meets the changes made in the 2008 standard.\\
 
-The summary table below shows what hardware is available, based on class, movability, and ease of transferring data off of it. 
+In-depth code analysis of the script will not be provided in this report.
+Instead the different flags that may be used for this project will be tabulated below (Table \ref{table:FlagsPTPd}).
+
+\begin{table}[H]
+\centering
+\caption{Flags used for PTPd}
+\begin{tabular}{|l|l|l|l|} \hline
+\textbf{Flag Name} & \textbf{Flag Letter V2.3.0 or above} & \textbf{Old Flag Letter} & \textbf{Description} \\ \hline
+Interface & i & b & Network Interface to use \\ \hline
+Domain & d & i & PTP Domain Number \\ \hline
+Foreground & C & C & Run program in foreground \\ \hline
+Verbose & V & None & Run in Verbose mode \\ \hline
+No Clock Adjust & n & t & Do not adjust the local clock \\ \hline 
+Slave only mode & s & g & Set PTPd as Slave \\ \hline
+\end{tabular}
+\label{table:FlagsPTPd}
+\end{table}
+
+PTPd can be used as both a slave and a grandmaster.
+As there is already a dedicated grandmaster, PTPd will be used mainly as a slave. 
+
+The script call has already been given for the beaglebone. The code extract below has been used for the PTPd\_Netbook 
+
+\begin{lstlisting}[language=bash,label=lst:ptpd2]
+./ptpd2 -C -S -g -i 17 -t | tee /home/james/FinalYearProject/PTPData/TestData/TimePort-To-Soft-Test4/RawData.txt
+\end{lstlisting}
+
+The difference in the call to ptpd2 above is that tee has also been used so the data is displayed both on the screen and sent to the text file. 
+This script can be run on any linux computer with root access. 
+Note that the above script in Extract \ref{lst:ptpd2} is already run as a root user.
+The other method to do this would be to run the script with sudo. 
+
+
+\subsection{Data Collection Overview}
+As the majority of the devices above will be controlled remotely via SSH, it would be useful for all of them to be on static IPs assigned by the university computing services. 
+All devices were able to get a static IP with a domain forwarding in the format eepc-rjw-nameofdevice.bath.ac.uk. 
+This is a local address which isn't forwarded outside of the university network. 
+The summary table below shows what hardware is available, based on class, and IPs for the PTP port and the control port. 
 
 \begin{table}[H]
 \caption{Hardware Summary}
-\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
-\textbf{Clock ID} & \textbf{Name} & \textbf{Type} & \textbf{Role} & \textbf{Location Mobility} & \textbf{PTP IP} & \textbf{Control IP}  & \textbf{MAC Address} \\ \hline
-001 & Chronos TimePort & Hardware & Grandmaster & Mobile &TimePort & USB over Serial & ... \\ \hline
-002 & Chronos SyncWatch & Hardware & Slave & Mobile & syncwatchptp & eepc-rjw-syncwatch & ... \\ \hline
-003 & BeagleBone Black & Hardware & Slave & Mobile & beaglebone & eepc-rjw-beaglebone & ... \\ \hline
-004 & PTPd\_Desktop & Software & Slave & Fixed &  ... & ... & ... \\ \hline 
-005 & PTPd\_Netbook & Software & Slave & Mobile & ... & ... & ... \\ \hline
 \label{table:hardwareSummary}
+\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
+\textbf{Clock ID} & \textbf{Name} & \textbf{Type} &  \textbf{PTP IP} & \textbf{Control IP}  & \textbf{MAC Address} \\ \hline
+001 & Chronos TimePort & Hardware GM  &TimePort & USB over Serial & ... \\ \hline
+002 & Chronos SyncWatch & Hardware & syncwatchptp & syncwatch & ... \\ \hline
+003 & BeagleBone Black & Hardware & beaglebone & beaglebone & ... \\ \hline
+004 & PTPd\_Desktop & Software &  ... & ... & ... \\ \hline 
+005 & PTPd\_Netbook & Software & ... & ... & ... \\ \hline
 \end{tabular}
 \end{table}
 
@@ -417,29 +504,150 @@ Note that the IPs listed are just part of the full name.
 To access one of them on the university network, add the prefix eepc-rjw- and the suffix .bath.ac.uk.
 
 \subsection{Locations for Clocks}
+
+To get a varied set of data points, it was decided to collect data at a number of locations throughout the network. 
+
+%Topology of network info in here.
+%Note locations of clocks on map
 \subsection{Test Sheets}
 
-explain brief reason as to why test sheets will be used.
-stored in excel
+As there will be quite a few tests performed during the project, and it is important to note times and locations of each test, a test sheet has been created using LibreOffice Calc. An example of a test sheet is found in Appendix \ref{app:testsheet} \\
 
-post example of one of the overall test sheets and the individual test sheets.
+Each test will have the following:
 
+\begin{description}
+\item[Test ID] Each test gets a unique ID number. 
+The number increments for every test performed. 
+\item[Test Name] A general name for the test. 
+This usually consists of the GM clock type, the slave clock type, and the number associated with that type of test. 
+\item[Test Date] The date at which the test was performed in ISO 8601 format.
+\item[File Name] The file name for the test file.
+If the test has to be stopped for any reason, a new file is made with a number at the end. 
+The file name is typically RawData.txt. 
+\item[Directory] The directory where the test data is stored.
+\item[Clock Type] Each clock will have its clock type listed. 
+The clock types have been mentioned earlier in this report. 
+\item[Clock Name] The name of the clock. 
+This is a unique identifer in case multiple clocks of the same type and model are used. 
+\item[Clock Model] The model of the clock. 
+\item[Start Time] The time that the test started. 
+This is as accurate as possible so network data can be correlated with it. 
+\item[End Time] The time that the test finishes. 
+If the test is stopped prematurely but started up again, the final end time is noted here, but the intermediate start and stop time is listed in the comments section.
+\item[Network Activity] An average network activity for the day (low, medium, high). 
+This is used to correlate delay spread with network activity.
+
+\item[Test Description] Brief description of why the test was performed and what the expected outcome of the test is.
+\item[Comments] Any comments can be noted here. Start/Stop times, or if any issues come up will be noted here.
+\end{description}
+
+
+All of the test sheets will not be shown in this report. 
+Instead a summary sheet of all the tests was produced. 
+The summary sheet will include the Test name, date, directory, and start and end times of the tests. 
+This will show up later in the report. 
 
 \subsection{Testing Schedule}
 
-This part of the project will run in parallel with the implementation stage of the packet metrics, as this does not rely on them being completed.
-*list types of tests wanting to be run
-*tabulate locations + clock types? (rough dates/times maybe)
+This part of the project will run in parallel with the implementation stage of the packet metrics, as this does not rely on them being completed. 
+The tests that are to be completed will include:
 
+\begin{itemize}
+\item Hardware to Hardware
+\item Hardware to Software
+\item Hardware to Beaglebone
+\item Different locations
+\item Different Times
+\end{itemize}
+
+An explicit testing schedule has not been produced. 
+Instead there are week blocks allocated in the gantt chart for data collection. 
+
+%Brainstorm other sections
 \section{Packet Methods}
-* explain briefly the packets are used, and refer to report
-*explain which packets will be chosen (why they were chosen)
-*list all metrics that will be implemented
+
+This section of the project is the bulk of the programming development.
+Packet metrics will be created in a suitable language and will be run against the data collected in the previous section.\\
+
+A range of packet metrics were chosen to be implemented from the report detailed in the literature review section of this report. The following packet metrics will be implemented:
+
+\begin{itemize}
+\item TDEV
+\item minTDEV
+\item percentileTDEV
+\item bandTDEV
+\item MATIE
+\item MAFE 
+\end{itemize}
+
+Note that both MATIE and MAFE can have different packet selection methods (min, percentile, or band), so there may be more than the above implemented in the final script. 
 \subsection{Choosing a suitable language}
 
-*ranking tables to choose the correct language
+The first decision to make for this section of the project was to choose a suitable programming language. 
+Based on the languages that would be suitable for a task such as this, the following languages were identified: R, C, Matlab, or Python. \\
 
-\subsection{General Packet Implementation}
+The requirements that the language must meet in order to be suitable for the project are listed below.\\
+
+Note that parts of this section has been copied from the Individual Technical Report for the Third Year Group Business and Design Project as there are some parts that are applicable. 
+
+\begin{description}
+\item[REQ1- Familiarity with the Language] \hfill \\ \textit{Spec: Used for a sufficient length of time} \\ If the language was very familiar the development time of the scripts would be quicker. 
+This extra time may be acceptable however if there is a much better language ssuited for the task. 
+\item[REQ2 - Well Documented] \hfill \\ \textit{Spec: Not Applicable} \\ The majority of modern high level languages are well documented, with some online resources better than others. 
+The language must be well documented so \textbf{[REQ7]} can be met. 
+This will also make it easier if \textbf{[REQ1]} has not been met fully as it would be easier to learn the language with good documentation. 
+\item[REQ3 - Plotting Functionality] \hfill \\ \textit{Spec: Sufficient plotting functionality available} \\ Does the language support complex plotting as standard or are external libraries required?
+\item[REQ4 - External libraries already available] \hfill \\ \textit{Spec: All available} \\ Some external libraries may be needed in case some specific functionality is required. Examples of external libraries that will be required are a command line argument tool and logging functionality.  
+\item[REQ5 - Speed] \hfill \\ \textit{Spec: Performs the metrics in a reasonable length of time} \\ The metrics should be able to run on a relatively large dataset in a reasonable length of time.
+As it is unknown how long the scripts will take, this reasonable length of time will be decided later.
+If need be optimisation can be made to make the scripts faster.
+\item[REQ6 - Linux Compatibility] \hfill \\ \textit{Spec: Can be developed under Linux} \\ As the rest of the development will be using a Linux Mint netbook, it is a preference for the language to be suitable for a Linux development environment.
+
+\end{description}
+To decide on the best solution, a set of ranking criteria was created as well as a ranking table. 
+The table below shows the criteria that the above languages were compared against. 
+\begin{table}[H]
+\centering
+\caption{List of Criteria for the Language Options}
+\begin{tabular}{|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{2cm}|c|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|}\hline
+\cellcolor{Black}\textcolor{White}{\textbf{Criterion}} & \cellcolor{Black}\textcolor{White}{\textbf{Description}}& \cellcolor{Black}\textcolor{White}{\textbf{Requirement}} & \cellcolor{Black}\textcolor{White}{\textbf{Weight}} & \cellcolor{Black}\textcolor{White}{\textbf{Highest - 5}} & \cellcolor{Black}\textcolor{White}{\textbf{Lowest - 0}}\\ \hline
+Familiarity with the Language & Is the engineer familiar with the language syntax and style? & \textbf{[REQ1]} & 9 & Developed a few large projects. & No familiarity \\ \hline
+Plotting functionality & What plotting functionality is available for the language& \textbf{[REQ3]}&  7 & Lots of plotting functionality & All plotting functions would need to be written from scratch \\ \hline
+External Libraries available & Are all of the libraries available to complete the project? & \textbf{[REQ4]} & 7 & All of the required libraries are available. & Minimal library support. \\ \hline
+Speed & Is the chosen language going to be fast enough for the application? & \textbf{[REQ5]} & 6 & Fast enough. & Not fast at all. Needs careful programming to make as efficient as possible. \\ \hline
+Linux Compatibility & Is the language compatible in a linux development environment?  & \textbf{[REQ6]} & 6 & Yes, it is compatible. & No. Windows Only \\ \hline
+Development Time & How long would it take to develop the first program & \textbf{None} & 7 & Less than a month & Longer than 3 months \\ \hline
+ Documentation & Is the language mature enough to have a full set of documentation? & \textbf{[REQ2]} & 6 & Yes. The language has clear and concise for all of the documentation. & Very limited. \\ \hline
+\end{tabular}
+\end{table}
+
+% ---------------------------------------------------------------------
+\begin{table}[H]
+\caption{Language Options Ranking Tables}
+\label{table:lang}
+\centering
+\begin{tabular}{|c|c|m{2cm}|m{2cm}|m{2cm}|} \hline
+\multicolumn{5}{|l|}{\cellcolor{black}\textcolor{white}{\textbf{Programming Language}}} \\ \hline
+\multirow{2}{*}{Ranking Criteria} & \multirow{2}{*}{Weight} & \multicolumn{3}{|c|}{Language} \\ \cline{3-5}
+& & C++ & Matlab & Python\\ \hhline{*{5}{|-}}
+Familiarity with the Language & 9 & \cellcolor{OrangeRed}{27} & \cellcolor{Goldenrod}{36} & \cellcolor{ForestGreen}{45} \\ \hhline{*{5}{|-}}
+Form Libraries Easy to use & 8 & \cellcolor{Orange}{24} & \cellcolor{Orange}{24} & \cellcolor{LimeGreen}{32} \\ \hhline{*{5}{|-}}
+Portability & 8 & \cellcolor{ForestGreen}{40} & \cellcolor{OrangeRed}{16} & \cellcolor{LimeGreen}{32} \\ \hhline{*{5}{|-}}
+External Libraries Available  & 7 & \cellcolor{ForestGreen}{28} & \cellcolor{Orange}{21} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
+Multithreading Support & 7 & \cellcolor{Orange}{14} & \cellcolor{OrangeRed}{0} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
+Development Time & 7 & \cellcolor{Orange}{21} & \cellcolor{ForestGreen}{28} & \cellcolor{ForestGreen}{28} \\  \hhline{*{5}{|-}}
+Documentation & 6 & \cellcolor{Orange}{18} & \cellcolor{Orange}{18} & \cellcolor{ForestGreen}{30} \\ \hhline{*{5}{|=}}
+\multicolumn{2}{|r|}{\textbf{Total Figure of Merit}} & 151 & 115 & \cellcolor{ForestGreen}{195} \\ \hhline{*{5}{|-}}
+\end{tabular}
+\end{table}
+
+Therefore based on the ranking table above it was decided that R will be the most suitable language for the task.
+In addition to this there are some R scripts as part of the PTPd which may also be used if suitable.\\
+
+%Some information on R
+
+
+\subsection{General Packet Metric Implementation}
 
 \subsubsection{TDEV and TDEV derivatives}
 
@@ -458,15 +666,14 @@ This part of the project will run in parallel with the implementation stage of t
 
 explain what utility scripts otherwise not mentioned above that will be used.
 
-Rsync Script
 
 Awk Data Parser
 
 \section{Results}
 
 *explain results
-\section{Milestones}
 \section{Discussion}
+\section{Milestones}
 \section{Conclusion}
 \section{Acknowledgements}
 
