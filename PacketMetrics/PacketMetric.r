@@ -73,6 +73,19 @@ N <- dataPacket$N
 #---- Currently To == Time, but will sort out once I understand what to do with To ----
 
 
+if (args$hist) {
+	plotHistogram(delays)
+}
+
+if (args$chist) {
+	plotCHistogram(delays)
+	plotCHistogram(delays)
+}
+
+if (args$pdelay) {
+	plotDelay(delays)
+}
+
 # ---- Set restrictions based on document ------
 maxn <- floor(N / 3)
 maxNMATIE <- floor(N / 2)
@@ -87,7 +100,6 @@ colnames(ResultMATIEMAFE) <- c("MATIE", "MAFE", "MinMATIE", "MinMAFE")
 a <- 20
 b <- 80
 loginfo("Starting main loop")
-
 # ----- Main Loop. Loop from 1 to maxn -------
 for (i in 1:maxn){
 	ptm <- proc.time() # Read current time
