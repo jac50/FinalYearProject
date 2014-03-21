@@ -674,6 +674,12 @@ Awk Data Parser
 *explain results
 \section{Discussion}
 \section{Milestones}
+\section{Further Work}
+\subsection{Cryptographically Signing PTP}
+
+\subsection{Sub-microsecond accuracy}
+
+\section{Future Work}
 \section{Conclusion}
 \section{Acknowledgements}
 
