@@ -67,7 +67,18 @@ Thursday 20th March
 - instead of looking at the scripts today, I will look into cryptographically signing PTP messages
 - Report currently at 3.3k
 
-- Reached up to ranking table. need to sort tomorrow.
+- Reached up to ranking table. need to sort tomorrow
+- documentation for hardware?
+
+Notes on cryptographically signing PTP
+--------------------------------------
+
+- PTP is not a secure system
+- the GM is based on trust, and all slaves are blindly synchronising to the msaster clock. 
+- what if the master was spoofed and the delays sent were inaccurate?
+- catastrophy would occur with high critical systems which rely on this accurate timing.
+- some investigation into what the causes would be to the system and how to mitigate it would also be looked at. 
+
 
 
 
