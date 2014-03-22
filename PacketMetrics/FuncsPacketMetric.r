@@ -52,7 +52,8 @@ createArguments <- function(){
 	parser$add_argument('--save', dest='save', action="store_true")
 	parser$add_argument('--load', dest='file')
 	parser$add_argument('--stats', dest='stats', action="store_true")
-	#--------------------------------------------------------------------------------------------------
+	parser$add_argument('')
+	#------------------------------------------------------------------------------
 	return (parser)
 }
 
@@ -328,6 +329,18 @@ for (i in (maxn + 1) : maxNMATIE) {
 
 	returnValue<- list("ResultTDEV" = ResultTDEV, "ResultMATIEMAFE" = ResultMATIEMAFE)
 	return (returnValue)
+
+}
+
+purgeResult <- function() {
+	#Purge ResultTDEV and ResultMATIEMAFE for NA values (or 0s)
+	# Work back through the list until there are no NAs. 
+	# Ideally all datasets should be an equal length. 
+	# need to collect data on what are the rows that are invalid
+	# For loop from end. remove if NA. keep looping until no NA. return 0
+
+	
+
 
 }
 
