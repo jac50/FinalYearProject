@@ -138,7 +138,7 @@ ResultMATIEMAFE <- results$ResultMATIEMAFE
 #------ Plotting and other Outpit forms are plotted here
 plotArray(ResultTDEV,0)
 plotArray(ResultMATIEMAFE,1)
-
+print(ResultTDEV)
 if (args$save) { 
 fname = paste("../PTPData/DelayData/Data : Test: ", args$nTest, "Sample Size:", N, ".txt")
 write.table(delays,file=fname,sep="\t", col.names = F, row.names = F)
