@@ -275,3 +275,60 @@ outputTable <- function(result, isCSV, isLatex){
 		loginfo("LaTeX table written")
 	}
 }
+calculateMetrics <- function() {
+
+
+# ---- Set restrictions based on document ------
+maxn <- floor(N / 3)
+maxNMATIE <- floor(N / 2)
+# -------------- Initialise Variables ----------------------
+RawResult <- c(0,0,0,0)
+RawResultMATIE <- c(0,0,0,0)
+ResultTDEV <- matrix(0, nrow = maxn, ncol = 5)
+colnames(ResultTDEV) <- c("TDEV", "TDEVC", "minTDEV", "bandTDEV", "percentileTDEV")
+ResultMATIEMAFE <- matrix(0, nrow = maxNMATIE, ncol = 4)
+colnames(ResultMATIEMAFE) <- c("MATIE", "MAFE", "MinMATIE", "MinMAFE")
+
+a <- 20
+b <- 80
+loginfo("Starting main loop")
+# ----- Main Loop. Loop from 1 to maxn -------
+for (i in 1:maxn){
+	ptm <- proc.time() # Read current time
+	#iresultTDEV[i] <- TDEV(To, i,N,delays) #TDEV on its own
+	#resultMinTDEV[i] <-minTDEV(To,i,N,delays) #minTDEV on its own
+	#temp <- .C("TDEV",To,as.integer(i),as.integer(N),delays,result = double(1)) # C call to TDEV
+	
+	#resultTDEVC[i] <-as.double(temp['result']) #saves TDEVC results
+	RawResult = TDEVAll(To,i,N,delays,a,b) 
+	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
+	ResultTDEV[i,1] = RawResult[1]
+#	ResultTDEV[i,2] = ResultTDEVC[i] 
+	ResultTDEV[i,3] = RawResult[2]
+	ResultTDEV[i,4] = RawResult[3]
+	ResultTDEV[i,5] = RawResult[4]
+	ResultMATIEMAFE[i,1] = RawResultMATIE[1]
+	ResultMATIEMAFE[i,3] = RawResultMATIE[2]
+	ResultMATIEMAFE[i,2] = RawResultMATIE[3]
+	ResultMATIEMAFE[i,4] = RawResultMATIE[4]
+	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3), "\n" )) # Print line which prints the iteration time
+	
+}
+# ----- Extension of the main loop to handle the extra iterations needed for MATIE / MAFE
+for (i in (maxn + 1) : maxNMATIE) {
+	ptm <- proc.time()
+	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
+	ResultMATIEMAFE[i,1] = RawResultMATIE[1]
+	ResultMATIEMAFE[i,3] = RawResultMATIE[2]
+	ResultMATIEMAFE[i,2] = RawResultMATIE[3]
+	ResultMATIEMAFE[i,4] = RawResultMATIE[4]
+	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
+}
+
+
+	returnValue<- list("ResultTDEV" = ResultTDEV, "ResultMATIEMAFE" = ResultMATIEMAFE)
+	return (returnValue)
+
+}
+
+
