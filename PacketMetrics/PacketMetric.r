@@ -34,6 +34,7 @@ parser <- createArguments()
 args <- parser$parse_args()
 sampleSize <- args$sampleSize
 directory <- args$directory
+start <- args$start
 initLogger()
 
 
@@ -49,7 +50,9 @@ if (sampleSize <= 0){
 	sampleSize <-args$sampleSize
 	# ---- Note: Strange that I need to do the above. will investigate. possibly to do with deep/shallow copying?
 }
-
+if (start > 0 && < 10000) {
+	sampleSize <- sampleSize + start
+}
 tempResult <- parseFileName(args$nTest, args$directory, args$direction)
 fileName <- tempResult$fileName
 args$nTest <- tempResult$nTest
@@ -139,6 +142,7 @@ ResultMATIEMAFE <- results$ResultMATIEMAFE
 plotArray(ResultTDEV,0)
 plotArray(ResultMATIEMAFE,1)
 print(ResultTDEV)
+
 if (args$save) { 
 fname = paste("../PTPData/DelayData/Data : Test: ", args$nTest, "Sample Size:", N, ".txt")
 write.table(delays,file=fname,sep="\t", col.names = F, row.names = F)
