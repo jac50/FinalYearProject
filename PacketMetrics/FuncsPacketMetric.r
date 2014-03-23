@@ -52,7 +52,7 @@ createArguments <- function(){
 	parser$add_argument('--save', dest='save', action="store_true")
 	parser$add_argument('--load', dest='file')
 	parser$add_argument('--stats', dest='stats', action="store_true")
-	parser$add_argument('')
+	parser$add_argument('--start', dest='start', default=0)
 	#------------------------------------------------------------------------------
 	return (parser)
 }
