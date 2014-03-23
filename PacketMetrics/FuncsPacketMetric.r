@@ -29,7 +29,7 @@ runHead <- function(sampleSize, directory){
 createArguments <- function(){
 
 	# ----- Sets up the Argument Parser and adds the required arguments -----
-	parser <- ArgumentParser(description='Perform some Packet Metrics')
+	parser <- ArgumentParser(description='This script can calculate packet metrics on some PTP data. Type the -help command for a full list of arguments')
 	parser$add_argument('-nTest',metavar='00X',type='integer',default= -1,
 			help = 'This is the test number found in the Summary test sheet',dest="nTest")
 	parser$add_argument('-nLines',metavar='N',type='integer',dest="sampleSize", default = 0,
@@ -41,18 +41,18 @@ createArguments <- function(){
 	parser$add_argument('--AllTestsForSampleSize', metavar='Sample Size', dest='AllSampleSize', default="None", 
 			help="Use this flag if you want all tests to run for a set sample size")
 	parser$add_argument('--AllSamplesSizesForTest', metavar = 'Test Number', dest='AllinTest', default="None", 
-			help = "USe this flag if you want all the sample sizes run for a particular test")
-	parser$add_argument('-CSV',dest='CSV',action="store_true")
-	parser$add_argument('-latex',dest='latex',action="store_true")
-	parser$add_argument('-v', '--verbose', dest='verbose', action="store_true")
-	parser$add_argument('-q', '--quiet', dest='quiet', action="store_true")
-	parser$add_argument('--hist',dest='hist', action="store_true")
-	parser$add_argument('--cHist', dest='chist', action="store_true")
-	parser$add_argument('--plotDelay', dest='pdelay', action="store_true")	
-	parser$add_argument('--save', dest='save', action="store_true")
-	parser$add_argument('--load', dest='file')
-	parser$add_argument('--stats', dest='stats', action="store_true")
-	parser$add_argument('--start', dest='start', default=0)
+			help = "Use this flag if you want all the sample sizes run for a particular test")
+	parser$add_argument('-CSV',dest='CSV',action="store_true", help = "Use this command to write a CSV file of metrics")
+	parser$add_argument('-latex',dest='latex',action="store_true", help = "Generates a LaTeX table of results")
+	parser$add_argument('-v', '--verbose', dest='verbose', action="store_true", help = "Sets the logger to verbose mode")
+	parser$add_argument('-q', '--quiet', dest='quiet', action="store_true" , help = "Sets the logger to quiet mode")
+	parser$add_argument('--hist',dest='hist', action="store_true", help = "Creates a histogram of delays")
+	parser$add_argument('--cHist', dest='chist', action="store_true", help = "Creates a colour histogram plot")
+	parser$add_argument('--plotDelay', dest='pdelay', action="store_true", help = "Plots delay in a line graph")	
+	parser$add_argument('--save', dest='save', action="store_true", help = "Saves the delays in a csv file")
+	parser$add_argument('--load', dest='file', help = "Loads the given CSV file")
+	parser$add_argument('--stats', dest='stats', action="store_true". help = "Calculates stats based on delays")
+	parser$add_argument('--start', dest='start', default = 0, help = "Sets the starting point")
 	#------------------------------------------------------------------------------
 	return (parser)
 }
