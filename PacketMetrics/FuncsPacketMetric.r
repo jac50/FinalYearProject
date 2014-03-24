@@ -50,8 +50,8 @@ createArguments <- function(){
 	parser$add_argument('--cHist', dest='chist', action="store_true", help = "Creates a colour histogram plot")
 	parser$add_argument('--plotDelay', dest='pdelay', action="store_true", help = "Plots delay in a line graph")	
 	parser$add_argument('--save', dest='save', action="store_true", help = "Saves the delays in a csv file")
-	parser$add_argument('--load', dest='file', help = "Loads the given CSV file")
-	parser$add_argument('--stats', dest='stats', action="store_true". help = "Calculates stats based on delays")
+	parser$add_argument('--loadDelays', dest='loadDelays', help = "Loads the given CSV file", default="None")
+	parser$add_argument('--stats', dest='stats', action="store_true", help = "Calculates stats based on delays")
 	parser$add_argument('--start', dest='start', default = 0, help = "Sets the starting point")
 	#------------------------------------------------------------------------------
 	return (parser)
@@ -168,6 +168,18 @@ readFile <- function(fileName, nTest, sampleSize, testSheet){
 	return(Data)	
 
 }
+readFileDirect <- function(fileName) {
+
+	cat(paste("Filename to be read : ", fileName,"\n"))
+	error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=",")) # Catches the error if read.csv fails
+	if ("try-error" %in% class(error)) { 
+		loginfo("File does not exist. Will exit\n")
+		return(2)
+	}
+	
+	loginfo("CSV Data has been written to Data variable\n")
+
+}
 
 # --------------------------------------------------------------
 # -             Name: purgeData                                -
@@ -246,9 +258,11 @@ generateResultArray <- function(ResultTDEV, ResultMATIEMAFE) {
 	# Globals: maxNMATIE, maxn
 	# The indices below refer to the C result. Adjust the result indices by 1 when it gets removed.
 	#  C array is result[,2]
-	result <- matrix(0,ncol = 10, nrow = maxNMATIE)
-	result[,1] <- seq(1,maxNMATIE) #currently datapoints - not time axis
-	result[1:maxn,2:6] <- ResultTDEV
+	sizeTDEV <- nrow(ResultTDEV)
+	sizeMATIE <- nrow(ResultMATIEMAFE)
+	result <- matrix(0,ncol = 10, nrow = sizeMATIE)
+	result[,1] <- seq(1,sizeMATIE) #currently datapoints - not time axis
+	result[1:sizeTDEV,2:6] <- ResultTDEV
 	result[,7:10] <- ResultMATIEMAFE
 	return(result)
 
