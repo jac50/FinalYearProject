@@ -50,16 +50,20 @@ if (sampleSize <= 0){
 	sampleSize <-args$sampleSize
 	# ---- Note: Strange that I need to do the above. will investigate. possibly to do with deep/shallow copying?
 }
-if (start > 0 && < 10000) {
+if (start > 0 && start < 10000) {
 	sampleSize <- sampleSize + start
 }
-tempResult <- parseFileName(args$nTest, args$directory, args$direction)
-fileName <- tempResult$fileName
-args$nTest <- tempResult$nTest
-index <- tempResult$index
-testSheet <- tempResult$testSheet
-# ----- At this point all arguments have been parsed successfully -----
-Data <- readFile(fileName, nTest, sampleSize, testSheet)
+if (args$loadDelays != "None") {
+	readFileDirect(paste("/home/james/FinalYearProject/PTPData/", args$loadDelays, sep=""))
+} else {
+
+	tempResult <- parseFileName(args$nTest, args$directory, args$direction)
+	fileName <- tempResult$fileName
+	args$nTest <- tempResult$nTest
+	index <- tempResult$index
+	testSheet <- tempResult$testSheet
+	Data <- readFile(fileName, nTest, sampleSize, testSheet)
+}
 if (dim(Data)[0] ==1 && Data == 2) return (2) # Returns out of the entire script if an error is thrown in the previous function
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #### - May need to be dynamic To ? or at least an option to change / work out #####
