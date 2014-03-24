@@ -37,7 +37,9 @@ directory <- args$directory
 start <- args$start
 initLogger()
 
-
+if (args$interactiveMode == TRUE) {
+	interactiveMenu()
+}
 if (directory == "None" && args$loadDelays == "None") {
 	if (args$nTest == -1){
 		logerror("Error 1: You need either a directory or the test number\n Program will exit. \n")
