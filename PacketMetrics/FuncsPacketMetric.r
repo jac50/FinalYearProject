@@ -178,6 +178,7 @@ readFileDirect <- function(fileName) {
 	}
 	
 	loginfo("CSV Data has been written to Data variable\n")
+	return(Data)
 
 }
 
@@ -290,7 +291,7 @@ outputTable <- function(result, isCSV, isLatex){
 		loginfo("LaTeX table written")
 	}
 }
-calculateMetrics <- function() {
+calculateMetrics <- function(To,N, delays) {
 
 
 # ---- Set restrictions based on document ------
@@ -340,7 +341,6 @@ for (i in (maxn + 1) : maxNMATIE) {
 	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
 }
 
-
 	returnValue<- list("ResultTDEV" = ResultTDEV, "ResultMATIEMAFE" = ResultMATIEMAFE)
 	return (returnValue)
 
@@ -366,3 +366,4 @@ convertData <- function() {
 
 
 }
+

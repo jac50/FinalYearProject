@@ -38,7 +38,7 @@ start <- args$start
 initLogger()
 
 
-if (directory == "None") {
+if (directory == "None" && args$loadDelays == "None") {
 	if (args$nTest == -1){
 		logerror("Error 1: You need either a directory or the test number\n Program will exit. \n")
 		return (1)
@@ -54,7 +54,7 @@ if (start > 0 && start < 10000) {
 	sampleSize <- sampleSize + start
 }
 if (args$loadDelays != "None") {
-	readFileDirect(paste("/home/james/FinalYearProject/PTPData/", args$loadDelays, sep=""))
+	Data <-readFileDirect(paste("/home/james/FinalYearProject/PTPData/TestData/", args$loadDelays, sep=""))
 } else {
 
 	tempResult <- parseFileName(args$nTest, args$directory, args$direction)
@@ -91,65 +91,19 @@ if (args$pdelay) {
 	plotDelay(delays)
 }
 
-results <- calculateMetrics()
+results <- calculateMetrics(To, N, delays)
 ResultTDEV <- results$ResultTDEV
 ResultMATIEMAFE <- results$ResultMATIEMAFE
-
-# ---- Set restrictions based on document ------
-#maxn <- floor(N / 3)
-#maxNMATIE <- floor(N / 2)
-## -------------- Initialise Variables ----------------------
-##RawResult <- c(0,0,0,0)
-#RawResultMATIE <- c(0,0,0,0)
-#ResultTDEV <- matrix(0, nrow = maxn, ncol = 5)
-#colnames(ResultTDEV) <- c("TDEV", "TDEVC", "minTDEV", "bandTDEV", "percentileTDEV")
-#ResultMATIEMAFE <- matrix(0, nrow = maxNMATIE, ncol = 4)
-#colnames(ResultMATIEMAFE) <- c("MATIE", "MAFE", "MinMATIE", "MinMAFE")
-
-#a <- 20
-#b <- 80
-#loginfo("Starting main loop")
-# ----- Main Loop. Loop from 1 to maxn -------
-#for (i in 1:maxn){
-#	ptm <- proc.time() # Read current time
-#	#iresultTDEV[i] <- TDEV(To, i,N,delays) #TDEV on its own
-#	#resultMinTDEV[i] <-minTDEV(To,i,N,delays) #minTDEV on its own
-#	#temp <- .C("TDEV",To,as.integer(i),as.integer(N),delays,result = double(1)) # C call to TDEV
-#	
-#	#resultTDEVC[i] <-as.double(temp['result']) #saves TDEVC results
-#	RawResult = TDEVAll(To,i,N,delays,a,b) 
-#	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
-#	ResultTDEV[i,1] = RawResult[1]
-##	ResultTDEV[i,2] = ResultTDEVC[i] 
-#	ResultTDEV[i,3] = RawResult[2]
-#	ResultTDEV[i,4] = RawResult[3]
-#	ResultTDEV[i,5] = RawResult[4]
-#	ResultMATIEMAFE[i,1] = RawResultMATIE[1]
-#	ResultMATIEMAFE[i,3] = RawResultMATIE[2]
-#	ResultMATIEMAFE[i,2] = RawResultMATIE[3]
-#	ResultMATIEMAFE[i,4] = RawResultMATIE[4]
-#	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3), "\n" )) # Print line which prints the iteration time
-#	
-#}##
-# ----- Extension of the main loop to handle the extra iterations needed for MATIE / MAFE
-#for (i in (maxn + 1) : maxNMATIE) {
-#	ptm <- proc.time()
-#	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
-#	ResultMATIEMAFE[i,1] = RawResultMATIE[1]
-#	ResultMATIEMAFE[i,3] = RawResultMATIE[2]
-#	ResultMATIEMAFE[i,2] = RawResultMATIE[3]
-#	ResultMATIEMAFE[i,4] = RawResultMATIE[4]
-#	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
-#}##
-#pr#int(ResultTDEV)
-#------ Plotting and other Outpit forms are plotted here
 plotArray(ResultTDEV,0)
 plotArray(ResultMATIEMAFE,1)
-print(ResultTDEV)
 
 if (args$save) { 
 fname = paste("../PTPData/DelayData/Data : Test: ", args$nTest, "Sample Size:", N, ".txt")
+fname2 = paste("../PTPData/MetricData/TDEVData : Test: ", args$nTest, "Sample Size:", N, ".txt")
+fname3 = paste("../PTPData/MetricData/MATIEData : Test: ", args$nTest, "Sample Size:", N, ".txt")
 write.table(delays,file=fname,sep="\t", col.names = F, row.names = F)
+write.table(ResultTDEV, file=fname2,sep="\t", col.names = T, row.names = F)
+write.table(ResultMATIEMAFE, file = fname3, sep"\t", col.names = T, row.names = F)
 loginfo("Data written to file")
 }
 
