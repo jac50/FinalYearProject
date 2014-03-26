@@ -53,6 +53,7 @@ createArguments <- function(){
 	parser$add_argument('--loadDelays', dest='loadDelays', help = "Loads the given CSV file", default="None")
 	parser$add_argument('--stats', dest='stats', action="store_true", help = "Calculates stats based on delays")
 	parser$add_argument('--start', dest='start', default = 0, help = "Sets the starting point")
+	parser$add_argument('-i', dest='interactiveMode', action="store_true")
 	#------------------------------------------------------------------------------
 	return (parser)
 }
@@ -97,7 +98,6 @@ initLogger<- function(){ #removed quiet/verbose. rely globally
 # -             GlobalVarDepend: None                          -
 # --------------------------------------------------------------
 parseFileName <- function(nTest,directory,column) {
-
 	# ----- Reads in the Summary Test Sheet -----
 	testSheet <- read.gnumeric.sheet(file = "../PTPData/TestData/TestSheets.ods", 
 				 sheet.name="Summary Sheet",
@@ -110,20 +110,21 @@ parseFileName <- function(nTest,directory,column) {
 	# ----- Checks if either Test number is 0 or if the test has not been added to the sheet -----
 	# ----- The latter is performed to check if the value in testSheet is NA                 -----
 	if (nTest == 0 || is.na(testSheet[nTest,3])){
-		logwarn(paste("Test Number", args$nTest, "not found. Defaulting to example data\n"))
+		logwarn(paste("Test Number", nTest, "not found. Defaulting to example data\n"))
 		nTest <- 0
 	}
+	
 	# ----- Creates the fileName. Currently a relative path ------
 	fileName <- ""				
 	if (directory != "None"){
 		fileName = paste("../PTPData/TestData/",directory,"/SampleSize_", sampleSize,".txt",sep="")
 
-	} else if (args$nTest == 0) {
+	} else if (nTest == 0) {
 		fileName = paste("../PTPData/TestData/ExampleData/SampleSize_", sampleSize, ".txt",sep="")
 
 	} else {
 		
-		fileName = paste("../PTPData/TestData/", testSheet[args$nTest,3], "/SampleSize_", sampleSize,".txt", sep="")
+		fileName = paste("../PTPData/TestData/", testSheet[nTest,3], "/SampleSize_", sampleSize,".txt", sep="")
 	}
 	index <- 4 #default index for Data delays. 4 for Master to Slave. 6 for Slave to Master
 	if (column == "Slave2Master") { 
@@ -244,7 +245,7 @@ plotArray <- function(values,whichPlot) {
 	axis(side = 1)
 	axis(side = 2, las = 1)
 	dev.off()
-	loginfo("Plot Created")
+	loginfo(paste(metric, "Plot Created"))
 }
 
 # --------------------------------------------------------------
@@ -366,4 +367,26 @@ convertData <- function() {
 
 
 }
+interactiveMenu <- function() {
 
+system("clear")
+cat("Interactive mode has been enabled. \n")
+Sys.sleep(0.5)
+cat("Welcome to the Packet Metric Script written by James Cox\n")
+cat("This script will run you through the arguments necessary to run the script successfully\n")
+Sys.sleep(0.5)
+cat("What is the Test Number? ")
+nTest <- readLines(file("stdin"),1)
+if (nTest < 0 || is.na(as.numeric(nTest)) == TRUE) {
+	cat("nTest is an illegal value. will default to 0 \n")
+	nTest <- 0
+}
+cat("What Sample Size is required ")
+nLines <- readLines(file("stdin"),1)
+if (nLines < 0 || is.na(as.numeric(nLines)) == TRUE) {
+	cat("nLines is illegal. will default to 50 \n")
+	nLines <- 50
+}
+vars <- list("nLines" = nLines, "nTest" = nTest)
+return (vars)
+}
