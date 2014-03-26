@@ -23,7 +23,7 @@ source("FuncsPacketMetric.r")
 source("SimpleOperations.r")
 dyn.load("TDEV.so") # C function
 cat("Loaded Required Scripts\n")
-
+startTime <- proc.time()
 # ----- Initialises Variables -----
 sampleSize <- 0
 directory <- ""
@@ -34,14 +34,18 @@ parser <- createArguments()
 args <- parser$parse_args()
 sampleSize <- args$sampleSize
 directory <- args$directory
+nTest <- args$nTest
 start <- args$start
 initLogger()
 
 if (args$interactiveMode == TRUE) {
-	interactiveMenu()
+	vars <- interactiveMenu()
+	sampleSize <- vars$nLines
+	nTest <- vars$nTest
+	
 }
 if (directory == "None" && args$loadDelays == "None") {
-	if (args$nTest == -1){
+	if (nTest == -1){
 		logerror("Error 1: You need either a directory or the test number\n Program will exit. \n")
 		return (1)
 	}
@@ -58,9 +62,10 @@ if (start > 0 && start < 10000) {
 if (args$loadDelays != "None") {
 	Data <-readFileDirect(paste("/home/james/FinalYearProject/PTPData/TestData/", args$loadDelays, sep=""))
 } else {
-
-	tempResult <- parseFileName(args$nTest, args$directory, args$direction)
+	print (paste("....",nTest))
+	tempResult <- parseFileName(nTest, args$directory, args$direction)
 	fileName <- tempResult$fileName
+	print(fileName)
 	args$nTest <- tempResult$nTest
 	index <- tempResult$index
 	testSheet <- tempResult$testSheet
@@ -105,7 +110,7 @@ fname2 = paste("../PTPData/MetricData/TDEVData : Test: ", args$nTest, "Sample Si
 fname3 = paste("../PTPData/MetricData/MATIEData : Test: ", args$nTest, "Sample Size:", N, ".txt")
 write.table(delays,file=fname,sep="\t", col.names = F, row.names = F)
 write.table(ResultTDEV, file=fname2,sep="\t", col.names = T, row.names = F)
-write.table(ResultMATIEMAFE, file = fname3, sep"\t", col.names = T, row.names = F)
+write.table(ResultMATIEMAFE, file = fname3, sep="\t", col.names = T, row.names = F)
 loginfo("Data written to file")
 }
 
@@ -117,4 +122,5 @@ if (args$stats) {
 result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
 
 error <- outputTable(result,args$CSV, args$latex)
-
+loginfo(paste("Total Run Time: ", round(proc.time()[1] - startTime[1],3)))
+loginfo(paste("Total memory requirement: ", (object.size(x=lapply(ls(), get)))))
