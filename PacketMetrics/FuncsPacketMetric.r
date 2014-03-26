@@ -155,8 +155,8 @@ readFile <- function(fileName, nTest, sampleSize, testSheet){
 	if ("try-error" %in% class(error)) { 
 		loginfo("The file can not be found. This is most likely because the sample size file you requested does not exist. This file will be created.\n")
 		# ---- Calls Head on the non-standard sampleSize
-		if (args$nTest == 0) runHead(args$sampleSize, "ExampleData")
-		else runHead(args$sampleSize,testSheet[args$nTest, 3])
+		if (args$nTest == 0) runHead(sampleSize, "ExampleData")
+		else runHead(sampleSize,testSheet[args$nTest, 3])
 	
 		# ----- Reads the data again to see if the file was created successfully -----
 		error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=","))
