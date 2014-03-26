@@ -180,8 +180,41 @@ The reports below will be discussed in some detail:
 \end{description}
 
 
-\subsection{Lit Review for Packet Metric}
-Lit review for packet metric 
+\subsection{Definitions and Terminology for Synchronisation in Packet Networks \cite{ITUPacketMetrics}}
+\label{metricReview}
+
+The first paper defines a number of definitions and terms when dealing with Packet Synchronisation. The areas of interest in this report were packet metrics which are found in Appendix I3 and I4.  
+These can be split into three sections: Packet Selection Methods, Packet Metrics without Pre-filtering, and Packet Metrics with Pre-filtering.
+
+\subsubsection{Packet Selection Methods}
+
+There are two main methods of selecting packets when calculating a packet metric: either using a selection technique at the same time as the packet metric calculation, or as a pre-processing technique before the metric calculation is performed.  \\
+
+Packet selection, when integrated with the calculation, is very useful when the behaviour of a network is to be determined with respect to its packet delay variation. 
+This is because it provides a generic method that is independent to a particular slave clock implementation \cite {ITUPacketMetrics}.
+This packet selection method is also known as a Class B metric. \\
+
+The other method uses a pre-processing technique which preselects packets from a time window. 
+By doing this the process will average out any inconsistencies in the delays, thus resembling a clock running in steady state. 
+Therefore this method is more suitable when trying to specify network limits. This is known as a class A metric). \\
+
+
+There are four examples of packet selection methods that are mentioned in the recommendation report. 
+These are: Minimum Packet Selection Method, Percentile Packet Selection Method, Band Packet Selection Method and Cluster Range Packet Selection Method. 
+These will be discussed in turn and will be implemented.
+\subsubsection{Packet Metrics without Pre-filtering}
+
+The first packet method technique discussed is \ac{TDEV}. It is used to specify network wander limits for timing signals and can also be used for packet data
+
+\ac{TDEV} can be applied to both integrated and pre-processed packet selection methods. \\
+
+The implementation equations are quoted in the reference. The approximation equations were used when implementing the functions. 
+\subsubsection{Packet Metrics with Pre-filtering}
+
+The other method is using pre-filtering before the metric is calculated. 
+An averaging function is applied to the set of data, but care must be taken to not over-filter the input.
+This filtered packet sequence can then applied to the metrics mentioned previously in the report. 
+Prefiltered metrics are useful as they can help specify network limits. 
 \subsection{Other Relevant Reading}
 
 There was other relevant reading performed in the first week of the project to do with cryptography and how packet collisions can be prevented. 
@@ -612,7 +645,7 @@ The table below shows the criteria that the above languages were compared agains
 \begin{tabular}{|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{2cm}|c|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|}\hline
 \cellcolor{Black}\textcolor{White}{\textbf{Criterion}} & \cellcolor{Black}\textcolor{White}{\textbf{Description}}& \cellcolor{Black}\textcolor{White}{\textbf{Requirement}} & \cellcolor{Black}\textcolor{White}{\textbf{Weight}} & \cellcolor{Black}\textcolor{White}{\textbf{Highest - 5}} & \cellcolor{Black}\textcolor{White}{\textbf{Lowest - 0}}\\ \hline
 Familiarity with the Language & Is the engineer familiar with the language syntax and style? & \textbf{[REQ1]} & 9 & Developed a few large projects. & No familiarity \\ \hline
-Plotting functionality & What plotting functionality is available for the language& \textbf{[REQ3]}&  7 & Lots of plotting functionality & All plotting functions would need to be written from scratch \\ \hline
+Plotting functionality & What plotting functionality is available for the language& \textbf{[REQ3]}& 8 & Lots of plotting functionality & All plotting functions would need to be written from scratch \\ \hline
 External Libraries available & Are all of the libraries available to complete the project? & \textbf{[REQ4]} & 7 & All of the required libraries are available. & Minimal library support. \\ \hline
 Speed & Is the chosen language going to be fast enough for the application? & \textbf{[REQ5]} & 6 & Fast enough. & Not fast at all. Needs careful programming to make as efficient as possible. \\ \hline
 Linux Compatibility & Is the language compatible in a linux development environment?  & \textbf{[REQ6]} & 6 & Yes, it is compatible. & No. Windows Only \\ \hline
@@ -629,12 +662,12 @@ Development Time & How long would it take to develop the first program & \textbf
 \begin{tabular}{|c|c|m{2cm}|m{2cm}|m{2cm}|} \hline
 \multicolumn{5}{|l|}{\cellcolor{black}\textcolor{white}{\textbf{Programming Language}}} \\ \hline
 \multirow{2}{*}{Ranking Criteria} & \multirow{2}{*}{Weight} & \multicolumn{3}{|c|}{Language} \\ \cline{3-5}
-& & C++ & Matlab & Python\\ \hhline{*{5}{|-}}
-Familiarity with the Language & 9 & \cellcolor{OrangeRed}{27} & \cellcolor{Goldenrod}{36} & \cellcolor{ForestGreen}{45} \\ \hhline{*{5}{|-}}
-Form Libraries Easy to use & 8 & \cellcolor{Orange}{24} & \cellcolor{Orange}{24} & \cellcolor{LimeGreen}{32} \\ \hhline{*{5}{|-}}
-Portability & 8 & \cellcolor{ForestGreen}{40} & \cellcolor{OrangeRed}{16} & \cellcolor{LimeGreen}{32} \\ \hhline{*{5}{|-}}
-External Libraries Available  & 7 & \cellcolor{ForestGreen}{28} & \cellcolor{Orange}{21} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
-Multithreading Support & 7 & \cellcolor{Orange}{14} & \cellcolor{OrangeRed}{0} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
+& & R & Matlab & C \\ \hhline{*{5}{|-}}
+Familiarity with the Language & 9 & \cellcolor{OrangeRed}{18} & \cellcolor{Goldenrod}{36} & \cellcolor{ForestGreen}{45} \\ \hhline{*{5}{|-}}
+Plotting Functionality & 8 & \cellcolor{ForestGreen}{40} & \cellcolor{Green}{32} & \cellcolor{Red}{0} \\ \hhline{*{5}{|-}}
+External Libraries Available  & 7 & \cellcolor{ForestGreen}{28} & \cellcolor{Orange}{21} & \cellcolor{OrangeRed}{14} \\ \hhline{*{5}{|-}}
+Speed & 7 & \cellcolor{Orange}{14} & \cellcolor{OrangeRed}{0} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
+Linux Compatibility  & 7 & \cellcolor{Orange}{14} & \cellcolor{OrangeRed}{0} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
 Development Time & 7 & \cellcolor{Orange}{21} & \cellcolor{ForestGreen}{28} & \cellcolor{ForestGreen}{28} \\  \hhline{*{5}{|-}}
 Documentation & 6 & \cellcolor{Orange}{18} & \cellcolor{Orange}{18} & \cellcolor{ForestGreen}{30} \\ \hhline{*{5}{|=}}
 \multicolumn{2}{|r|}{\textbf{Total Figure of Merit}} & 151 & 115 & \cellcolor{ForestGreen}{195} \\ \hhline{*{5}{|-}}
@@ -644,7 +677,14 @@ Documentation & 6 & \cellcolor{Orange}{18} & \cellcolor{Orange}{18} & \cellcolor
 Therefore based on the ranking table above it was decided that R will be the most suitable language for the task.
 In addition to this there are some R scripts as part of the PTPd which may also be used if suitable.\\
 
-%Some information on R
+- explain what sort of language R is
+- pros / cons
+- considerations that need to be made
+- Development environment
+	+ Linux Mint Netbook
+	+ text editor + the interpreter. no IDE
+
+
 
 
 \subsection{General Packet Metric Implementation}
