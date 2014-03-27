@@ -15,10 +15,10 @@ FS = ","; RATIO==10; num=0; sum[0]=0; sum[1]=0; #Sets the file seperator, a defa
 };\
 {\
 if (NR < 4) next; #Ignores the first three lines
-if (num==0) { firstfield = $1}; \ # Sets the firstfield (time) to the variable firstfield
-num = num + 1;\ 
+if (num==0) { firstfield = $1}; # Sets the firstfield (time) to the variable firstfield
+num = num + 1;\
 sum[1] = sum[1] + $4; #Adds the first delay to the first sum 
-sum[2] = sum[2] + $6;\ #Adds the second delay to sum
+sum[2] = sum[2] + $6; #Adds the second delay to sum
 if (num == RATIO) { #If we've added up RATIO number of delays
 # --- This section parse
 split(firstfield,arrayFirstField," ") #Split old time (at num=0) by space
@@ -30,7 +30,7 @@ gsub(/-/, " ", arraySecond[1]) #Replace all dasheswith a space
 timeDelta = add_ms(arrayFirstField,arraySecond) 
 
 printf "%s %g %g \n",abs(timeDelta),sum[1]/num,sum[2]/num;\
-sum[1] = 0; \ #reset counters
+sum[1] = 0;#reset counters
 sum[2] = 0; \
 num = 0;\
 }; \
@@ -52,8 +52,8 @@ END {
 
 }
 function add_ms(time, time2, 	delta, delta2) { 
-	split(time[2],delta, ".");\ #split the old time by .
-	split(time2[2],delta2,".");\ #split the current time by .
+	split(time[2],delta, "."); #split the old time by .
+	split(time2[2],delta2,"."); #split the current time by .
 	#delta?[2] is the ms difference
 	if (int(delta[2]) > int(delta2[2])) {
 		# If delta is > delta 2, the time is of the form similar to 3.873 and 4.210. 
