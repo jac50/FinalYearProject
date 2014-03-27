@@ -100,7 +100,7 @@ Abstract goes here
 \newpage
 \section*{Acronyms}
 \begin{acronym}
-\acro{CSAC}{}
+\acro{CSAC}{Chip Scale Atomic Clock}
 \acro{CSMA/CD}{Carrier Sense Multiple Access with Collision Detection}
 \acro{GM}{Grandmaster}
 \acro{GPS}{Global Positioning System}
