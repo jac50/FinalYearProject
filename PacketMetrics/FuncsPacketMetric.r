@@ -54,6 +54,8 @@ createArguments <- function(){
 	parser$add_argument('--stats', dest='stats', action="store_true", help = "Calculates stats based on delays")
 	parser$add_argument('--start', dest='start', default = 0, help = "Sets the starting point")
 	parser$add_argument('-i', dest='interactiveMode', action="store_true")
+	parser$add_argument('--convert', dest='convert', action="store_true")
+	
 	#------------------------------------------------------------------------------
 	return (parser)
 }
@@ -359,11 +361,14 @@ purgeResult <- function() {
 
 }
 # This function uses the awk script to convert the two file types. will save the original though.
-convertData <- function() {
+convertData <- function(dir) {
 	# A system call is needed. 
 	# maybe some logic to work out where the new data is being saved
-	#system(paste("/home/james/FinalYearProject/OtherScripts/parseData.awk ", dir, " > ", sep="" ))
-	
+	print(dirname(dir))
+	newDir <- paste(dirname(dir), "ConvertedData", basename(dir),sep="/")
+	system(paste("mkdir -p", newDir))
+	system(paste("/home/james/FinalYearProject/OtherScripts/parseData.awk ", dir, " > ", newDir, "/", basename(dir), sep="" ))
+	return (dir)
 
 
 }
