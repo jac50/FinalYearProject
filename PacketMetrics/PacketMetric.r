@@ -62,13 +62,13 @@ if (start > 0 && start < 10000) {
 if (args$loadDelays != "None") {
 	Data <-readFileDirect(paste("/home/james/FinalYearProject/PTPData/TestData/", args$loadDelays, sep=""))
 } else {
-	print (paste("....",nTest))
 	tempResult <- parseFileName(nTest, args$directory, args$direction)
 	fileName <- tempResult$fileName
-	print(fileName)
 	args$nTest <- tempResult$nTest
 	index <- tempResult$index
 	testSheet <- tempResult$testSheet
+	fileNameConv <- tempResult$fileNameConv
+	if (args$convert) fileName <- convertData(fileName) #changes filename to the new file
 	Data <- readFile(fileName, nTest, sampleSize, testSheet)
 }
 if (dim(Data)[0] ==1 && Data == 2) return (2) # Returns out of the entire script if an error is thrown in the previous function
