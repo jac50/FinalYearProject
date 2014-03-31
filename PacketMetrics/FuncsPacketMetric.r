@@ -38,10 +38,6 @@ createArguments <- function(){
 	parser$add_argument('-metric', metavar='metric', dest="metrics", default="TDEV", help = 'List what metrics you want to add in.')
 	parser$add_argument('-delayDir', metavar='direction', dest="direction", default="Master2Slave", 
 			help = "What direction of delays do you want to base the metrics off? Master to Slave or Slave to Master")
-	parser$add_argument('--AllTestsForSampleSize', metavar='Sample Size', dest='AllSampleSize', default="None", 
-			help="Use this flag if you want all tests to run for a set sample size")
-	parser$add_argument('--AllSamplesSizesForTest', metavar = 'Test Number', dest='AllinTest', default="None", 
-			help = "Use this flag if you want all the sample sizes run for a particular test")
 	parser$add_argument('-CSV',dest='CSV',action="store_true", help = "Use this command to write a CSV file of metrics")
 	parser$add_argument('-latex',dest='latex',action="store_true", help = "Generates a LaTeX table of results")
 	parser$add_argument('-v', '--verbose', dest='verbose', action="store_true", help = "Sets the logger to verbose mode")
