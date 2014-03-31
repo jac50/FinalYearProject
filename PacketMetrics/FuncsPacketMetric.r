@@ -55,7 +55,7 @@ createArguments <- function(){
 	parser$add_argument('--start', dest='start', default = 0, help = "Sets the starting point")
 	parser$add_argument('-i', dest='interactiveMode', action="store_true")
 	parser$add_argument('--convert', dest='convert', action="store_true")
-	
+	parser$add_argument('--ratio', dest='ratio', default = 1)	
 	#------------------------------------------------------------------------------
 	return (parser)
 }
@@ -154,6 +154,7 @@ readFile <- function(fileName, nTest, sampleSize, testSheet){
 
 	loginfo("Attempting to Read in CSV Data...\n")
 	error <- try(Data <- read.csv(file = fileName,head = TRUE, sep=",")) # Catches the error if read.csv fails
+	print(paste("This is the filename: ", fileName))
 	if ("try-error" %in% class(error)) { 
 		loginfo("The file can not be found. This is most likely because the sample size file you requested does not exist. This file will be created.\n")
 		# ---- Calls Head on the non-standard sampleSize
@@ -206,9 +207,10 @@ purgeData <- function(Data) {
 		N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
 	} else if (ncol(Data == 3)) {
 		loginfo("Parsing New File Type.")
-	        time <- as.matrix(Data[0])
-		delays <- as.matrix(Data[index])
-		N <- as.numeric(dim(time))
+	        time <- as.matrix(Data[1])
+		if (index == 4) delays <- as.matrix(Data[2])
+		else delays <- as.matrix(Data[3])
+		N <- as.numeric(nrow(Data))
 		
 	}
 	
@@ -317,13 +319,17 @@ for (i in 1:maxn){
 	#iresultTDEV[i] <- TDEV(To, i,N,delays) #TDEV on its own
 	#resultMinTDEV[i] <-minTDEV(To,i,N,delays) #minTDEV on its own
 	#temp <- .C("TDEV",To,as.integer(i),as.integer(N),delays,result = double(1)) # C call to TDEV
-	
+	temp <- .C("TDEVAllMethods",To,as.integer(i),as.integer(N),delays,tempResultTDEV = double(1),tempResultMinTDEV = double(1), tempResultBandTDEV = double(1), tempResultPercTDEV = double(1)) # C call to TDEV
+	ResultTDEV[i,1] = as.double(temp['tempResultTDEV'])
+	ResultTDEV[i,3] = as.double(temp['tempResultMinTDEV'])
+	ResultTDEV[i,4] = as.double(temp['tempResultBandTDEV'])
+	ResultTDEV[i,5] = as.double(temp['tempResultPercTDEV'])
 	#resultTDEVC[i] <-as.double(temp['result']) #saves TDEVC results
-	RawResult = TDEVAll(To,i,N,delays,a,b) 
-	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
-	ResultTDEV[i,1] = RawResult[1]
+	RawResult = TDEVAll(To,i,N,delays,a,b) 	
+	#RawResultMATIE = MATIEAllMethods(To,i,N,delays)
+	#ResultTDEV[i,1] = RawResult[1]
 #	ResultTDEV[i,2] = ResultTDEVC[i] 
-	ResultTDEV[i,3] = RawResult[2]
+	#ResultTDEV[i,3] = RawResult[2]
 	ResultTDEV[i,4] = RawResult[3]
 	ResultTDEV[i,5] = RawResult[4]
 	ResultMATIEMAFE[i,1] = RawResultMATIE[1]
@@ -361,14 +367,15 @@ purgeResult <- function() {
 
 }
 # This function uses the awk script to convert the two file types. will save the original though.
-convertData <- function(dir) {
+convertData <- function(ratio, dir) {
 	# A system call is needed. 
 	# maybe some logic to work out where the new data is being saved
 	print(dirname(dir))
-	newDir <- paste(dirname(dir), "ConvertedData", basename(dir),sep="/")
+	newDir <- paste(dirname(dir), "ConvertedData",sep="/")
+	newPath <- paste(newDir, basename(dir),sep="/")
 	system(paste("mkdir -p", newDir))
-	system(paste("/home/james/FinalYearProject/OtherScripts/parseData.awk ", dir, " > ", newDir, "/", basename(dir), sep="" ))
-	return (dir)
+	system(paste("/home/james/FinalYearProject/OtherScripts/parseData.awk -v RATIO=", ratio, " ", dir, " > ", newPath, sep="" ))
+	return (newPath)
 
 
 }
