@@ -127,7 +127,6 @@ if (args$stats) {
 }
 
 result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
-
 error <- outputTable(result,args$CSV, args$latex)
 loginfo(paste("Total Run Time: ", round(proc.time()[1] - startTime[1],3)))
 loginfo(paste("Total memory requirement: ", (object.size(x=lapply(ls(), get)))))
