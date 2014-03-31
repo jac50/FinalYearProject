@@ -320,33 +320,43 @@ for (i in 1:maxn){
 	#resultMinTDEV[i] <-minTDEV(To,i,N,delays) #minTDEV on its own
 	#temp <- .C("TDEV",To,as.integer(i),as.integer(N),delays,result = double(1)) # C call to TDEV
 	temp <- .C("TDEVAllMethods",To,as.integer(i),as.integer(N),delays,tempResultTDEV = double(1),tempResultMinTDEV = double(1), tempResultBandTDEV = double(1), tempResultPercTDEV = double(1)) # C call to TDEV
+	temp2 <- .C("MATIEAllMethods",To,as.integer(i),as.integer(N),delays,tempResultMATIE = double(1),tempResultMinMATIE = double(1), tempResultMAFE = double(1), tempResultMinMAFE = double(1)) # C call to TDEV
 	ResultTDEV[i,1] = as.double(temp['tempResultTDEV'])
 	ResultTDEV[i,3] = as.double(temp['tempResultMinTDEV'])
 	ResultTDEV[i,4] = as.double(temp['tempResultBandTDEV'])
 	ResultTDEV[i,5] = as.double(temp['tempResultPercTDEV'])
+	ResultMATIEMAFE[i,1] = as.double(temp2['tempResultMATIE'])
+	ResultMATIEMAFE[i,2] = as.double(temp2['tempResultMinMATIE'])
+	ResultMATIEMAFE[i,3] = as.double(temp2['tempResultMAFE'])
+	ResultMATIEMAFE[i,4] = as.double(temp2['tempResultMinMAFE'])
 	#resultTDEVC[i] <-as.double(temp['result']) #saves TDEVC results
-	RawResult = TDEVAll(To,i,N,delays,a,b) 	
+	#RawResult = TDEVAll(To,i,N,delays,a,b) 	
 	#RawResultMATIE = MATIEAllMethods(To,i,N,delays)
 	#ResultTDEV[i,1] = RawResult[1]
 #	ResultTDEV[i,2] = ResultTDEVC[i] 
 	#ResultTDEV[i,3] = RawResult[2]
-	ResultTDEV[i,4] = RawResult[3]
-	ResultTDEV[i,5] = RawResult[4]
-	ResultMATIEMAFE[i,1] = RawResultMATIE[1]
-	ResultMATIEMAFE[i,3] = RawResultMATIE[2]
-	ResultMATIEMAFE[i,2] = RawResultMATIE[3]
-	ResultMATIEMAFE[i,4] = RawResultMATIE[4]
+	#ResultTDEV[i,4] = RawResult[3]
+	#ResultTDEV[i,5] = RawResult[4]
+	#ResultMATIEMAFE[i,1] = RawResultMATIE[1]
+	#ResultMATIEMAFE[i,3] = RawResultMATIE[2]
+	#ResultMATIEMAFE[i,2] = RawResultMATIE[3]
+	#ResultMATIEMAFE[i,4] = RawResultMATIE[4]
 	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3), "\n" )) # Print line which prints the iteration time
 	
 }
 # ----- Extension of the main loop to handle the extra iterations needed for MATIE / MAFE
 for (i in (maxn + 1) : maxNMATIE) {
 	ptm <- proc.time()
-	RawResultMATIE = MATIEAllMethods(To,i,N,delays)
-	ResultMATIEMAFE[i,1] = RawResultMATIE[1]
-	ResultMATIEMAFE[i,3] = RawResultMATIE[2]
-	ResultMATIEMAFE[i,2] = RawResultMATIE[3]
-	ResultMATIEMAFE[i,4] = RawResultMATIE[4]
+	#RawResultMATIE = MATIEAllMethods(To,i,N,delays)
+	temp2 <- .C("MATIEAllMethods",To,as.integer(i),as.integer(N),delays,tempResultMATIE = double(1),tempResultMinMATIE = double(1), tempResultMAFE = double(1), tempResultMinMAFE = double(1)) # C call to TDEV
+	ResultMATIEMAFE[i,1] = as.double(temp2['tempResultMATIE'])
+	ResultMATIEMAFE[i,2] = as.double(temp2['tempResultMinMATIE'])
+	ResultMATIEMAFE[i,3] = as.double(temp2['tempResultMAFE'])
+	ResultMATIEMAFE[i,4] = as.double(temp2['tempResultMinMAFE'])
+	#ResultMATIEMAFE[i,1] = RawResultMATIE[1]
+	#ResultMATIEMAFE[i,2] = RawResultMATIE[2]
+	#ResultMATIEMAFE[i,3] = RawResultMATIE[3]
+	#ResultMATIEMAFE[i,4] = RawResultMATIE[4]
 	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3),"\n" ))
 }
 
