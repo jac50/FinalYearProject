@@ -20,12 +20,12 @@ void MATIEAllMethods(int To, int* n, int* N ,double * x,double * tempResultMATIE
 	double interimStep[4][*N - (2 * (*n)) + 10];
 	double average[2] = {0.0,0.0};
 	for (int i=windowSide; i <= (*N -(2 * (*n))) - windowSide + 2; i++){
- 		for (int j=i + windowSide; j < *n + i - 1 - 1 ; ) { // - 1 as normal. - 1 for index difference
+ 		for (int j=i + windowSide; j < *n + i - 1 - 1 ; j++) { // - 1 as normal. - 1 for index difference
 			for (int k=0;k < window ;k++){
-				average[0] = average[0] + x[i + (*n) - windowSide + k - 1];
-				average[1] = average[1] + x[i - windowSide + k - 1];
-				if (x[i + (*n) - windowSide + k - 1] < minimum[0]) minimum[0] = x[i + (*n) - windowSide + k - 1];
-				if (x[i- windowSide + k - 1] < minimum[1] ) minimum[1] = x[i - windowSide + k - 1];
+				average[0] = average[0] + x[j + (*n) - windowSide + k - 1];
+				average[1] = average[1] + x[j - windowSide + k - 1];
+				if (x[j + (*n) - windowSide + k - 1] < minimum[0]) minimum[0] = x[j + (*n) - windowSide + k - 1];
+				if (x[j- windowSide + k - 1] < minimum[1] ) minimum[1] = x[j - windowSide + k - 1];
 			
 			}
 		}
