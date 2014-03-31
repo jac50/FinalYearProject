@@ -12,7 +12,7 @@ if (RATIO < 0 || RATIO > 1000000) print "Illegal value of ratio. Will default to
 if (RATIO == 0) print "RATIO variable not found. will default to 10" > "/dev/stderr" ;\
 if (!(RATIO ~ /^[0-9]+$/)) print "RATIO must be an integer. Defaulted to 10" > "/dev/stderr"; 
 FS = ","; RATIO==10; num=0; sum[0]=0; sum[1]=0; #Sets the file seperator, a default ratio value, and some initial values
-printf "#TimeDelta Master2Slave Slave2Master\n"
+printf "# TimeDelta, Master2Slave, Slave2Master\n"
 };\
 {\
 if (NR < 4) next; #Ignores the first three lines
