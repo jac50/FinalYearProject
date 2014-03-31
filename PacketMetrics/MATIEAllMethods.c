@@ -12,14 +12,13 @@
 #include <stdio.h>
 #include <R.h>
 
-void MATIEAllMethods(int To, int* n, int* N ,double * x,double * tempResultMATIE,double * tempResultMAFE, double * tempResultMinMATIE, double * tempResultMinMAFE){
+void MATIEAllMethods(double *To, int* n, int* N ,double * x,double * tempResultMATIE,double * tempResultMAFE, double * tempResultMinMATIE, double * tempResultMinMAFE){
 	int window = 5; // Set window Size
 	int windowSide =  (window - 1) / 2; // Set the length of Side of window
-	double outerStep[4] = {0.0,0.0,0.0,0.0}; 
 	double minimum[2] = {10000,10000};	
-	double interimStep[4][*N - (2 * (*n)) + 10];
+	double interimStep[2][*N - (2 * (*n)) + 10];
 	double average[2] = {0.0,0.0};
-	for (int i=windowSide; i <= (*N -(2 * (*n))) - windowSide + 2; i++){
+	for (int i=0; i <= (*N -(2 * (*n)))  + 1 -1; i++){
  		for (int j=i + windowSide; j < *n + i - 1 - 1 ; j++) { // - 1 as normal. - 1 for index difference
 			for (int k=0;k < window ;k++){
 				average[0] = average[0] + x[j + (*n) - windowSide + k - 1];
@@ -33,15 +32,17 @@ void MATIEAllMethods(int To, int* n, int* N ,double * x,double * tempResultMATIE
 			average[j] = average[j] / window;
 		}
 		
+		interimStep[0][i] = abs(average[0] - average[1]) / *n;
+		interimStep[1][i] = abs(minimum[0] - minimum[1]) / *n;
 		for (int k = 0; k < 2; k++) interimStep[k][i] = abs(interimStep[k][i]) / *n;
-		interimStep[0][i] = average[0] + average[1];
-		interimStep[1][i] = interimStep[0][i] / (*n * (To));
-		interimStep[2][i] = minimum[0] + minimum[1];
-		interimStep[3][i] = interimStep[2][i] / (*n * (To));
 		
+		Rprintf("%.9lf\n", interimStep[0][i]);
 		average[0] = average[1] = 0;
 		minimum[0] = minimum[1] = 10000.00;
-		for (int k = 0; k < 4; k ++)	if (interimStep[k][i] < *tempResultMATIE) *tempResultMATIE = interimStep[k][i];
+		if (interimStep[0][i] > *tempResultMATIE) *tempResultMATIE = interimStep[0][i];
+		if (interimStep[1][i] > *tempResultMinMATIE) *tempResultMinMATIE = interimStep[1][i];
+		*tempResultMAFE = (double) *tempResultMATIE / (*n * (*To));
+		*tempResultMinMAFE = (double) *tempResultMinMATIE / (*n * (*To));
 		
 	}
 
