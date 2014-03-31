@@ -12,7 +12,7 @@ plotDelay <- function(delay) {
 	
 	outputFileName = paste("../PTPData/Plots/PlotOfDelays/Plot of Delays - Test:", args$nTest, " Sample -", N, " size.eps",sep = "")
 	postscript(outputFileName)
-	plot(delay)
+	plot(delay,, pch = 16, cex = .9)
 }
 
 plotCHistogram <- function (delay) { 
