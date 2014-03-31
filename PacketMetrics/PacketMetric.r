@@ -22,6 +22,7 @@ source("MATIEAllMethods.r")
 source("FuncsPacketMetric.r")
 source("SimpleOperations.r")
 dyn.load("TDEV.so") # C function
+dyn.load("TDEVAllMethods.so")
 cat("Loaded Required Scripts\n")
 startTime <- proc.time()
 # ----- Initialises Variables -----
@@ -36,8 +37,8 @@ sampleSize <- args$sampleSize
 directory <- args$directory
 nTest <- args$nTest
 start <- args$start
+ratio <- args$ratio
 initLogger()
-
 if (args$interactiveMode == TRUE) {
 	vars <- interactiveMenu()
 	sampleSize <- vars$nLines
@@ -68,7 +69,14 @@ if (args$loadDelays != "None") {
 	index <- tempResult$index
 	testSheet <- tempResult$testSheet
 	fileNameConv <- tempResult$fileNameConv
-	if (args$convert) fileName <- convertData(fileName) #changes filename to the new file
+	if (args$convert) {
+		loginfo(paste("Data file is being converted to the new format, and using a",ratio, "point average"))
+		print(paste("File Name: ", fileName))
+		runHead(sampleSize, "ExampleData") #Hard Coded need to fix!
+		fileName <- convertData(ratio, fileName) #changes filename to the new file
+		
+
+	}
 	Data <- readFile(fileName, nTest, sampleSize, testSheet)
 }
 if (dim(Data)[0] ==1 && Data == 2) return (2) # Returns out of the entire script if an error is thrown in the previous function
@@ -80,7 +88,6 @@ dataPacket <- purgeData(Data)
 delays <- dataPacket$delays
 time <- dataPacket$time
 N <- dataPacket$N
-
 #---- Currently To == Time, but will sort out once I understand what to do with To ----
 #----- As Delay variable has been written, it can now be plotted into histograms ------
 
