@@ -26,6 +26,7 @@ dyn.load("TDEVAllMethods.so")
 dyn.load("MATIEAllMethods.so")
 cat("Loaded Required Scripts\n")
 startTime <- proc.time()
+options(scipen=9)
 # ----- Initialises Variables -----
 sampleSize <- 0
 directory <- ""
