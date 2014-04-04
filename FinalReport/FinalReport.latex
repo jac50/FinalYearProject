@@ -123,26 +123,90 @@ Abstract goes here
 \listoftables
 \newpage
 \section{Introduction}
+In a few important applications there is a requirement for high accurate clocks. 
+These clocks mmay be used for either an actual timestamp, such as in the telecommunications industry,  or a way to synchronise processes, as is what happens in the automotive industry. 
+Multiple clocks will be used in these applications, and thus they all should be synchronised, but also be accurate. \\
 
-In several applications, maintaining a high level of time accuracy is very important. 
-This may either be a physical timestamp or that there is a need to synchronise process occuring at specific times.
-Some examples of these applications are: telecommunications, the automation industry, or the power transmission industry.\\
+In some applications it is not feasible to have a high accuracy atomic clock (or \ac{CSAC}) due to space or cost constraints.
+If this is not possible, then a \ac{GPS} receiver could be used and time can then be synchronised to the accurate clocks onboard the \ac{GPS} satellites.
+Using high accuracy clocks like the ones mentioned would help to reduce any clock accuracies.\\
 
-There are currently only a few methods to realise this, which depends heavily on the application. 
-For example, if there is space and the budget, a high accuracy atomic clock \ac{CSAC} could be used. 
-If this is not possible, then a \ac{GPS} receiver could be used and time can then be synchronised to the accurate clocks onboard the \ac{GPS} satellites.\\
+There are two types of clock inaccuracies when synchronising clocks. 
+Firstly they may have started at a different time relative to the others, and adjusting for this is called offset correction.
+The second effect is that clocks do not necessarily run at exactly the same speed.
+Therefore clocks need to be continuously adjusted, which is called drift correction.
+The amount of drift correction required depends on the quality of the clock.
+Appendix \ref{clockaccuracies} shows a table of clocks and their corresponding accuracies.
 
-This leads to some issues when heavily relying on \ac{GPS} for time synchronisation. 
-There would be catastrophic consequences in some applications if timing is not kept accurate.
-The issues relate to the ease of jamming of a \ac{GPS receiver}. [reference]\\
+The following industries are examples that would require highly accurate clocks.
 
-Due to the jammability of GPS, there must be either be a backup solution or an alternative method of time synchronisation in order for accurate timing to still be possible. \\
+\begin{description}
+\item[Automation Industry] \hfill \\ Processes will need to be synchronised exactly, and can only be if their clocks are in sync with one another.
+If clocks are in sync then processes can also be separated away from communication between each machine and the processing of the control commands. \cite{IEEEApplications} 
+\item[Power Transmission] \hfill \\ Time synchronisation is very important in the power transmission industry. An example of a situation where timing would have mitigated an event from occurring is the North American blackout in August 2003 \cite{PTPFuturePower}. 
+It made it difficult for the investigation team to be able to sort through the data received when the timestamps were gathered from an inaccurate clock. 
+From the events of this blackout a regulation was put in place to define a minimum absolute accuracy for timestamped data.
+The adoption of the \ac{NERC}  Standard PRC018-1 in 2006 \cite{NERCPRC0181} made it a requirement for any substation in the USA to log data to a minimum accuracy. The timestamped data must be accurate to within 2ms relative  to \ac{UTC}.
+\item[Telecommunications] \hfill\\ In telecommunications, timing protocols are considered when networks need to be synchronised or if mobile base stations need synchronisation pulses.
+With the increase in \ac{GPS} jamming, systems such as 4G must rely on other timing methods in case \ac{GPS} is affected. 
+\end{description}
+
+All of the industries mentioned above could feasibly use \ac{GPS} for a highly accurate timing reference.
+But if there is an issue with the system, for example a jamming incident, then there will be some major consequences should timing drift out of line.  
+It is known that jamming of GPS receivers is becoming more common (REFERENCE) and thus an alternative method of time synchronisation should be used.  [reference]\\
 
 One way of realising this is by using a distributed timing system, such as \ac{NTP} or \ac{PTP}. 
 This would allow for nodes to be able to synchronise their clocks with a much more accurate time source without having to rely on \ac{GPS}
 
+\subsection{How NTP Works}
+
+This is a technology originally designed in 1985 and is used to synchronise clocks over a packet switched network. 
+It is able to achieve synchronisation with \ac{UTC} within a few milliseconds, but can maintain sub-millisecond accuracy on a \ac{LAN} if ideal conditions are met. 
+Errors due to different packet routes or network congestion can decrease this ~accuracy by 100ms or more. \cite{NTPWhitePaper}
+
+\ac{NTP} uses a client-server hierarchy split into "Stratums". 
+Figure \ref{fig:NTPHierarchy} on the next page  shows the Stratums numbered from 0 to 3. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.3]{./Figures/NTPDiagram.eps}
+\caption{\ac{NTP} Network Hierarchy \cite{figRef:NTPHierarchy}}
+\label{fig:NTPHierarchy}
+\end{figure}
+
+The reference clocks located in Stratum 0 are high precision such as  atomic clocks or they use \ac{GPS} synchronisation.  
+The clocks in Stratum 2 will base their time off of the clocks in Stratum 1. 
+A number of the clocks in Stratum 1 will be used for time synchronising each clock in Stratum 2. This is done so that the time is more accurate and robust. 
+Within a Stratum, clocks may also synchronise for sanity checking to ensure that all clocks within a Stratum are accurate between each other.
+Any layers below Stratum 2 will mirror the same algorithm, and there can be up to 15 layers. 
+Stratum 16 is reserved for clocks that are not synchronised with \ac{NTP} \cite{NTP}.
+
+\ac{SNTP} is used in applications which do not require a high timing accuracy.
+It does this by ignoring drift values.
+Therefore it is recommended that SNTP is only used in the higher Stratums \cite{SNTP}.
+The \ac{SNTP} specification is part of the \ac{NTP} specification, cited here \cite{NTPV4Specification}. 
+
+Issues arise when synchronising time over a packet switched network where sub millisecond accuracies are required.  
+\ac{PTP} was developed as a successor to the existing \ac{NTP} standard which aims to reach sub millisecond accuracies. 
+Meeting this value of accuracy is very difficult however with a traditional Ethernet network. \\
+
+When standard switches are used, the packet delay between two nodes is indeterminate. 
+This may be because the packet route from A to B changes depending on network load, or a packet may be held in a switch for an unspecified amount of time whilst working with other data.
+Therefore this is undesired for \ac{PTP} as this packet delay must be taken into account when working out the clock offset. 
+Specific timing switches can be used which will prioritise \ac{PTP} packets, but these may not be available in existing networks or be too expensive to be suitable. 
+
 \subsection{How PTP Works}
-Explain PTP Briefly
+
+\ac{PTP} was developed as a successor to the existing \ac{NTP} standard which aims to reach sub millisecond accuracies. 
+Meeting this value of accuracy is very difficult however with a traditional Ethernet network. \\
+
+When standard switches are used, the packet delay between two nodes is indeterminate. 
+This may be because the packet route from A to B changes depending on network load, or a packet may be held in a switch for an unspecified amount of time whilst working with other data.
+Therefore this is undesired for \ac{PTP} as this packet delay must be taken into account when working out the clock offset. 
+One part of this project will be to investigate the extent of this variation in packet delay on an ethernet network.\\
+
+There are a few important elements of how PTP works in order to be able to start the project. 
+These are: general \ac{PTP} operation, the \ac{BMC} 
 \section{\acf{BMC}}
 \label{ref:BMC}
 \subsection{Project Description}
@@ -310,9 +374,10 @@ To connect to the TimePort: connect the serial to USB cable (seen pictured below
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{Figures/USB2Serial.eps}
+% \includegraphics[scale=0.5]{Figures/USB2Serial.eps}
 \label{fig:USB2Serial}
 \caption{USB to Serial Converter}
+\end{figure}
 Type the following command into a linux terminal:
 
 \begin{lstlisting}[language=Bash]
