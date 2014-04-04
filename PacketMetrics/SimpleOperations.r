@@ -12,37 +12,31 @@ plotDelay <- function(delay) {
 	
 	outputFileName = paste("../PTPData/Plots/PlotOfDelays/Plot of Delays - Test:", args$nTest, " Sample -", N, " size.eps",sep = "")
 	postscript(outputFileName)
-	plot(delay,, pch = 16, cex = .9)
+	plot(delay * 1000, pch = 16, cex = .9, xlab = "Sample Number", ylab = "Delays (ms)")
 }
 
 plotCHistogram <- function (delay) { 
 	# Work in Progress. Comment out all lines until it is completed
 	#outputFileName = paste("../PTPData/Plots/PlotOfDelays/Colour Histogram of Delays - Test:", args$nTest, " Sample -", N, " size.eps",sep = "")
 	#postscript(outputFileName)
-	#logDelay <- log(abs(delay))
-	postscript("Test.eps")
-	logDelay <- delay[2000:length(delay)]
-	plot(delay[2000:length(delay)])
-	step <- 32
+	step <- 32 * 60
 	j <- 0
+	#delay <- rnorm(n=5000,m=24.2,sd=2.2)
 	# -- Flatten the histogram into their corresponding colours. 
-	nStep <- floor(length(logDelay) / step ) # 100 steps for the time being. 
-	colouredDelayArray = matrix(0,nStep,20) #temp matrix. need to define size
-	print(nStep)
-	print(min(logDelay))
-	print(max(logDelay))
+	nStep <- floor(length(delay) / step ) # 100 steps for the time being. 
+	colouredDelayArray = matrix(0,nStep,100) #temp matrix. need to define size
 	bins <- seq(0.00000, 0.00010, by = 0.00005)
 	
-	for (i in seq(1, length(logDelay), by = step))  {
-		if (is.na(logDelay[(i+step - 1)])) break
-		
-		colouredDelayArray[j,] <-hist(logDelay[i:i+step - 1],plot = FALSE, breaks = bins)$counts
+	for (i in seq(1, length(delay),by=step))  {
+		if (is.na(delay[(i+step - 1)])) break
+		histogram <- hist(delay[i:step + i - 1],breaks=30)$counts
+		colouredDelayArray[j,1:length(histogram)] <- histogram
 		j = j + 1
 	}
-	print(colouredDelayArray)	
-	#cat(paste("Test: ",counts))
+	#print(colouredDelayArray)	
 	png("simpleIm.png")
-	image(colouredDelayArray, col=rainbow(256))
+	
+	image(log(t(colouredDelayArray[,1:30])), col=heat.colors(30,alpha=1))
 
 }
 
