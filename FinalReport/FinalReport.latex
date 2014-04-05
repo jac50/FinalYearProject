@@ -108,6 +108,7 @@ Abstract goes here
 \acro{IEEE}{Institute of Electrical and Electronic Engineers}
 \acro{ITU}{International Telecommunication Union}
 \acro{LAN}{Local Area Network}
+\acro{MAC}{Media Access Control}
 \acro{NERC}{North American Electric Reliability Company}
 \acro{NTP}{Network Time Protocol}
 \acro{PPS}{Pulse per Second}
@@ -120,15 +121,16 @@ Abstract goes here
 \end{acronym}
 
 \listoffigures
+\newpage
 \listoftables
 \newpage
 \section{Introduction}
-In a few important applications there is a requirement for high accurate clocks. 
-These clocks mmay be used for either an actual timestamp, such as in the telecommunications industry,  or a way to synchronise processes, as is what happens in the automotive industry. 
-Multiple clocks will be used in these applications, and thus they all should be synchronised, but also be accurate. \\
+In a few applications there is an ever increasing requirement for high accurate clocks.  
+These clocks mmay be used for either a timestamp, such as in the telecommunications industry,  or a way to synchronise processes, as is what happens in the automotive industry. 
+Multiple clocks will be used in these applications, and thus they all should be synchronised with one another. \\
 
 In some applications it is not feasible to have a high accuracy atomic clock (or \ac{CSAC}) due to space or cost constraints.
-If this is not possible, then a \ac{GPS} receiver could be used and time can then be synchronised to the accurate clocks onboard the \ac{GPS} satellites.
+An alternative to this could be to use a \ac{GPS} receiver and time can then be synchronised to the accurate clocks onboard the \ac{GPS} satellites.
 Using high accuracy clocks like the ones mentioned would help to reduce any clock accuracies.\\
 
 There are two types of clock inaccuracies when synchronising clocks. 
@@ -206,9 +208,152 @@ Therefore this is undesired for \ac{PTP} as this packet delay must be taken into
 One part of this project will be to investigate the extent of this variation in packet delay on an ethernet network.\\
 
 There are a few important elements of how PTP works in order to be able to start the project. 
-These are: general \ac{PTP} operation, the \ac{BMC} 
-\section{\acf{BMC}}
+These are: general \ac{PTP} operation and the \ac{BMC} algorithm.
+There are other aspects that will be covered in this report (such as token passing and Secure PTP), but these will be covered in a later section. 
+A comparison with \ac{NTP}, a similar technology will also be made.
+This will be important when considering some security aspects of the technology.
+
+\subsubsection{PTP Explanation}
+
+\ac{PTP} uses a similar master-slave hierarchy of \ac{NTP}, but it does not  use the stratum method. Instead it uses domains which separate out \ac{PTP} synchronisation networks. 
+The master clock for the domain will broadcast out the current time to all of the other clocks on the network using a multicast message.
+In IEEE1588-2008 this can occur up to one message every 32 and a quarter milliseconds. \\
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{Figures/DelayPTP.eps}
+\label{fig:ptptiming}
+\caption{PTP timing diagram (based on \cite{PTPTiming})}
+\end{figure}
+
+The list below shows the basic steps that \ac{PTP} follows \cite{ieee1588}:
+
+\begin{enumerate}
+\item Broadcast begins at $t_{1}$ where the master sends a \textit{sync} message to all clocks on the domain.
+\item Each slave clock takes a note of when the message was received using their local clock.  
+This timestamp is labelled $t_{1}^{'}$.
+\item An optional \textit{follow\_up} message may be sent that includes an accurate timestamp of $t_{1}$. 
+this step occurs if the master clock does not have the capability to create an accurate timestamp when sending the \textit{sync} message.
+\item In order for the slave to synchronise with the master, the round trip delay needs to be known. therefore a \textit{delay\_req} message is sent by the slave clock at time $t_{2}$. 
+\item The master will respond to this message with a \textit{delay\_resp} message. this timestamp is called $t_{2}^{'}$.
+\end{enumerate}
+
+At this point $t_{1}$, $t_{1}^{'}$, $t_{2}$ and $t_{2}^{'}$ are now known. \\
+
+If we define $d$ as the transit time, and $\widetilde{o}$ as the constant offset between the two clocks: 
+
+\begin{equation}
+\label{eqn:t1delay}
+t_{1}^{'} - t_{2} = \widetilde{o} + d
+\end{equation}
+
+\begin{equation}
+\label{eqn:t2delay}
+t_{2}^{'} - t_{2} = - \widetilde{o} + d
+\end{equation}
+
+If we rearrange equation \ref{eqn:t2delay} for $d$ : 
+
+\begin{equation}
+\label{eqn:3}
+d = t_{2}^{'} - t_{2} + \widetilde{o}
+\end{equation}
+
+Substituting equation \ref{eqn:3} into \ref{eqn:t1delay}: 
+\begin{equation}
+t_{1}^{'} - t_{1} = \widetilde{o} + t_{2}^{'} - t_{2} + \widetilde{o}
+\end{equation}
+\begin{equation}
+t_{1}^{'} - t_{1} -  t_{2}^{'} +  t_{2} = 2 \widetilde{o}
+\end{equation}
+\begin{equation}
+\widetilde{o} = \frac{t_{1}^{'} - t_{1} -  t_{2}^{'} +  t_{2}}{2}
+
+\label{eqn:final}
+\end{equation}
+\\
+
+The offset is now known and can be adjusted for. 
+The following assumptions have been made to create the calculations above. 
+\begin{enumerate}
+\item Message exchange occurs over a short period of time that the delay is assumed to be constant. 
+\item Transit time is symmetrical (i.e. time from master to slave is the same as slave to master). 
+\item Both the slave and the master can measure the transmit and receive times of messages accurately (~ignoring clock drift).
+\end{enumerate}
+
+\subsubsection{Comparison with NTP}
+
+The \acf{PTP} was first developed in 2003 with the intention to build on the existing \ac{NTP} standard. 
+Version 1 improvement improved on \ac{NTP} in a number of different ways.
+A new \ac{PTP} standard was introduced in 2008 with some new features such as boundary clocks and using domains instead of stratums. 
+These changes and comparison with \ac{NTP} have been tabulated below, table \ref{table:ntpptp}.
+
+\begin{table}[h]
+\centering
+\caption{NTP vs PTP Version 1 vs PTP Version 2}
+\begin{tabular}{| p{4cm} || c |c | c| } \hline
+\cellcolor{Black}\textcolor{white}{\textbf{ Feature }}  &  \cellcolor{Black}\textcolor{White}{\textbf{NTP}} & \cellcolor{Black}\textcolor{White}{\textbf{ IEEE1588-2002}} & \cellcolor{Black}\textcolor{White}{\textbf{IEEE1588-2008}} \\ \hline
+Time System & \ac{UTC} & \ac{TAI} & \ac{TAI} - can choose epoch \\ \hline
+Transparent Clocks  & No & No  & Yes\\ \hline
+Unicast  & no &  No  &  Yes \\ \hline
+Domains  & Subdomain Name Fields & Subdomain Name Fields &  Domain Numbers\\ \hline
+Clock Quality & None & Data Field Stratum & Clock Accuracy / Clock Class \\ \hline
+Selection Algorithm For Best Clock & Unknown & Election Based & Hierarchical \\ \hline
+\multirow{5}{*}{Unique Features} & & & Alternate Time Scale \\ 
+ & & & Grandmaster Cluster \\ 
+ & None & Noise Reduction&  Unicast Masters \\ 
+ & & & Alternate Master \\ 
+ & & & Path Trace \\  \hline  \end{tabular}
+
+\label{table:ntpptp}
+\end{table}
+
+\subsubsection{A Typical PTP Network}
+\label{ref:PTPNetwork}
+- list components of a PTP network
+- diagrams
+- types of clock (both hardware and software)
+- topologies
+%Need to explain a typical PTP network in here.
+% explain differnet clock types etc.
+\subsubsection{\acf{BMC}}
 \label{ref:BMC}
+
+The \ac{BMC} is used to determine the most suitable clock to be the master (or the grandmaster) of a \ac{PTP} network. 
+The following criteria are used when determine which clock on the network is the best.
+
+\begin{description}
+\item[Identifer] This is a unique identifier which is constructed from the device's \ac{MAC} address.
+\item[Quality] This refers to the technology used to implement the clock, and takes into account the expected time deviation.
+\item[Priority] This is an admin assigned precedence to select a particular grandmaster. 
+In IEEE1588-2008 there are 2 8bit priority fields.
+\item[Variance] This refers to the stability of the clock based on itsd performancr against the \ac{PTP} reference. 
+\end{description}
+
+The 2008 standard uses a hierarchical selection algorithm system, which is outlined below.
+
+\begin{enumerate}
+\item Priority 1
+\item Class
+\item Accuracy
+\item Variance
+\item Priority 2
+\item Unique Identifier (tie break)
+\end{enumerate}
+
+The \ac{BMC} algorithm is used to determine each master, and ultimately the grandmaster of the entire \ac{PTP} network. 
+
+\subsubsection{Management Commands}
+\label{ref:ManagementCommands}
+
+- explanation of the management portion of PTP
+	+ explain the distributed maangement structure etc
+\subsubsection{Issues}
+
++ explain some issues with PTP
++ ethernet issues
++ security concerns
++ reliance on some GPS sources
 \subsection{Project Description}
 This project aims to investigate \ac{PTP} performance on a heavily used Ethernet network, and to attempt to quantify \ac{PTP} performance using packet metrics. \\
 There are also some deliverables as part of the Final Year Project. 
@@ -233,6 +378,8 @@ A suitable language will be chosen once this part of the project begins.
 Multiple window sizes and types of metric will be used to quantify network performance.
 \item[Test Chronos' equipment and provide feedback] \hfill \\ 
 As Chronos has provided this project with some equipment, this equipment will also be thoroughly tested and any information gathered can be passed to them once the project is completed.
+\item[Investigate into security measures]
+
 \end{description}
 
 
