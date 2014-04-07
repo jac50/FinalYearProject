@@ -29,6 +29,8 @@
 %\usepackage[table]{xcolor}
 \usepackage{hhline}
 \usepackage{pdfpages}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -215,7 +217,8 @@ This will be important when considering some security aspects of the technology.
 
 \subsubsection{PTP Explanation}
 
-\ac{PTP} uses a similar master-slave hierarchy of \ac{NTP}, but it does not  use the stratum method. Instead it uses domains which separate out \ac{PTP} synchronisation networks. 
+\ac{PTP} uses a similar master-slave hierarchy of \ac{NTP}, but it does not  use the stratum method. 
+Instead it uses domains which separate out \ac{PTP} synchronisation networks. 
 The master clock for the domain will broadcast out the current time to all of the other clocks on the network using a multicast message.
 In IEEE1588-2008 this can occur up to one message every 32 and a quarter milliseconds. \\
 
@@ -303,8 +306,8 @@ Selection Algorithm For Best Clock & Unknown & Election Based & Hierarchical \\ 
  & & & Grandmaster Cluster \\ 
  & None & Noise Reduction&  Unicast Masters \\ 
  & & & Alternate Master \\ 
- & & & Path Trace \\  \hline  \end{tabular}
-
+ & & & Path Trace \\  \hline  
+\end{tabular}
 \label{table:ntpptp}
 \end{table}
 
@@ -350,14 +353,14 @@ The \ac{BMC} algorithm is used to determine each master, and ultimately the gran
 	+ explain the distributed maangement structure etc
 \subsubsection{Issues}
 
-+ explain some issues with PTP
-+ ethernet issues
-+ security concerns
-+ reliance on some GPS sources
+There are some areas of concern with \ac{PTP} that will be addressed in this report. 
+Firstly it is unknown how well \ac{PTP} operates on a busy network when standard switches are used instead of boundary clocks.
+Secondly there are some security concerns with \ac{PTP} as all messages are transmitted in plain text. 
+
+% - Expand and/or move to a different section
 \subsection{Project Description}
 This project aims to investigate \ac{PTP} performance on a heavily used Ethernet network, and to attempt to quantify \ac{PTP} performance using packet metrics. \\
-There are also some deliverables as part of the Final Year Project. 
-These include: an interim report, a log book, a final year report and a poster. 
+There are also some deliverables as part of the Final Year Project which are: an interim report, a log book, a final year report and a poster. 
 These deliverables, along with the sub tasks involved in order to complete them have been detailed in the Gantt chart, as seen in Appendix \ref{ganttchart}. \\
 
 The following project objectives have been identified:
@@ -378,7 +381,9 @@ A suitable language will be chosen once this part of the project begins.
 Multiple window sizes and types of metric will be used to quantify network performance.
 \item[Test Chronos' equipment and provide feedback] \hfill \\ 
 As Chronos has provided this project with some equipment, this equipment will also be thoroughly tested and any information gathered can be passed to them once the project is completed.
-\item[Investigate into security measures]
+\item[Documentation] \hfill \\ It was noted that it would be beneficial to document as much as possible about the hardware used, which can then be fed back to Chronos if need be. 
+This would also be useful internally in case the hardware documentation is limited. 
+\item[Investigate into security measures] \hfill \\ Some research into how to secure \ac{PTP} will be made along with some recommendations in possible. 
 
 \end{description}
 
@@ -437,7 +442,7 @@ There was other relevant reading performed in the first week of the project to d
 
 \section{Project Methods}
 
-Based on the objectives mentioned previously, the project can be split into three distinct sections:  
+Based on the objectives mentioned previously, the project can be split into some distinct sections:  
 
 \begin{description}
 \item[Data Collection] This part of the project will involve collecting \ac{PTP} timing data on the university network.
@@ -459,11 +464,13 @@ The following hardware was identifed as being available to use for the duration 
 \begin{itemize}
 \item Hardware Grandmaster - Chronos TimePort \cite{TimePort}
 \item Hardware Slave - Chronos Syncwatch \cite{SyncWatch}
-\item Hardware Slave - Beaglebone Black \cite{}
+\item Hardware Slave - Beaglebone Black \cite{BBB}
 \item Software Grandmaster - \ac{PTPd}
 \item Software Slave - \ac{PTPd}
 \end{itemize}
 
+The above were identified to be suitable enough to carry out this project. 
+If any assistance is required with the two Chronos hardware devices it will be possible to contact Chronos directly. 
 \subsection{Hardware - Timeport \cite{TimePort}}
 
 \subsubsection{Description} 
@@ -534,12 +541,21 @@ screen /dev/ttyUSB0 115200, cs8, ixoff
 This will connect you to the first layer of the TimePort. 
 The system is a restricted linux distribution, so some commands you may be familiar with do exist.
 A full list of commands and the rest of the documentation can be found in Appendix \ref{app:TimePortDocumentation}. 
+Figure \ref{fig:TP1stLayer} is a screenshot of this first layer
 
+\begin{figure}
+\centering
+%\includegraphics[scale=0.5]{Figures/Screenshots/TimePortFirstLayer.eps}
+\caption{TimePort Access}
+\label{fig:TP1stLayer}
+\end{figure}
+
+A complete list of commands can be found in the TimePort documentation that has been written (Appendix \ref{app:TimePortDocumentation}. 
 % Need screenshots for this section
 \subsection{Hardware - Chronos Syncwatch \cite{Syncwatch}}
 \subsubsection{Description}
 The Chronos Syncwatch is a hardware slave clock used to synchronise time in  a number of different applications.
-It operates in all of the current synchronisation technologies. SyncE, ESMC,  PTPv2, 1PPS+TOD, 1PPS, Frequencies(64k-200MHz), T1 \& E1 protocols and interfaces are supported. \\
+It operates in all of the current synchronisation technologies such as SyncE, ESMC,  PTPv2, 1PPS+TOD, 1PPS, Frequencies(64k-200MHz), T1 \& E1 protocols and interfaces are supported. \\
 
 It can be used on both legacy and modern Ethernet/IP networks. 
 It can simultaneously operate on a number of the protocols above. 
@@ -551,7 +567,7 @@ It also integrates with with Symmetricom's TimeMonitor software. \\
 The device markets include telecommunications, TV and radio broadcasting, and the power industry. \\
 
 The table shown in Appendix \ref{app:SyncwatchSpec} details the Syncwatch specifications. 
-The figures below show labelled diagrams of the inside and outside of the Chronos Syncwatch. \\
+The figures below show labelled diagrams of a block diagram and the outside of the Chronos Syncwatch. \\
 
 \begin{figure}
 \centering
@@ -611,13 +627,11 @@ To access the \ac{PTP} console, type the following into the screen connection:
 minicom -S
 \end{lstlisting}
 
-The complete list of commands in both of the modes is shown in the documentation, shown in Appendix \ref{app:SyncwatchDocumentation}
-- notes in logbook.
-- will complete this section Thursday. 
-- screenshots too
+The complete list of commands in both of the modes is shown in the documentation, shown in Appendix \ref{app:SyncwatchDocumentation}. 
 \subsubsection{Hardware - Beaglebone Black \cite{BBB}}
 \subsubsection{Description}
-The Beaglebone Black is a hardware device but it is running a software PTP Daemon (called PTPd). \\
+The Beaglebone Black is a hardware device but it is running a software PTP Daemon (called PTPd). 
+Throughout this report the Beaglebone Black will be called a hardware clock, but in reality it is running a \ac{PTP} software implementation. \\
 
 In terms of hardware capabilities it has an ARM Cortex A-8 processor with 512MB of DDR3 RAM.
 It runs a cut down version of Linux called Angstrom Linux.
@@ -670,11 +684,9 @@ The ls command was typed to show that the connection was successful.
 \end{figure}
 
 Once SSH'd into the device, then the device can be accessed like any other linux machine.
-Note however that there is a restricted command set.\\
+Note however that there is a restricted command set. \cite{AngstromInstructionSet}
 
-When the BeagleBone boots, it was required that the SD card used to store the test data on would be automounted and that the PTP daemon automatically runs.\\
-
-
+When the BeagleBone boots, it was required that the SD card used to store the test data on would be automounted and that the PTP daemon automatically runs.
 Several attempts in trying to automount the SD card using conventional means such as adding in an entry to fstab were attempted, but this did not work.\\
 
 The method in getting round this was by creating a script in /etc/init.d. 
@@ -688,8 +700,8 @@ The full bash script is shown below, in Code Extract \ref{lst:bashBBB}
 \begin{lstlisting}[label = lst:bashBBB, language = bash, caption=Bash Script in init.d for Beaglebone Black]
 #!/bin/bash
 mount /dev/mmcblk1p1 /mnt/sd
-date=$(date +"%Y_%m_%d")
-sudo /home/eesrjw/ptpd2 -i eth0 -C -S -g -d 17 -V > /mnt/sd/eesrjw/timeport_$date.txt
+date=\$(date +"%Y_%m_%d")
+sudo /home/eesrjw/ptpd2 -i eth0 -C -S -g -d 17 -V > /mnt/sd/eesrjw/timeport\_\$date.txt
 \end{lstlisting}
 
 Line 1 is the bash shebang which lets the operating system know that the following script is written in bash. 
@@ -768,7 +780,7 @@ Slave only mode & s & g & Set PTPd as Slave \\ \hline
 \end{table}
 
 PTPd can be used as both a slave and a grandmaster.
-As there is already a dedicated grandmaster, PTPd will be used mainly as a slave. 
+As there is already a dedicated grandmaster, PTPd will be used mainly as a slave, but some software grandmaster clock tests may be performed.
 
 The script call has already been given for the beaglebone. The code extract below has been used for the PTPd\_Netbook 
 
@@ -777,6 +789,7 @@ The script call has already been given for the beaglebone. The code extract belo
 \end{lstlisting}
 
 The difference in the call to ptpd2 above is that tee has also been used so the data is displayed both on the screen and sent to the text file. 
+An alternative method to this would be to redirect the standard output to the text file, then call $tail -f file\_name\_here$ to display the file in the terminal. 
 This script can be run on any linux computer with root access. 
 Note that the above script in Extract \ref{lst:ptpd2} is already run as a root user.
 The other method to do this would be to run the script with sudo. 
@@ -808,9 +821,43 @@ To access one of them on the university network, add the prefix eepc-rjw- and th
 \subsection{Locations for Clocks}
 
 To get a varied set of data points, it was decided to collect data at a number of locations throughout the network. 
+The following locations were identified, along with some information on the surroundings.
 
-%Topology of network info in here.
-%Note locations of clocks on map
+\begin{table}[H]
+\caption{Clock Locations}
+\label{table:clockLocations}
+\begin{tabular}{|c|c|c|c|c|} \hline
+\textbf{Clock Location} & \textbf{Room number} & \textbf{Room Type} & \textbf{Left Unattended} & \textbf{Distance from Grandmaster} \\ \hline
+Watson's Office & 2E 4.10? & Office & Locked office & Same room \\ \hline
+2\textsuperscript{nd} floor lab & 2E 2.10 & Lab & Secure lab & Same subnet \\ \hline
+Comms Lab & 2E 3.xx & Lab & Secure & Same subnet \\ \hline
+Library & Library & Library & No. Busy 24/7 & Differnet subnet \\ \hline
+8W Rooms & 8W 2...& Lecture room & No & Different subnet \\ \hline
+East building & EB 2.. & Lecture room & No & Differnet subnet \\ \hline
+\end{tabular}
+\end{table}
+
+The full list of clock locations have been placed on the map below, Figure \ref{UniMap}
+
+\begin{figure}[H]
+\centering
+%\includegraphics[scale=0.5]{Figures/UniMap.eps}
+\label{UniMap}
+\caption{University Map with clock locations labelled}
+\end{figure}
+
+A broad range of locations were attempted, within the limitations of the network. 
+Connecting via a VPN was attempted but it was deemed that the \ac{PTP} packets were not transmitted outside of the network.
+A network topology map has also been added, see below Figure \ref{NetworkMap}. 
+
+\begin{figure}[H]
+\centering
+%\includegraphics[scale=0.5]{Figures/NetworkMap.eps}
+\label{NetworkMap}
+\caption{Network Topology Map}
+\end{figure}
+
+% Any discussion here
 \subsection{Test Sheets}
 
 As there will be quite a few tests performed during the project, and it is important to note times and locations of each test, a test sheet has been created using LibreOffice Calc. An example of a test sheet is found in Appendix \ref{app:testsheet} \\
@@ -844,10 +891,9 @@ This is used to correlate delay spread with network activity.
 \end{description}
 
 
-All of the test sheets will not be shown in this report. 
-Instead a summary sheet of all the tests was produced. 
+All of the test sheets will not be shown in this report, but the information has been compiled into a summary test sheet.
 The summary sheet will include the Test name, date, directory, and start and end times of the tests. 
-This will show up later in the report. 
+This will show up later in the report, in Appendix \ref{app:SummaryTestSheet}. 
 
 \subsection{Testing Schedule}
 
@@ -862,10 +908,68 @@ The tests that are to be completed will include:
 \item Different Times
 \end{itemize}
 
-An explicit testing schedule has not been produced. 
-Instead there are week blocks allocated in the gantt chart for data collection. 
+An explicit testing schedule has not been produced, but the full list of tests that would like to be completed have been listed below. 
+Instead there are week blocks allocated in the gantt chart for data collection, and tests will be carried out throughout that time.\\
 
-%Brainstorm other sections
+The following tests that have been identifed as important tests to run have been included in the table below.
+
+\begin{table}[H]
+\begin{tabular}{|c|c|c|c|c}
+\textbf{GM Clock Type} & \textbf{GM Clock Location}  & \textbf{Slave Clock Type} & \textbf{Slave Clock Location} & \textbf{Duration} \hline
+Hardware (TimePort)  & Watson's Office & Hardware (Syncwatch) & 2E 3.Comms lab & 24 hours \\ \hline
+Hardware (TimePort) & Watson's Office & Software (PTPd) & Watson's Office & 24 hours \\ \hline
+Hardware (TimePort) & Watson's Office & Software (PTPd) & 2E 2... Lab  & 24 hours \\ \hline
+Hardware (TimePort) & Watson's Office & Beaglebone  & Anywhere available& 24 hours \\ \hline
+\end{tabular}
+\end{table}
+
+Any other tests may also be performed, including but not limited to: different grandmaster clock types and for different durations.
+
+\subsection{Data Processing}
+
+The final section of this part of the project consisted of initially processing the data that is gathered from the various clocks mentioned above.
+This is important because certain parts of the data is only needed for certain metrics and can thus be reduced to reduce the overall memory usage for the scripts.
+
+\subsubsection{Example Data File}
+
+An example file output for the PTPd implementation which is run on the majority of the clocks is shown below in Figure \ref{FileOutput}.  
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{Figures/Screenshots/ExampleData.eps}
+\caption{Example of the File Output}
+\label{FileOutput}
+\end{figure}
+
+This data is formatted as a \ac{CSV} filetype of the following format: 
+
+\begin{description}
+\item[Timestamp] The timestamp includes the big-endian date format specified under ISO 8601 as well as the time. 
+The time is displayed in an HH:MM:SS.###### type format, with the hashes denoting the decimal after the seconds field.
+\item [State] The state is what state the clock is in, for example a Grandmaster or a Slave. 
+\item[Clock ID] The clock ID is a hardware ID which is specified under IEEE1588. 
+\item[One Way Delay] The one way delay is the average of the Master to Slave and Slave to Master delays. \cite{PTPM2S}. 
+\item[Offset from Master] This is the difference between the master clock timestamp and the current slave clock timestamp.
+\item[Slave to Master] This is the propagation delay from Slave to Master. 
+\item[Master to Slave] This is the propagation delay from Master to Slave. 
+\item[Drift]
+\item[Last Packet Received] This is a single character which is the type of packet received. 
+For example, S is a sync packet, and D is a delay packet.
+\end{description}
+
+\subsubsection{Script to Parse the Data File}
+
+It can be seen that depending on what calculation is performed, there is quite a bit of excess data not required. 
+Assuming that there will be 32 of these messages every second, the RAM requirement will be high if a long test was performed.
+Therefore it was decided to create a script that would parse this data into a correct form for use later on.\\
+
+Because this was a preprocessing step, it is important to try and keep the execution time of this script to as low as possible. 
+Due to the script having to operate on a line by line basis, it was decided to use the scripting language Awk \cite{awk}.
+
+%Advantages of awk
+
+%Do I need ranking tables here etc? Maybe. will ask
+
 \section{Packet Methods}
 
 This section of the project is the bulk of the programming development.
@@ -1216,6 +1320,7 @@ Weight: & 1150g \\ \\
 \label{app:SyncwatchDocumentation}
 \includepdf[pages={1, 2}]{SyncwatchDocumentation.pdf}
 \section{Test Sheet Example}
+\label{app:testsheet}
 \begin{table}[H]
 \begin{tabular}{|l|l|p{3cm}|l|l|} \hline \\
 \multicolumn{5}{|c|}{Test: Timeport\_to\_Software Test One} \\ \hline
