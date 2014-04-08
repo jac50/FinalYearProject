@@ -313,7 +313,28 @@ Selection Algorithm For Best Clock & Unknown & Election Based & Hierarchical \\ 
 
 \subsubsection{A Typical PTP Network}
 \label{ref:PTPNetwork}
-- list components of a PTP network
+%http://www.cisco.com/c/en/us/td/docs/switches/connectedgrid/cgs2520/software/release/12_2_58_ey/configuration/cgs_2520_swcg.html
+There are several different configurations for a \ac{PTP} network to take using the following pieces of hardware.
+
+\begin{description}
+\item[Grandmaster Clock] The grandmaster clock is the main source of time synchronisation using PTP within the same \ac{PTP} domain. 
+This clock will consist of a highly accurate timing source, such as a \ac{CSAC} or be based off of a \ac{GPS} time reference. 
+This clock is picked using the \ac{BMC} algorithm detailed in the next secxtion. 
+\item[Ordinary Clock] An ordinary clock is a \ac{PTP} clock with a single ethernet port. 
+They are also called nodes in a PTP network.
+These are the most common types of clocks on the \ac{PTP} network as these are the end nodes that are then connected to devices that require synchronisation.
+\item[Boundary Clock] A boundary clock is a replacement to a standalone switch.
+It usually has multiple \ac{PTP} ports and thus provides a link between domains. 
+\item[Transparent Clock] 
+\end{description}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{Figures/PTPNetwork.eps}
+\caption{A Typical PTP Network}
+\label{PTPNet}
+\end{figure}
+
 - diagrams
 - types of clock (both hardware and software)
 - topologies
