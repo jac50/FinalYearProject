@@ -1,0 +1,1268 @@
+\documentclass[11pt,a4paper,oneside]{article}
+%\renewcommand\abstractname{Executive Summary}
+%\renewcommand*\thesection{\arabic{section}}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+\usepackage{tocloft}
+\usepackage{graphicx}
+\usepackage[section]{placeins}
+\usepackage{array}
+\usepackage{rotating}
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{epstopdf}
+\usepackage{txfonts}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage[titletoc,toc,title]{appendix}
+\usepackage{varioref}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{acronym}
+\usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+%\usepackage[table]{xcolor}
+\usepackage{hhline}
+\usepackage{pdfpages}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\lstset{ %
+  language=R,                     % the language of the code
+  basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line
+                                  % will be numbered
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                 % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},      % keyword style
+  commentstyle=\color{dkgreen},   % comment style
+  stringstyle=\color{mauve},      % string literal style
+  morekeywords={*,...}            % if you want to add more keywords to the set
+}
+\renewcommand{\lstlistingname}{Code Extract} 
+\newcommand{\degree}{\ensuremath{^\circ}}
+\renewcommand{\headrulewidth}{0pt} % remove the header rule
+\newcommand{\includecode}[2][c]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
+ 
+\addtolength{\voffset}{-1.5cm}
+\addtolength{\hoffset}{-1.3cm}
+\addtolength{\textwidth}{3cm}
+\addtolength{\textheight}{120pt}
+\addtolength{\marginparwidth}{-100pt}
+\addtolength{\oddsidemargin}{-0.3in}
+\addtolength{\evensidemargin}{-0.3in}
+\textwidth 6.6in
+ 
+\setlength\cftparskip{1pt}
+\setlength{\parindent}{0pt}
+% leftmark shows the chapter, rightmark shows the section.
+\fancyhead{}
+\fancyfoot[L]{}% empty left
+\fancyfoot[R]{ % right
+}
+\pagestyle{fancy}
+
+\title {Final Year Report - Investigation into the Precision Time Protocol}
+\author {James Cox
+\\ Department of Electrical and Electronic Engineering \\
+\\
+University of Bath}
+\date{\today}
+\begin{document}
+
+\maketitle
+\vfill
+
+\begin{abstract}
+Abstract goes here
+\end{abstract}
+\newpage
+\tableofcontents
+\newpage
+\section*{Acronyms}
+\begin{acronym}
+\acro{BMC}{Best Master Clock}
+\acro{CSAC}{Chip Scale Atomic Clock}
+\acro{CSMA/CD}{Carrier Sense Multiple Access with Collision Detection}
+\acro{GM}{Grandmaster}
+\acro{GPS}{Global Positioning System}
+\acro{IEEE}{Institute of Electrical and Electronic Engineers}
+\acro{ITU}{International Telecommunication Union}
+\acro{LAN}{Local Area Network}
+\acro{MAC}{Media Access Control}
+\acro{NERC}{North American Electric Reliability Company}
+\acro{NTP}{Network Time Protocol}
+\acro{PPS}{Pulse per Second}
+\acro{PTP}{Precision Time Protocol}
+\acro{PTPd}{PTP Daemon}
+\acro{SA}{Security Association}
+\acro{SNTP}{Simple Network Time Protocol}
+\acro{TDEV}{Time Deviation}
+\acro{UTC}{Coordinated Universal Time}
+\end{acronym}
+
+\listoffigures
+\newpage
+\listoftables
+\newpage
+\section{Introduction}
+In a few applications there is an ever increasing requirement for high accurate clocks.  
+These clocks mmay be used for either a timestamp, such as in the telecommunications industry,  or a way to synchronise processes, as is what happens in the automotive industry. 
+Multiple clocks will be used in these applications, and thus they all should be synchronised with one another. \\
+
+In some applications it is not feasible to have a high accuracy atomic clock (or \ac{CSAC}) due to space or cost constraints.
+An alternative to this could be to use a \ac{GPS} receiver and time can then be synchronised to the accurate clocks onboard the \ac{GPS} satellites.
+Using high accuracy clocks like the ones mentioned would help to reduce any clock accuracies.\\
+
+There are two types of clock inaccuracies when synchronising clocks. 
+Firstly they may have started at a different time relative to the others, and adjusting for this is called offset correction.
+The second effect is that clocks do not necessarily run at exactly the same speed.
+Therefore clocks need to be continuously adjusted, which is called drift correction.
+The amount of drift correction required depends on the quality of the clock.
+Appendix \ref{clockaccuracies} shows a table of clocks and their corresponding accuracies.
+
+The following industries are examples that would require highly accurate clocks.
+
+\begin{description}
+\item[Automation Industry] \hfill \\ Processes will need to be synchronised exactly, and can only be if their clocks are in sync with one another.
+If clocks are in sync then processes can also be separated away from communication between each machine and the processing of the control commands. \cite{IEEEApplications} 
+\item[Power Transmission] \hfill \\ Time synchronisation is very important in the power transmission industry. An example of a situation where timing would have mitigated an event from occurring is the North American blackout in August 2003 \cite{PTPFuturePower}. 
+It made it difficult for the investigation team to be able to sort through the data received when the timestamps were gathered from an inaccurate clock. 
+From the events of this blackout a regulation was put in place to define a minimum absolute accuracy for timestamped data.
+The adoption of the \ac{NERC}  Standard PRC018-1 in 2006 \cite{NERCPRC0181} made it a requirement for any substation in the USA to log data to a minimum accuracy. The timestamped data must be accurate to within 2ms relative  to \ac{UTC}.
+\item[Telecommunications] \hfill\\ In telecommunications, timing protocols are considered when networks need to be synchronised or if mobile base stations need synchronisation pulses.
+With the increase in \ac{GPS} jamming, systems such as 4G must rely on other timing methods in case \ac{GPS} is affected. 
+\end{description}
+
+All of the industries mentioned above could feasibly use \ac{GPS} for a highly accurate timing reference.
+But if there is an issue with the system, for example a jamming incident, then there will be some major consequences should timing drift out of line.  
+It is known that jamming of GPS receivers is becoming more common (REFERENCE) and thus an alternative method of time synchronisation should be used.  [reference]\\
+
+One way of realising this is by using a distributed timing system, such as \ac{NTP} or \ac{PTP}. 
+This would allow for nodes to be able to synchronise their clocks with a much more accurate time source without having to rely on \ac{GPS}
+
+\subsection{How NTP Works}
+
+This is a technology originally designed in 1985 and is used to synchronise clocks over a packet switched network. 
+It is able to achieve synchronisation with \ac{UTC} within a few milliseconds, but can maintain sub-millisecond accuracy on a \ac{LAN} if ideal conditions are met. 
+Errors due to different packet routes or network congestion can decrease this ~accuracy by 100ms or more. \cite{NTPWhitePaper}
+
+\ac{NTP} uses a client-server hierarchy split into "Stratums". 
+Figure \ref{fig:NTPHierarchy} on the next page  shows the Stratums numbered from 0 to 3. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.3]{./Figures/NTPDiagram.eps}
+\caption{\ac{NTP} Network Hierarchy \cite{figRef:NTPHierarchy}}
+\label{fig:NTPHierarchy}
+\end{figure}
+
+The reference clocks located in Stratum 0 are high precision such as  atomic clocks or they use \ac{GPS} synchronisation.  
+The clocks in Stratum 2 will base their time off of the clocks in Stratum 1. 
+A number of the clocks in Stratum 1 will be used for time synchronising each clock in Stratum 2. This is done so that the time is more accurate and robust. 
+Within a Stratum, clocks may also synchronise for sanity checking to ensure that all clocks within a Stratum are accurate between each other.
+Any layers below Stratum 2 will mirror the same algorithm, and there can be up to 15 layers. 
+Stratum 16 is reserved for clocks that are not synchronised with \ac{NTP} \cite{NTP}.
+
+\ac{SNTP} is used in applications which do not require a high timing accuracy.
+It does this by ignoring drift values.
+Therefore it is recommended that SNTP is only used in the higher Stratums \cite{SNTP}.
+The \ac{SNTP} specification is part of the \ac{NTP} specification, cited here \cite{NTPV4Specification}. 
+
+Issues arise when synchronising time over a packet switched network where sub millisecond accuracies are required.  
+\ac{PTP} was developed as a successor to the existing \ac{NTP} standard which aims to reach sub millisecond accuracies. 
+Meeting this value of accuracy is very difficult however with a traditional Ethernet network. \\
+
+When standard switches are used, the packet delay between two nodes is indeterminate. 
+This may be because the packet route from A to B changes depending on network load, or a packet may be held in a switch for an unspecified amount of time whilst working with other data.
+Therefore this is undesired for \ac{PTP} as this packet delay must be taken into account when working out the clock offset. 
+Specific timing switches can be used which will prioritise \ac{PTP} packets, but these may not be available in existing networks or be too expensive to be suitable. 
+
+\subsection{How PTP Works}
+
+\ac{PTP} was developed as a successor to the existing \ac{NTP} standard which aims to reach sub millisecond accuracies. 
+Meeting this value of accuracy is very difficult however with a traditional Ethernet network. \\
+
+When standard switches are used, the packet delay between two nodes is indeterminate. 
+This may be because the packet route from A to B changes depending on network load, or a packet may be held in a switch for an unspecified amount of time whilst working with other data.
+Therefore this is undesired for \ac{PTP} as this packet delay must be taken into account when working out the clock offset. 
+One part of this project will be to investigate the extent of this variation in packet delay on an ethernet network.\\
+
+There are a few important elements of how PTP works in order to be able to start the project. 
+These are: general \ac{PTP} operation and the \ac{BMC} algorithm.
+There are other aspects that will be covered in this report (such as token passing and Secure PTP), but these will be covered in a later section. 
+A comparison with \ac{NTP}, a similar technology will also be made.
+This will be important when considering some security aspects of the technology.
+
+\subsubsection{PTP Explanation}
+
+\ac{PTP} uses a similar master-slave hierarchy of \ac{NTP}, but it does not  use the stratum method. Instead it uses domains which separate out \ac{PTP} synchronisation networks. 
+The master clock for the domain will broadcast out the current time to all of the other clocks on the network using a multicast message.
+In IEEE1588-2008 this can occur up to one message every 32 and a quarter milliseconds. \\
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.3]{Figures/DelayPTP.eps}
+\label{fig:ptptiming}
+\caption{PTP timing diagram (based on \cite{PTPTiming})}
+\end{figure}
+
+The list below shows the basic steps that \ac{PTP} follows \cite{ieee1588}:
+
+\begin{enumerate}
+\item Broadcast begins at $t_{1}$ where the master sends a \textit{sync} message to all clocks on the domain.
+\item Each slave clock takes a note of when the message was received using their local clock.  
+This timestamp is labelled $t_{1}^{'}$.
+\item An optional \textit{follow\_up} message may be sent that includes an accurate timestamp of $t_{1}$. 
+this step occurs if the master clock does not have the capability to create an accurate timestamp when sending the \textit{sync} message.
+\item In order for the slave to synchronise with the master, the round trip delay needs to be known. therefore a \textit{delay\_req} message is sent by the slave clock at time $t_{2}$. 
+\item The master will respond to this message with a \textit{delay\_resp} message. this timestamp is called $t_{2}^{'}$.
+\end{enumerate}
+
+At this point $t_{1}$, $t_{1}^{'}$, $t_{2}$ and $t_{2}^{'}$ are now known. \\
+
+If we define $d$ as the transit time, and $\widetilde{o}$ as the constant offset between the two clocks: 
+
+\begin{equation}
+\label{eqn:t1delay}
+t_{1}^{'} - t_{2} = \widetilde{o} + d
+\end{equation}
+
+\begin{equation}
+\label{eqn:t2delay}
+t_{2}^{'} - t_{2} = - \widetilde{o} + d
+\end{equation}
+
+If we rearrange equation \ref{eqn:t2delay} for $d$ : 
+
+\begin{equation}
+\label{eqn:3}
+d = t_{2}^{'} - t_{2} + \widetilde{o}
+\end{equation}
+
+Substituting equation \ref{eqn:3} into \ref{eqn:t1delay}: 
+\begin{equation}
+t_{1}^{'} - t_{1} = \widetilde{o} + t_{2}^{'} - t_{2} + \widetilde{o}
+\end{equation}
+\begin{equation}
+t_{1}^{'} - t_{1} -  t_{2}^{'} +  t_{2} = 2 \widetilde{o}
+\end{equation}
+\begin{equation}
+\widetilde{o} = \frac{t_{1}^{'} - t_{1} -  t_{2}^{'} +  t_{2}}{2}
+
+\label{eqn:final}
+\end{equation}
+\\
+
+The offset is now known and can be adjusted for. 
+The following assumptions have been made to create the calculations above. 
+\begin{enumerate}
+\item Message exchange occurs over a short period of time that the delay is assumed to be constant. 
+\item Transit time is symmetrical (i.e. time from master to slave is the same as slave to master). 
+\item Both the slave and the master can measure the transmit and receive times of messages accurately (~ignoring clock drift).
+\end{enumerate}
+
+\subsubsection{Comparison with NTP}
+
+The \acf{PTP} was first developed in 2003 with the intention to build on the existing \ac{NTP} standard. 
+Version 1 improvement improved on \ac{NTP} in a number of different ways.
+A new \ac{PTP} standard was introduced in 2008 with some new features such as boundary clocks and using domains instead of stratums. 
+These changes and comparison with \ac{NTP} have been tabulated below, table \ref{table:ntpptp}.
+
+\begin{table}[h]
+\centering
+\caption{NTP vs PTP Version 1 vs PTP Version 2}
+\begin{tabular}{| p{4cm} || c |c | c| } \hline
+\cellcolor{Black}\textcolor{white}{\textbf{ Feature }}  &  \cellcolor{Black}\textcolor{White}{\textbf{NTP}} & \cellcolor{Black}\textcolor{White}{\textbf{ IEEE1588-2002}} & \cellcolor{Black}\textcolor{White}{\textbf{IEEE1588-2008}} \\ \hline
+Time System & \ac{UTC} & \ac{TAI} & \ac{TAI} - can choose epoch \\ \hline
+Transparent Clocks  & No & No  & Yes\\ \hline
+Unicast  & no &  No  &  Yes \\ \hline
+Domains  & Subdomain Name Fields & Subdomain Name Fields &  Domain Numbers\\ \hline
+Clock Quality & None & Data Field Stratum & Clock Accuracy / Clock Class \\ \hline
+Selection Algorithm For Best Clock & Unknown & Election Based & Hierarchical \\ \hline
+\multirow{5}{*}{Unique Features} & & & Alternate Time Scale \\ 
+ & & & Grandmaster Cluster \\ 
+ & None & Noise Reduction&  Unicast Masters \\ 
+ & & & Alternate Master \\ 
+ & & & Path Trace \\  \hline  \end{tabular}
+
+\label{table:ntpptp}
+\end{table}
+
+\subsubsection{A Typical PTP Network}
+\label{ref:PTPNetwork}
+%http://www.cisco.com/c/en/us/td/docs/switches/connectedgrid/cgs2520/software/release/12_2_58_ey/configuration/cgs_2520_swcg.html
+There are several different configurations for a \ac{PTP} network to take using the following pieces of hardware.
+
+\begin{description}
+\item[Grandmaster Clock] The grandmaster clock is the main source of time synchronisation using PTP within the same \ac{PTP} domain. 
+This clock will consist of a highly accurate timing source, such as a \ac{CSAC} or be based off of a \ac{GPS} time reference. 
+This clock is picked using the \ac{BMC} algorithm detailed in the next secxtion. 
+\item[Ordinary Clock] An ordinary clock is a \ac{PTP} clock with a single ethernet port. 
+They are also called nodes in a PTP network.
+These are the most common types of clocks on the \ac{PTP} network as these are the end nodes that are then connected to devices that require synchronisation.
+\item[Boundary Clock]
+\item[Transparent Clock]
+\end{description}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{Figures/PTPNetwork.eps}
+\caption{A Typical PTP Network}
+\label{PTPNet}
+\end{figure}
+
+- list components of a PTP network
+- diagrams
+- types of clock (both hardware and software)
+- topologies
+%Need to explain a typical PTP network in here.
+% explain differnet clock types etc.
+\subsubsection{\acf{BMC}}
+\label{ref:BMC}
+
+The \ac{BMC} is used to determine the most suitable clock to be the master (or the grandmaster) of a \ac{PTP} network. 
+The following criteria are used when determine which clock on the network is the best.
+
+\begin{description}
+\item[Identifer] This is a unique identifier which is constructed from the device's \ac{MAC} address.
+\item[Quality] This refers to the technology used to implement the clock, and takes into account the expected time deviation.
+\item[Priority] This is an admin assigned precedence to select a particular grandmaster. 
+In IEEE1588-2008 there are 2 8bit priority fields.
+\item[Variance] This refers to the stability of the clock based on itsd performancr against the \ac{PTP} reference. 
+\end{description}
+
+The 2008 standard uses a hierarchical selection algorithm system, which is outlined below.
+
+\begin{enumerate}
+\item Priority 1
+\item Class
+\item Accuracy
+\item Variance
+\item Priority 2
+\item Unique Identifier (tie break)
+\end{enumerate}
+
+The \ac{BMC} algorithm is used to determine each master, and ultimately the grandmaster of the entire \ac{PTP} network. 
+
+\subsubsection{Management Commands}
+\label{ref:ManagementCommands}
+
+- explanation of the management portion of PTP
+	+ explain the distributed maangement structure etc
+\subsubsection{Issues}
+
++ explain some issues with PTP
++ ethernet issues
++ security concerns
++ reliance on some GPS sources
+\subsection{Project Description}
+This project aims to investigate \ac{PTP} performance on a heavily used Ethernet network, and to attempt to quantify \ac{PTP} performance using packet metrics. \\
+There are also some deliverables as part of the Final Year Project. 
+These include: an interim report, a log book, a final year report and a poster. 
+These deliverables, along with the sub tasks involved in order to complete them have been detailed in the Gantt chart, as seen in Appendix \ref{ganttchart}. \\
+
+The following project objectives have been identified:
+
+
+\begin{description}
+\item[Learn about \ac{PTP} and other work in relation to the protocol] \hfill \\ 
+This stage would occur at the beginning of the project to understand how \ac{PTP} works.
+This is important so work can then be carried out to investigate \ac{PTP} performance on a network. 
+\item[Collect PTP Data] \hfill \\ 
+In parallel with the above, PTP data can be collected. 
+This will be monitoring the performance of \ac{PTP} across the network as well as how using multiple types of grandmaster/slaves affect the performance. 
+Different clock locations in the network will also be considered.
+\item[Implement some packet metric scripts] \hfill \\ 
+To be able to understand the performance of the network, some packet metric scripts will be created. 
+A suitable language will be chosen once this part of the project begins.
+\item[Determine packet performance using these scripts] \hfill \\
+Multiple window sizes and types of metric will be used to quantify network performance.
+\item[Test Chronos' equipment and provide feedback] \hfill \\ 
+As Chronos has provided this project with some equipment, this equipment will also be thoroughly tested and any information gathered can be passed to them once the project is completed.
+\item[Investigate into security measures]
+
+\end{description}
+
+
+\section{Literature Review}
+
+With the following objectives and tasks in mind, a literature review was performed with some suitable documentation: mainly packet metric related, but also on cryptographically signing PTP packets.\\
+
+The reports below will be discussed in some detail:
+\begin{description}
+\item[Definitions and terminology for synchronization in packet networks \cite{ITUPacketMetrics}] A standard regarding different packet metrics that could be used in order to try and quantify network delay. 
+\item[Prevention of Packet Collisions \cite{IEEECollision}] A journal article describing an algorithm that aims to prevent packet collisions in an Ethernet network.
+\end{description}
+
+
+\subsection{Definitions and Terminology for Synchronisation in Packet Networks \cite{ITUPacketMetrics}}
+\label{metricReview}
+
+The first paper defines a number of definitions and terms when dealing with Packet Synchronisation. The areas of interest in this report were packet metrics which are found in Appendix I3 and I4.  
+These can be split into three sections: Packet Selection Methods, Packet Metrics without Pre-filtering, and Packet Metrics with Pre-filtering.
+
+\subsubsection{Packet Selection Methods}
+
+There are two main methods of selecting packets when calculating a packet metric: either using a selection technique at the same time as the packet metric calculation, or as a pre-processing technique before the metric calculation is performed.  \\
+
+Packet selection, when integrated with the calculation, is very useful when the behaviour of a network is to be determined with respect to its packet delay variation. 
+This is because it provides a generic method that is independent to a particular slave clock implementation \cite {ITUPacketMetrics}.
+This packet selection method is also known as a Class B metric. \\
+
+The other method uses a pre-processing technique which preselects packets from a time window. 
+By doing this the process will average out any inconsistencies in the delays, thus resembling a clock running in steady state. 
+Therefore this method is more suitable when trying to specify network limits. This is known as a class A metric). \\
+
+
+There are four examples of packet selection methods that are mentioned in the recommendation report. 
+These are: Minimum Packet Selection Method, Percentile Packet Selection Method, Band Packet Selection Method and Cluster Range Packet Selection Method. 
+These will be discussed in turn and will be implemented.
+\subsubsection{Packet Metrics without Pre-filtering}
+
+The first packet method technique discussed is \ac{TDEV}. It is used to specify network wander limits for timing signals and can also be used for packet data
+
+\ac{TDEV} can be applied to both integrated and pre-processed packet selection methods. \\
+
+The implementation equations are quoted in the reference. The approximation equations were used when implementing the functions. 
+\subsubsection{Packet Metrics with Pre-filtering}
+
+The other method is using pre-filtering before the metric is calculated. 
+An averaging function is applied to the set of data, but care must be taken to not over-filter the input.
+This filtered packet sequence can then applied to the metrics mentioned previously in the report. 
+Prefiltered metrics are useful as they can help specify network limits. 
+\subsection{Other Relevant Reading}
+
+There was other relevant reading performed in the first week of the project to do with cryptography and how packet collisions can be prevented. 
+-cryptography ?
+
+
+\section{Project Methods}
+
+Based on the objectives mentioned previously, the project can be split into three distinct sections:  
+
+\begin{description}
+\item[Data Collection] This part of the project will involve collecting \ac{PTP} timing data on the university network.
+It will consist of using a number of different clock types and locations on the network.
+\item[Packet Methods] This section will mainly involve the implementations of the packet metric scripts based on the referenced report above.
+Focus on the implementation will be made in this section rather than the metrics themselves. 
+\item[Calculating/Analysing Results] Once the metrics have been implemented fully, there needs to be some supplementary scripts written to process some of this data. 
+\item[Securing PTP Considerations] As \ac{PTP} is inherently an unsecure system, there will be some work into investigating how PTP could be secured from rogue hosts on the network.
+\item[Methods to reduce Packet Collisions] Due to the way Ethernet networks work, there is a high probability of packet collisions.  
+Thus it would be useful to investigate, based on the results collected above, ways to reduce these packet collisions.
+
+\end{description}
+
+\section{Data Collection}
+
+The first step to perform with this part of the project is to work out what hardware is available. 
+The following hardware was identifed as being available to use for the duration of this project.
+
+\begin{itemize}
+\item Hardware Grandmaster - Chronos TimePort \cite{TimePort}
+\item Hardware Slave - Chronos Syncwatch \cite{SyncWatch}
+\item Hardware Slave - Beaglebone Black \cite{}
+\item Software Grandmaster - \ac{PTPd}
+\item Software Slave - \ac{PTPd}
+\end{itemize}
+
+\subsection{Hardware - Timeport \cite{TimePort}}
+
+\subsubsection{Description} 
+
+The Chronos CTL4540 Timeport is a low powered portable device that is able to maintain its time to a high accuracy when disconnected from a synchronisation source.
+It is able to maintain accuracy within a couple hundred nanoseconds without needing to be connected to \ac{GPS}. 
+It also has an internal LiPo battery. 
+This enables the device to be used to transport and measure time. \\
+
+With the above features in mind, it is thus suited for a number of markets, including the power industry and telecommunication network operators. 
+It can also be used to correct for any time errors caused by any cabling or equipment. \\
+
+Typical methods of doing this would involve using a Caesium atomic clock [REF] or setting up a \ac{GPS} attenna and connecting this to some other equipment. 
+The TimePort is best suited over these two operaitons because it is much lower power and much more transportable than an atomic clock.
+It also removes the requirement of \ac{GPS} equipment.\\
+
+Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 TimePort. Below are a few labelled photos of the clock.
+
+\begin{figure}
+\centering
+\begin{subfigure}{\textwidth}
+	\centering
+%	\includegraphics{Figures/TimePortOutside.eps}
+	\label{TimePortOutside}
+	\caption{Chronos TimePort Outside}
+\end{subfigure}%
+\begin{subfigure}{\textwidth}
+	\centering
+%	\includegraphics{Figures/TimePortInside.eps}
+	\label{TimePortInside}
+	\caption{Chronos TimePort Inside Block Diagram}
+\end{subfigure}
+\label{TimePortDiagrams}
+\caption{Chronos TimePort Labelled Diagrams}
+\end{figure}
+
+The difference between the release TimePort and the TimePort that will be used in this project is that the firmware on the TimePort is bleeding edge. 
+With that in mind time needs to be allocated to allow for any issues that the clock may have.
+The university has close links with Chronos thus it should be straightforward to either get our issues solved or to receive a new TimePort. \\
+
+This clock will mainly be kept in the same position on the network and will acct as a Grandmaster. \\
+
+In terms of documentation there is not much available for this device apart from some emails sent between Chronos and Dr Robert Watson. 
+Therefore Appendix \ref{TimePortDocumentation} shows some documentation put together for my own use during this project. 
+The documentation includes details on how to interface with the clock and a list of basic commands. \\
+
+To access the device it needs to be accessed locally over a USB to Serial connection. 
+SSH is unavailable as the control port has not been implemented yet.
+\subsubsection{How to Set Up the TimePort}
+
+The firmware version that the TimePort we have available does not have the control port active. 
+Therefore the only method to connect to the TimePort is via a serial connection.\\
+
+To connect to the TimePort: connect the serial to USB cable (seen pictured below, Figure \ref{fig:USB2Serial}). 
+
+\begin{figure}[H]
+\centering
+% \includegraphics[scale=0.5]{Figures/USB2Serial.eps}
+\label{fig:USB2Serial}
+\caption{USB to Serial Converter}
+\end{figure}
+Type the following command into a linux terminal:
+
+\begin{lstlisting}[language=Bash]
+screen /dev/ttyUSB0 115200, cs8, ixoff
+\end{lstlisting}
+
+This will connect you to the first layer of the TimePort. 
+The system is a restricted linux distribution, so some commands you may be familiar with do exist.
+A full list of commands and the rest of the documentation can be found in Appendix \ref{app:TimePortDocumentation}. 
+
+% Need screenshots for this section
+\subsection{Hardware - Chronos Syncwatch \cite{Syncwatch}}
+\subsubsection{Description}
+The Chronos Syncwatch is a hardware slave clock used to synchronise time in  a number of different applications.
+It operates in all of the current synchronisation technologies. SyncE, ESMC,  PTPv2, 1PPS+TOD, 1PPS, Frequencies(64k-200MHz), T1 \& E1 protocols and interfaces are supported. \\
+
+It can be used on both legacy and modern Ethernet/IP networks. 
+It can simultaneously operate on a number of the protocols above. 
+It can also operate in both local and remote modes. \\
+
+It is a small modular device with a simple user interface. 
+It also integrates with with Symmetricom's TimeMonitor software. \\
+
+The device markets include telecommunications, TV and radio broadcasting, and the power industry. \\
+
+The table shown in Appendix \ref{app:SyncwatchSpec} details the Syncwatch specifications. 
+The figures below show labelled diagrams of the inside and outside of the Chronos Syncwatch. \\
+
+\begin{figure}
+\centering
+\begin{subfigure}{\textwidth}
+	\centering
+%	\includegraphics{Figures/SyncwatchOutside.eps"}
+	\label{SyncwatchOutside}
+	\caption{Chronos Syncwatch Outside}
+\end{subfigure}%
+
+\begin{subfigure}{\textwidth}
+	\centering
+%	\includegraphics{Figures/SyncwatchInside.eps}
+	\label{SyncwatchInside}
+	\caption{Chronos Syncwatch Inside}
+\end{subfigure}
+\label{SyncwatchDiagrams}
+\caption{Chronos Syncwatch Labelled Diagrams}
+\end{figure}
+This product is similar to the TimePort in the fact that there isn't much documentation around for it. 
+Therefore Appendix \ref{app:SyncwatchDocumentation} shows the documentation written up for the Syncwatch.\\
+
+The Syncwatch will be mainly kept in the upstairs Level 3 Communications lab as it is a larger device. 
+As this device is a release product, all of the ports used for controlling the device are enabled.
+Therefore the syncwatch can be set up via SSH or using the program. 
+This is all explained in the documentation in Appendix \ref{app:SyncwatchDocumentation}.\\
+
+\subsubsection{How to Set Up the SyncWatch}
+
+The device can be accessed using either ssh, serial, or through the Syncwatch-Lab program. 
+As the first two stages are similar, these will be discussed at the same time.\\
+
+To connect via ssh: log in using a terminal program using the following command:
+
+\begin{lstlisting}[language=Bash]
+ssh root@eepc-rjw-syncwatch.bath.ac.uk
+\end{lstlisting}
+
+using password: $syncwatch$ .\\
+
+You are now in the first layer of the Syncwatch device. 
+The alternative method to access this same terminal window is by using a USB to Serial converter, as pictured earlier, Figure \ref{fig:USB2Serial}.
+
+Plug in the device to a computer, and connect to it using the following command:
+
+\begin{lstlisting}[language=Bash]
+screen /dev/ttyUSB0 115200, cs8, ixoff
+\end{lstlisting}
+
+The username is root and the password is syncwatch.\\
+
+At this point the first layer has been connected to. \\
+
+To access the \ac{PTP} console, type the following into the screen connection:
+
+\begin{lstlisting}[language=Bash]
+minicom -S
+\end{lstlisting}
+
+The complete list of commands in both of the modes is shown in the documentation, shown in Appendix \ref{app:SyncwatchDocumentation}
+- notes in logbook.
+- will complete this section Thursday. 
+- screenshots too
+\subsubsection{Hardware - Beaglebone Black \cite{BBB}}
+\subsubsection{Description}
+The Beaglebone Black is a hardware device but it is running a software PTP Daemon (called PTPd). \\
+
+In terms of hardware capabilities it has an ARM Cortex A-8 processor with 512MB of DDR3 RAM.
+It runs a cut down version of Linux called Angstrom Linux.
+It has Ethernet connectivity and runs off of a 5V DC supply.\\
+
+As it runs Linux and can be connected to the network, an SSH server has been set up on it with a static IP address. 
+This made it easy to start the PTP daemon. \\
+
+Below (Figure \ref{fig:BBBLabelled} is a labelled picture of the BeagleBone Black.
+
+\begin{figure}
+\centering
+%\includegraphics{Figures\BBB.eps}
+\caption{Labelled BeagleBone Black}
+\label{fig:BBBLabelled}
+\end{figure}
+
+The Beaglebone will be a useful device to use as a slave clock because of its portability.
+It would be able to be placed anywhere on the network without any disruption to that particular lecture room or lab space.
+
+\subsubsection{How to Set up the Beaglebone Black}
+
+When the project was started, Robert Watson had the BeagleBone Black working with PTPd already, so there was only some work to be done in order to automate the process. \\
+
+To set up the Beaglebone Black:
+
+\begin{enumerate}
+\item Plug in the Beaglebone Black to the 5V adapter.
+\item Plug in the Ethernet cable
+\item Once the Beaglebone boots you can then access the device over SSH.
+\end{enumerate}
+
+Type:
+
+\begin{lstlisting}
+ssh jac50@eepc-rjw-beaglebone.bath.ac.uk
+\end{lstlisting}
+
+to log in, replacing jac50 with the username on the device. 
+The users on the device were eerjw, jac50, and root.\\
+
+The screenshot below (Figure \ref{SSH_To_Beaglebone}) demonstrates this.
+The ls command was typed to show that the connection was successful.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{Figures/Screenshots/SSH_To_Beaglebone.eps}
+\caption{SSH to Beaglebone}
+\label{SSH_To_Beaglebone}
+\end{figure}
+
+Once SSH'd into the device, then the device can be accessed like any other linux machine.
+Note however that there is a restricted command set.\\
+
+When the BeagleBone boots, it was required that the SD card used to store the test data on would be automounted and that the PTP daemon automatically runs.\\
+
+
+Several attempts in trying to automount the SD card using conventional means such as adding in an entry to fstab were attempted, but this did not work.\\
+
+The method in getting round this was by creating a script in /etc/init.d. 
+Any script located in that folder will automatically be loaded once the device boots. 
+The PTP daemon was also run from this same script.
+The script would also need to automatically name the data file or the data would be overwritten every time the device was turned on.
+A convention of $timeport\_YYYY\_MM\_DD.txt$ was decided.\\
+
+The full bash script is shown below, in Code Extract \ref{lst:bashBBB}
+
+\begin{lstlisting}[label = lst:bashBBB, language = bash, caption=Bash Script in init.d for Beaglebone Black]
+#!/bin/bash
+mount /dev/mmcblk1p1 /mnt/sd
+date=$(date +"%Y_%m_%d")
+sudo /home/eesrjw/ptpd2 -i eth0 -C -S -g -d 17 -V > /mnt/sd/eesrjw/timeport_$date.txt
+\end{lstlisting}
+
+Line 1 is the bash shebang which lets the operating system know that the following script is written in bash. 
+The second line mounts the SD card to the correct location. 
+In this case the SD card is device mmcblk1p1, and the mount location is /mnt/sd/.\\
+
+The third line defines a date variable in Year\_Month\_Day format. 
+The forth line runs the PTPd2 daemon. 
+As the script is not saved in the PATH variable, the full path to the script is used. 
+The flags will be discussed in more detail in the later section as similar flags will be used.\\
+
+Once the script above is run (or if the PTPd2 script is run on its own from the terminal), the output is stored in the text file mentioned on Line 5.\\
+
+Once the test is completed, the script can be killed by using $kill -9$ on ptpd2. 
+The final step is to transfer the text file from the beaglebone to the local machine ready for packet metrics to be run on it. 
+
+\subsubsection{Sending Data to the Local Machine}
+
+There are two ways to retrieve the data from the Beaglebone: either pulling out the SD card and using an SD card reader to transfer the text file, or remotely using a utility such as rsync. \\
+
+It was decided that as all other commands are sent to the device remotely, that a short rsync script will be made. 
+Code Extract \ref{lst:rsync} below is the rsync script used. 
+
+\begin{lstlisting}[language=bash, label = lst:rsync,caption=Rsync Script]
+#!/bin/bash
+echo "RSync List-only will run"
+rsync --list-only jac50@eepc-rjw-beaglebone.bath.ac.uk:/mnt/sd/eesrjw/ ./
+echo "Type filename here: "
+read fileName
+rsync -v --progress jac50@eepc-rjw-beaglebone.bath.ac.uk:/mnt/sd/eesrjw/i\$fileName ./NotSorted
+\end{lstlisting}
+
+The script above prompts the user to type in the filename. 
+It lists the files in the correct directory on the beaglebone in case the user does not know the correct file name. 
+Line 6 then performs the sync operation, using the verbose and the progress flag. \\
+
+The only issue with this script is that it prompts the user twice for the password. 
+As this script was not run very often it was not an issue.
+If it was however more research would have been done to see if that could be fixed. 
+A screenshot below (Figure \ref{fig:rsync} shows the rsync script transferring across a gzipped data file.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{Figures/Screenshots/Rsync_From_Beaglebone.eps}
+\label{fig:rsync}
+\caption{Rsync Example}
+\end{figure}
+
+It was important to gzip the file beforehand or the transfer would have taken a lot longer. 
+%--------------------------------------------------------------------------
+The rate of data collection is around RATE OF DATA HERE
+%--------------------------------------------------------------------------
+
+\subsection{Software - PTPd}
+
+The final type of clock that can be used is a software daemon called PTPd (or sometimes PTPd2). 
+It is a program written in C that meets most aspects of the IEEE1588 specification. 
+PTPd2 meets the changes made in the 2008 standard.\\
+
+In-depth code analysis of the script will not be provided in this report.
+Instead the different flags that may be used for this project will be tabulated below (Table \ref{table:FlagsPTPd}).
+
+\begin{table}[H]
+\centering
+\caption{Flags used for PTPd}
+\begin{tabular}{|l|l|l|l|} \hline
+\textbf{Flag Name} & \textbf{Flag Letter V2.3.0 or above} & \textbf{Old Flag Letter} & \textbf{Description} \\ \hline
+Interface & i & b & Network Interface to use \\ \hline
+Domain & d & i & PTP Domain Number \\ \hline
+Foreground & C & C & Run program in foreground \\ \hline
+Verbose & V & None & Run in Verbose mode \\ \hline
+No Clock Adjust & n & t & Do not adjust the local clock \\ \hline 
+Slave only mode & s & g & Set PTPd as Slave \\ \hline
+\end{tabular}
+\label{table:FlagsPTPd}
+\end{table}
+
+PTPd can be used as both a slave and a grandmaster.
+As there is already a dedicated grandmaster, PTPd will be used mainly as a slave. 
+
+The script call has already been given for the beaglebone. The code extract below has been used for the PTPd\_Netbook 
+
+\begin{lstlisting}[language=bash,label=lst:ptpd2]
+./ptpd2 -C -S -g -i 17 -t | tee /home/james/FinalYearProject/PTPData/TestData/TimePort-To-Soft-Test4/RawData.txt
+\end{lstlisting}
+
+The difference in the call to ptpd2 above is that tee has also been used so the data is displayed both on the screen and sent to the text file. 
+This script can be run on any linux computer with root access. 
+Note that the above script in Extract \ref{lst:ptpd2} is already run as a root user.
+The other method to do this would be to run the script with sudo. 
+
+
+\subsection{Data Collection Overview}
+As the majority of the devices above will be controlled remotely via SSH, it would be useful for all of them to be on static IPs assigned by the university computing services. 
+All devices were able to get a static IP with a domain forwarding in the format eepc-rjw-nameofdevice.bath.ac.uk. 
+This is a local address which isn't forwarded outside of the university network. 
+The summary table below shows what hardware is available, based on class, and IPs for the PTP port and the control port. 
+
+\begin{table}[H]
+\caption{Hardware Summary}
+\label{table:hardwareSummary}
+\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
+\textbf{Clock ID} & \textbf{Name} & \textbf{Type} &  \textbf{PTP IP} & \textbf{Control IP}  & \textbf{MAC Address} \\ \hline
+001 & Chronos TimePort & Hardware GM  &TimePort & USB over Serial & ... \\ \hline
+002 & Chronos SyncWatch & Hardware & syncwatchptp & syncwatch & ... \\ \hline
+003 & BeagleBone Black & Hardware & beaglebone & beaglebone & ... \\ \hline
+004 & PTPd\_Desktop & Software &  ... & ... & ... \\ \hline 
+005 & PTPd\_Netbook & Software & ... & ... & ... \\ \hline
+\end{tabular}
+\end{table}
+
+The clock ID was used with internal documentation to know which clock was used where. 
+Note that the IPs listed are just part of the full name. 
+To access one of them on the university network, add the prefix eepc-rjw- and the suffix .bath.ac.uk.
+
+\subsection{Locations for Clocks}
+
+To get a varied set of data points, it was decided to collect data at a number of locations throughout the network. 
+
+%Topology of network info in here.
+%Note locations of clocks on map
+\subsection{Test Sheets}
+
+As there will be quite a few tests performed during the project, and it is important to note times and locations of each test, a test sheet has been created using LibreOffice Calc. An example of a test sheet is found in Appendix \ref{app:testsheet} \\
+
+Each test will have the following:
+
+\begin{description}
+\item[Test ID] Each test gets a unique ID number. 
+The number increments for every test performed. 
+\item[Test Name] A general name for the test. 
+This usually consists of the GM clock type, the slave clock type, and the number associated with that type of test. 
+\item[Test Date] The date at which the test was performed in ISO 8601 format.
+\item[File Name] The file name for the test file.
+If the test has to be stopped for any reason, a new file is made with a number at the end. 
+The file name is typically RawData.txt. 
+\item[Directory] The directory where the test data is stored.
+\item[Clock Type] Each clock will have its clock type listed. 
+The clock types have been mentioned earlier in this report. 
+\item[Clock Name] The name of the clock. 
+This is a unique identifer in case multiple clocks of the same type and model are used. 
+\item[Clock Model] The model of the clock. 
+\item[Start Time] The time that the test started. 
+This is as accurate as possible so network data can be correlated with it. 
+\item[End Time] The time that the test finishes. 
+If the test is stopped prematurely but started up again, the final end time is noted here, but the intermediate start and stop time is listed in the comments section.
+\item[Network Activity] An average network activity for the day (low, medium, high). 
+This is used to correlate delay spread with network activity.
+
+\item[Test Description] Brief description of why the test was performed and what the expected outcome of the test is.
+\item[Comments] Any comments can be noted here. Start/Stop times, or if any issues come up will be noted here.
+\end{description}
+
+
+All of the test sheets will not be shown in this report. 
+Instead a summary sheet of all the tests was produced. 
+The summary sheet will include the Test name, date, directory, and start and end times of the tests. 
+This will show up later in the report. 
+
+\subsection{Testing Schedule}
+
+This part of the project will run in parallel with the implementation stage of the packet metrics, as this does not rely on them being completed. 
+The tests that are to be completed will include:
+
+\begin{itemize}
+\item Hardware to Hardware
+\item Hardware to Software
+\item Hardware to Beaglebone
+\item Different locations
+\item Different Times
+\end{itemize}
+
+An explicit testing schedule has not been produced. 
+Instead there are week blocks allocated in the gantt chart for data collection. 
+
+%Brainstorm other sections
+\section{Packet Methods}
+
+This section of the project is the bulk of the programming development.
+Packet metrics will be created in a suitable language and will be run against the data collected in the previous section.\\
+
+A range of packet metrics were chosen to be implemented from the report detailed in the literature review section of this report. The following packet metrics will be implemented:
+
+\begin{itemize}
+\item TDEV
+\item minTDEV
+\item percentileTDEV
+\item bandTDEV
+\item MATIE
+\item MAFE 
+\end{itemize}
+
+Note that both MATIE and MAFE can have different packet selection methods (min, percentile, or band), so there may be more than the above implemented in the final script. 
+\subsection{Choosing a suitable language}
+
+The first decision to make for this section of the project was to choose a suitable programming language. 
+Based on the languages that would be suitable for a task such as this, the following languages were identified: R, C, Matlab, or Python. \\
+
+The requirements that the language must meet in order to be suitable for the project are listed below.\\
+
+Note that parts of this section has been copied from the Individual Technical Report for the Third Year Group Business and Design Project as there are some parts that are applicable. 
+
+\begin{description}
+\item[REQ1- Familiarity with the Language] \hfill \\ \textit{Spec: Used for a sufficient length of time} \\ If the language was very familiar the development time of the scripts would be quicker. 
+This extra time may be acceptable however if there is a much better language ssuited for the task. 
+\item[REQ2 - Well Documented] \hfill \\ \textit{Spec: Not Applicable} \\ The majority of modern high level languages are well documented, with some online resources better than others. 
+The language must be well documented so \textbf{[REQ7]} can be met. 
+This will also make it easier if \textbf{[REQ1]} has not been met fully as it would be easier to learn the language with good documentation. 
+\item[REQ3 - Plotting Functionality] \hfill \\ \textit{Spec: Sufficient plotting functionality available} \\ Does the language support complex plotting as standard or are external libraries required?
+\item[REQ4 - External libraries already available] \hfill \\ \textit{Spec: All available} \\ Some external libraries may be needed in case some specific functionality is required. Examples of external libraries that will be required are a command line argument tool and logging functionality.  
+\item[REQ5 - Speed] \hfill \\ \textit{Spec: Performs the metrics in a reasonable length of time} \\ The metrics should be able to run on a relatively large dataset in a reasonable length of time.
+As it is unknown how long the scripts will take, this reasonable length of time will be decided later.
+If need be optimisation can be made to make the scripts faster.
+\item[REQ6 - Linux Compatibility] \hfill \\ \textit{Spec: Can be developed under Linux} \\ As the rest of the development will be using a Linux Mint netbook, it is a preference for the language to be suitable for a Linux development environment.
+
+\end{description}
+To decide on the best solution, a set of ranking criteria was created as well as a ranking table. 
+The table below shows the criteria that the above languages were compared against. 
+\begin{table}[H]
+\centering
+\caption{List of Criteria for the Language Options}
+\begin{tabular}{|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{2cm}|c|>{\centering\arraybackslash}p{3cm}|>{\centering\arraybackslash}p{3cm}|}\hline
+\cellcolor{Black}\textcolor{White}{\textbf{Criterion}} & \cellcolor{Black}\textcolor{White}{\textbf{Description}}& \cellcolor{Black}\textcolor{White}{\textbf{Requirement}} & \cellcolor{Black}\textcolor{White}{\textbf{Weight}} & \cellcolor{Black}\textcolor{White}{\textbf{Highest - 5}} & \cellcolor{Black}\textcolor{White}{\textbf{Lowest - 0}}\\ \hline
+Familiarity with the Language & Is the engineer familiar with the language syntax and style? & \textbf{[REQ1]} & 9 & Developed a few large projects. & No familiarity \\ \hline
+Plotting functionality & What plotting functionality is available for the language& \textbf{[REQ3]}& 8 & Lots of plotting functionality & All plotting functions would need to be written from scratch \\ \hline
+External Libraries available & Are all of the libraries available to complete the project? & \textbf{[REQ4]} & 7 & All of the required libraries are available. & Minimal library support. \\ \hline
+Speed & Is the chosen language going to be fast enough for the application? & \textbf{[REQ5]} & 6 & Fast enough. & Not fast at all. Needs careful programming to make as efficient as possible. \\ \hline
+Linux Compatibility & Is the language compatible in a linux development environment?  & \textbf{[REQ6]} & 6 & Yes, it is compatible. & No. Windows Only \\ \hline
+Development Time & How long would it take to develop the first program & \textbf{None} & 7 & Less than a month & Longer than 3 months \\ \hline
+ Documentation & Is the language mature enough to have a full set of documentation? & \textbf{[REQ2]} & 6 & Yes. The language has clear and concise for all of the documentation. & Very limited. \\ \hline
+\end{tabular}
+\end{table}
+
+% ---------------------------------------------------------------------
+\begin{table}[H]
+\caption{Language Options Ranking Tables}
+\label{table:lang}
+\centering
+\begin{tabular}{|c|c|m{2cm}|m{2cm}|m{2cm}|} \hline
+\multicolumn{5}{|l|}{\cellcolor{black}\textcolor{white}{\textbf{Programming Language}}} \\ \hline
+\multirow{2}{*}{Ranking Criteria} & \multirow{2}{*}{Weight} & \multicolumn{3}{|c|}{Language} \\ \cline{3-5}
+& & R & Matlab & C \\ \hhline{*{5}{|-}}
+Familiarity with the Language & 9 & \cellcolor{OrangeRed}{18} & \cellcolor{Goldenrod}{36} & \cellcolor{ForestGreen}{45} \\ \hhline{*{5}{|-}}
+Plotting Functionality & 8 & \cellcolor{ForestGreen}{40} & \cellcolor{Green}{32} & \cellcolor{Red}{0} \\ \hhline{*{5}{|-}}
+External Libraries Available  & 7 & \cellcolor{ForestGreen}{28} & \cellcolor{Orange}{21} & \cellcolor{OrangeRed}{14} \\ \hhline{*{5}{|-}}
+Speed & 7 & \cellcolor{Orange}{14} & \cellcolor{OrangeRed}{0} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
+Linux Compatibility  & 7 & \cellcolor{Orange}{14} & \cellcolor{OrangeRed}{0} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
+Development Time & 7 & \cellcolor{Orange}{21} & \cellcolor{ForestGreen}{28} & \cellcolor{ForestGreen}{28} \\  \hhline{*{5}{|-}}
+Documentation & 6 & \cellcolor{Orange}{18} & \cellcolor{Orange}{18} & \cellcolor{ForestGreen}{30} \\ \hhline{*{5}{|=}}
+\multicolumn{2}{|r|}{\textbf{Total Figure of Merit}} & 151 & 115 & \cellcolor{ForestGreen}{195} \\ \hhline{*{5}{|-}}
+\end{tabular}
+\end{table}
+
+Therefore based on the ranking table above it was decided that R will be the most suitable language for the task.
+In addition to this there are some R scripts as part of the PTPd which may also be used if suitable.\\
+
+- explain what sort of language R is
+- pros / cons
+- considerations that need to be made
+- Development environment
+	+ Linux Mint Netbook
+	+ text editor + the interpreter. no IDE
+
+
+
+
+\subsection{General Packet Metric Implementation}
+
+\subsubsection{TDEV and TDEV derivatives}
+
+\subsubsection{MATIE and MAFE derivatives}
+
+\subsubsection{Overall Packet Script}
+
+\subsubsection{Testing}
+
+\subsubsection{Optimisation}
+
+
+\subsection{Calculating Results}
+*explain workflow of collecting data
+\subsubsection{Other Utility Scripts}
+
+explain what utility scripts otherwise not mentioned above that will be used.
+
+
+Awk Data Parser
+
+\section{Results}
+
+*explain results
+\section{Discussion}
+\section{Challenges}
+\section{Milestones}
+\section{Further Work}
+\section{Other Work}
+
+\subsection{Securing PTP against attacks}
+PTP Security Tutorial
+http://www.ispcs.org/security/downloads/PTPSecurityTutorial.pdf \\
+
+PTP is inherently an unsecure system with no standard methods in either encrypting communications between the master and the slave devices or any method of verifying that a particular grandmaster is legitamate.
+Therefore the slave clocks rely on trusting the grandmaster is an accurate time reference and blindly syncronising with the masters.
+The issue arises if a master or grandmaster was compromised and clock shift delays were spoofed.
+This would cause all of the slave clocks on the network to drift away from the actual time reference.
+The impact on critical systems mentioned in this report would be huge: timestamps for telecommunications data would be invalid or power transmission relays would trigger in the wrong order.
+Therefore this section of the report will highlight some of the attack vectors that could affect PTP and methods in which to help mitigate this.
+
+\subsubsection{Issues with NTP}
+
+* find documentation on the NTP DDOS type attack style *
+* comment whether it's possible with PTP*
+\subsubsection{Possible Attack Vectors}
+
+There a number of different methods that are possible with the existing \ac{PTP} standard.
+These are:
+
+\begin{description}
+\item[Control Plane Attack] \hfill \\ This attack is an attack specifically on the \acf{BMC} algorithm which is highlighted in Section \ref{ref:BMC}. 
+It works by having a compromised host (pictured below in red, Figure \ref{fig:ControlPlane}) announcing to the network that it has set the highest priority flag to 1. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figures/PTPSecurity/ControlPlane.eps}
+\caption{Control Plane Attack Vector (taken from ref)}
+\label{fig:ControlPlane}
+\end{figure}
+
+This would set it to become the Grandmaster clock on the network based on the \ac{BMC} algorithm. 
+The existing \ac{GM} clock is now passive and the new grandmaster can now steer all of the slave clocks on the network by reporting false timestamps. 
+Provided that the compromised host keeps their priority level at the highest, the only method of fixing this type of attack would be for another master clock to also set their priority to the highest.
+The \ac{BMC} algorithm will then drop to the next level, which is Clock Type (need to check). \\
+
+A more sophisticated version of this attack could be for the compromised clock to eventually mirror all of the parameters for the current grandmaster, such that it would be a random choice which clock would be chosen as the Grandmaster. 
+
+\item[Sync Plane Attack] \hfill \\ This attack type involves the compromised clock to learn enough about the existing grandmaster to be able to spoof messages as if the compromised clock was the grandmaster.
+It does this by learning the \ac{GM} identity, addresses, sync sequence number and interval. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figures/PTPSecurity/SyncPlane.eps}
+\caption{Sync Plane Attack Vector (taken from ref)}
+\label{fig:SyncPlane}
+\end{figure}
+
+From the perspective of one of the slaves, this compromised clock is exactly the same as the current grandmaster.
+The compromised clock can then send sync messages, thus hijacking the slave clocks on the network. 
+This is a form of a masquerade attack. \\
+
+Due to the nature of this attack, it would be difficult to attempt to mitigate the risk of this type of attack occurring on a PTP network because the real grandmaster and the hacked host look identical. \\
+
+One way that network administrators could attempt to mitigate this however is to restrict any two devices with the same parameters on the network from communicating.
+This would involve some sort of authentication process that cross checks all possible masters. 
+	
+
+\item[Management Plane Attack] \hfill \\ The final attack type involves using a management command to gain grandmaster access on the network. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figures/PTPSecurity/ManagementPlane.eps}
+\caption{Management Plane Attack Vector (taken from ref)}
+\label{fig:ManagementPlane}
+\end{figure}
+
+It involves gaining access to the clocks to disrupt network operation by sending an initialise command.
+
+%*need some more info*
+
+\item[Delay Attacks] \hfill \\ The final attack type is a delay attack, which involves a compromised switch instead of a host. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figures/PTPSecurity/DelayAttack.eps}
+\caption{Delay Attack}
+\label{fig:DelayAttack}
+\end{figure}
+\item[Confidentiality and Non-Repudiation] \hfill \\ Test. add in some info here
+
+\end{description}
+
+Figure \ref{fig:DelayAttack} demonstrates what would happen if this occured.
+The hijacked switch (when acting like a boundary clock) would be able to report incorrect delay values which would then propagate these errors across the network.\\
+
+The problem with mitigating this type of attack is, unlike the three previous attack types, is that it would be difficult to redirect routing of the PTP packets around the compromised switch.
+One way of mitigating is that the delays could be sanity checked with a number of different routes, similar to how clocks in every stratum in NTP are sanity checked.
+
+\subsubsection{Methods to mitigate the above attack vectors}
+
+There are several general methods of securing a PTP network in general, with some other specific methods also mentioned in relation to the attacks mentioned above.
+The general methods are:
+
+\begin{itemize}
+\item Physically Securing the Network
+\item Use seperate sub-networks to limit the effect of multicast communication
+\item Limit the grandmasters to a pre-defined list by implementing a whitelist
+\item Limit the management address to a pre-defined list
+\item Snoop source address to attempt to identify masquerade attacks
+\end{itemize}
+
+The above methods would be able to mitigate some of the attack types but they are either not always possible to implement, don't cover some of the more serious threats to the network, or the goal of minimising central administration would not be reached.
+For example, physically securing the network may not always be fool-proof or may not be possible in certain circumstances.
+The issue with limiting either the grandmasters or the management addresses is the extra overhead involved in administrating the network, which goes against the original goals of PTP to have distributed control. \\
+
+IEE1588-2008 standard includes a section on secure PTP which aims to address these concerns. 
+This is in Appendix J of the standard. 
+Some of the solutions mentioned in the standard will be discussed here, along with some comments and suggestions to move forward, and areas that could be later worked on to better improve the security of PTP. 
+
+\subsubsection{Security Protocol Recommendation}
+
+Annex K of the IEEE1588-2008 specification outlines a recommendation to how secure PTP could be implemented.
+It explicitly states that this section is not a requirement to meet the standard, just a possible way of implementing it.
+The extension to the standard includes group source authentication, message integrity and replay attack protection, which would help to mitigate some of the attack vectors mentioned previously. \\
+
+The security protocol includes two main elements: an integrity protection mechanism and a challenge-response mechanism. 
+Symmetric message authentication code functions are used which provides the advantages of replay proection, group source authentication and message integrity. 
+The standard recommends two main authentication standards (HMAC-SHA1-96 \ref{HMAC-SHA1-96} and HMAC-SHA256-128 \ref{HMAC-SHA256-128}), but there is a possibility for the standard to support more than these.\\
+
+Users on the PTP network will share symmetric authentication keys, which can either be shared across an entire domain or in subsections of it. 
+There are two ways of key distribution: either manual or an automatic key management protocol. \\
+
+\paragraph{Security Associations}
+
+The method of communication between users on the PTP network is through \acp{SA}. 
+The contain the following fields:
+
+\begin{itemize}
+\item Source (Source port and Protocol Address)
+\item Destination (Destination Address and Protocol Address)
+\item key (either SHA256-128 or SHA1-96)
+\item a random lifeTimeID
+\item a reply counter
+\end{itemize}
+
+The \ac{SA} is a unidirectional transaction, therefore each node on the network needs to maintain a list of both incoming \acp{SA} as well as outgoing. 
+They can be shared by a single sender and multiple receivers, but each receiver holds its own copy of the \ac{SA}. 
+This will work provided that each of the receiver copies holds a different value of the reply protection counter at the same time. 
+All of them must be smaller than the counter stored in the sender's copy.
+The \ac{SA} is generated by the sender, and can be sent to all of the receivers, or a seperate one to each of them.\\
+
+%Replay protection mechanism
+
+\paragraph{Requirements}
+
+
+
+\subsection{Sub-microsecond accuracy}
+
+\section{Conclusion}
+\section{Acknowledgements}
+
+\bibliographystyle{ieeetr}
+\bibliography{Bibliography}
+\begin{appendices}
+\section{Clock Accuracies}
+
+\section{Gantt Chart and Table}
+\label{ganttchart}
+\begin{figure}[H]
+\centering
+%\includegraphics[scale=0.4]{Figures/GanttChart.eps}
+\caption{Gantt Chart}
+\end{figure}
+\begin{table}[H]
+\begin{tabular}{|c|c|c|c|c|c|} \hline 
+\cellcolor{Black} & \cellcolor{Black}\textcolor{White}{\textbf{Task Name}} & \cellcolor{Black}\textcolor{White}{\textbf{Duration (days)}} & \cellcolor{Black}\textcolor{White}{\textbf{Start}} & \cellcolor{Black}\textcolor{White}{\textbf{Finish}} & \cellcolor{Black}\textcolor{White}{\textbf{Predecessors}} \\ \hline
+A & \textbf{Deliverables} & 72 & Mon 03/02/14 & Tues 13/05/14 & \\ \hline
+1 & Log Book & 65 & Mon 03/02/14 & Fri 02/05/14 & \\ \hline
+2 & Interim Report & 9 & Fri 07/02/14 & Wed 19/02/14 & B, 1 \\ \hline
+3 & Final Year Report & 17 & Mon 14/04/14 & Tues 06/05/14 & B,C,D,1,2 \\ \hline
+4 & Poster & 5 & Wed 07/05/14 & Tues 13/05/14 & 1,3 \\  \hline
+\cellcolor{Black}\textcolor{White}{\textbf{B}} & \cellcolor{Black}\textcolor{White}{\textbf{Preliminary Reading}} & \cellcolor{Black}\textcolor{White}{\textbf{7}} & \cellcolor{Black}\textcolor{White}{\textbf{Mon 03/02/14}} & \cellcolor{Black}\textcolor{White}{\textbf{Tues 11/02/14}} & \cellcolor{Black}\\ \hline
+1 & Read up on PTP & 7 & Mon 03/02/14 & Tues 11/02/14 & \\ \hline
+2 & Reading about Metrics & 7 & Mon 03/02/14 & Tues 11/02/14 & \\ \hline
+\cellcolor{Black}\textcolor{White}{\textbf{C}} & \cellcolor{Black}\textcolor{White}{\textbf{Packet Metrics}} & \cellcolor{Black}\textcolor{White}{\textbf{35}} & \cellcolor{Black}\textcolor{White}{\textbf{Mon 10/02/14}} & \cellcolor{Black}\textcolor{White}{\textbf{Fri 28/03/14}} & \cellcolor{Black} \\ \hline
+1 & Decide on Language & 1 & Mon 10/02/14 & Mon 10/02/14 & \\ \hline
+2 & Decide on Metrics & 1 & Mon 10/02/14 & Mon 10/02/14 & \\ \hline
+3 & Implement Metrics & 24 & Mon 11/02/14 & 14/03/14 & 1,2 \\ \hline
+4 & Test all Metrics & 33 & Wed 12/02/14 & Fri 27/03/14 & 3 \\ \hline
+5 & Run some tests on sample Data & 8 & Wed 12/02/14 & Fri 21/02/14 & 3 \\ \hline 
+\cellcolor{Black}\textcolor{White}{\textbf{D}} & \cellcolor{Black}\textcolor{White}{\textbf{Data Collection}} & \cellcolor{Black}\textcolor{White}{\textbf{45}} & \cellcolor{Black}\textcolor{White}{\textbf{Mon 03/02/14}} & \cellcolor{Black}\textcolor{White}{\textbf{Tues 04/04/14}} & \cellcolor{Black} \\ \hline
+1 & Set up Equipment & 5 & Mon 03/02/14 & Fri 07/02/14 & \\ \hline
+2 & Run Tests w/ Chronos Equipment & 10 & Mon 24/02/14 & Fri 07/03/14 & 1\\ \hline
+3 & Run Tests w/ Software & 5 & Mon 10/03/14 & Fri 14/03/14 & 1 \\ \hline
+4 & Run Tests with w/ Mix & 5 & Mon 17/03/14 & Fri 21/03/14 & 1 \\ \hline
+5 & Other Tests & 10 & Mon 24/03/14 & 04/04/14 & 1 \\ \hline
+6 & Run scripts on Results & 30 & Mon 24/02/14 & Fri 04/04/14 &  2,3,4,5 \\ \hline
+\cellcolor{Black}\textcolor{White}{\textbf{E}} & \cellcolor{Black}\textcolor{White}{\textbf{Other Work and Buffer}} & \cellcolor{Black}\textcolor{White}{\textbf{12}} & \cellcolor{Black}\textcolor{White}{\textbf{Mon 07/04/14}} & \cellcolor{Black}\textcolor{White}{\textbf{Fri 18/04/14}} & \cellcolor{Black} \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Chronos CTL4540 TimePort Specification}
+\begin{table}
+\begin{tabular}{l l } \\
+\multirow{2}{\textbf{IPPS Holdover}} & 200 nanoseconds over 8 hours (\pm $10\,^{\circ}\mathrm{C}$ temp change)  \\ 
+& 100 nanoseconds ove 4 hours (\pm $10\,^{\circ}\mathrm{C}$ temp change) \\ 
+\textbf{\large{Inputs}} \\ 
++5V DC: & MiniB USB \\ 
+GPS antenna: & SMA \\
+Ethernet (PTP and SNTP/NTP): & RJ45 10/100 \\ 
+Ethernet (management): & RJ45 10/100 \\
+1PPS (phase 2): & BNC \\ \\
+\textbf{\large{Outputs}} \\ 
+1PPS: & BNC \\
+Frequency 1: 2.048 MHz, 10 MHz & BNC G.703 \\
+Frequency 2: 2.048 MHz, 10 MHz & BNC G.703 \\
+IRIG-B: & BNC \\
+RS232: & 9 way D-Type 9600 band \\
+RS442: & 15 way D-Type 9600 band \\
+Ethernet (PTP and SNTP/NTP) (Max 10 clients): & RJ45 10/100 \\
+Ethernet (management): & RJ45 10/100 \\ \\
+\textbf{\large{Environmental}} \\
+Operating Temperature:  & $0\,^{\circ}\mathrm{C}$ to +$50\,^{\circ}\mathrm{C}$ \\
+Maintain holderover tolderance down to: & $ -10\,^{\circ}\mathrm{C}$ for 15 minutes \\
+Storage temperature:  & $-20\,^{\circ}\mathrm{C}$ to +$80\,^{\circ}\mathrm{C}$ \\ \\
+\textbf{\large{Physical}} \\
+Size: & 190 x 57 x 170mm (WxHxL) \\
+Weight: & 1150g \\ \\
+\end{tabular}
+\end{table} 
+\section{TimePort Documentation}
+\label{app:TimePortDocumentation}
+\includepdf[pages={1, 2}]{TimePortDocumentation.pdf}
+\section{Syncwatch Documentation}
+\label{app:SyncwatchDocumentation}
+\includepdf[pages={1, 2}]{SyncwatchDocumentation.pdf}
+\section{Test Sheet Example}
+\begin{table}[H]
+\begin{tabular}{|l|l|p{3cm}|l|l|} \hline \\
+\multicolumn{5}{|c|}{Test: Timeport\_to\_Software Test One} \\ \hline
+ \textbf{Test Name:} & \multicolumn{2}{|l|}{TimePort\_To\_Software Test One} & & \\ \hline
+ \textbf{Test ID:} & \multicolumn{2}{|l|}{001} & &\\ \hline
+ \textbf{Test Date} & \multicolumn{2}{|l|}{2014-02-27} & & \\ \hline
+ \textbf{File Name:} & \multicolumn{2}{|l|}{RawData.txt} & &\\ \hline
+ \textbf{Directory:} & \multicolumn{2}{|l|}{./PTPData/TimePort\_To\_Software\_Test1} & &\\ \hline
+ \textbf{Start Time:} & \multicolumn{2}{|l|}{1037} & &\\ \hline
+ \textbf{End Time:} &\multicolumn{2}{|l|}{2200} & &\\ \hline
+\textbf{Clock \#1 Type:} & Hardware & & \textbf{Clock \#2 Type:} & Software \\ \hline
+
+\textbf{Clock \#1 Name:} & TimePort\_1 & & \textbf{Clock \#2 Name:} & PTPd\_Netbook \\ \hline
+\textbf{Clock \#1 Model:} & TimePort & & \textbf{Clock \#2 Model:} & PTPd \\ \hline
+\textbf{Clock \#1 Location:} & Watson's Office & & \textbf{Clock \#2 Location:} & 2E 2.13 \\ \hline 
+& & & &\\ \hline
+\textbf{Network Activity:} & Normal & & & \\ \hline
+\textbf{Test Description:} & \multicolumn{4}{|l|}{An initial test to collect data to supplement the example data already received. } \\ \hline
+\textbf{Comments} & \multicolumn{4}{|l|}{1342: Data seems to be collecting fine. 3hrs20mins: 45MB} \\ \hline
+\end{tabular}
+\end{table}
+\section{Test Sheet Summary Sheet}
+\input{SummaryTestSheet.latex}
+\section{Main Packet Metric Script}
+\section{TDEVAllMethods}
+\section{MATIEAllMethods}
+\end{appendices}
+\end{document}
+
