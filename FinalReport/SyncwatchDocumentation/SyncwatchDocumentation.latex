@@ -1,0 +1,185 @@
+\documentclass[11pt,a4paper,oneside]{article}
+%\renewcommand\abstractname{Executive Summary}
+%\renewcommand*\thesection{\arabic{section}}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+\usepackage{tocloft}
+\usepackage{graphicx}
+\usepackage[section]{placeins}
+\usepackage{array}
+\usepackage{rotating}
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{epstopdf}
+\usepackage{txfonts}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage[titletoc,toc,title]{appendix}
+\usepackage{varioref}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{acronym}
+\usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+%\usepackage[table]{xcolor}
+\usepackage{hhline}
+\usepackage{pdfpages}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\lstset{ %
+  language=R,                     % the language of the code
+  basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line
+                                  % will be numbered
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                 % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},      % keyword style
+  commentstyle=\color{dkgreen},   % comment style
+  stringstyle=\color{mauve},      % string literal style
+  morekeywords={*,...}            % if you want to add more keywords to the set
+}
+\renewcommand{\lstlistingname}{Code Extract} 
+\newcommand{\degree}{\ensuremath{^\circ}}
+\renewcommand{\headrulewidth}{0pt} % remove the header rule
+\newcommand{\includecode}[2][c]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
+ 
+\addtolength{\voffset}{-1.5cm}
+\addtolength{\hoffset}{-1.3cm}
+\addtolength{\textwidth}{3cm}
+\addtolength{\textheight}{120pt}
+\addtolength{\marginparwidth}{-100pt}
+\addtolength{\oddsidemargin}{-0.3in}
+\addtolength{\evensidemargin}{-0.3in}
+\textwidth 6.6in
+ 
+\setlength\cftparskip{1pt}
+\setlength{\parindent}{0pt}
+% leftmark shows the chapter, rightmark shows the section.
+\fancyhead{}
+\fancyfoot[L]{}% empty left
+\fancyfoot[R]{ % right
+}
+\pagestyle{fancy}
+
+\title {Chronos Syncwatch Documentation}
+\author {James Cox
+\\ Department of Electrical and Electronic Engineering \\
+\\
+University of Bath}
+\date{\today}
+\begin{document}
+\maketitle
+\newpage
+
+\section{Introduction}
+
+This document outlines information regarding the Chronos Syncwatch. 
+It is meant to be used as a short manual for it with steps in performing some functions with the device.
+This is by no means an extensive or complete manual. 
+It was used to compile all information about the Syncwatch gathered during the final year project. \\
+
+The Chronos Syncwatch is a synchronisation testing and monitoring unit and is used in several applications including commissioning of field systems or synchronising equipment in labs.
+The device supports all of the current synchronisation protocols and timing interfaces.
+These include: SyncE, ESMC,  PTPv2, 1PPS+TOD, 1PPS, Frequencies(64k-200MHz), T1 and E1 protocols.\\
+
+\section{Diagram of the Syncwatch}
+
+A labelled diagram below has been given, labelling the important parts of the Syncwatch
+
+\begin{figure}[H]
+\centering
+%\includegraphics[scale=0.5]{../Figures/SyncwatchDiagram.eps}
+\label{fig:Syncwatch}
+\caption{A labelled Syncwatch Diagram}
+\end{figure}
+
+The labelled parts are:
+
+\begin{description}
+\item[Part 1]
+\item[Part 2]
+\item[Part 3]
+\end{description}
+
+A block diagram below has been created of the basic operation of the Syncwatch, with some brief explanations of each block below that.
+
+\begin{figure}[H]
+\centering
+%\includegraphics[scale=0.5]{../Figures/SyncwatchBlockDiagram.eps}
+\label{fig:SyncwatchBlock}
+\captin{An Internal block diagram of the Syncwatch}
+\end{figure}
+
+\begin{description}
+\item[Part 1]
+\item[Part 2]
+\item[Part 3]
+\end{description}
+
+\section{How to access the Syncwatch}
+
+To connect to the Syncwatch: connect the serial to USB cable (seen pictured below, Figure \ref{fig:USB2Serial}). 
+
+\begin{figure}[H]
+\centering
+% \includegraphics[scale=0.5]{../Figures/USB2Serial.eps}
+\label{fig:USB2Serial}
+\caption{USB to Serial Converter}
+\end{figure}
+Type the following command into a linux terminal:
+
+\begin{lstlisting}[language=Bash, caption="Bash - Using Screen to connect to Syncwatch"]
+screen /dev/ttyUSB0 115200, cs8, ixoff
+\end{lstlisting}
+
+This will connect you to the first layer of the Syncwatch. 
+The system is a restricted linux distribution, so some commands you may be familiar with do exist.
+A full list of commands and the rest of the documentation can be found in Appendix \ref{app:SyncwatchDocumentation}. 
+Figure \ref{fig:TP1stLayer} is a screenshot of this first layer
+
+\begin{figure}
+\centering
+%\includegraphics[scale=0.5]{../Figures/Screenshots/SyncwatchFirstLayer.eps}
+\caption{Syncwatch Access}
+\label{fig:TP1stLayer}
+\end{figure}
+
+\subsection{Commands}
+
+Within the Syncwatch console there are several useful commands. 
+These are:
+
+\begin{description}
+\end{description}
+
+\section{How to Update the Firmware}
+
+
+\section{Problems and Solutions}
+
+Throughout the project, there have been a number of issues with the Syncwatch. 
+These have been discussed and solutions provided below.
+
+
+\section{Conclusion}
+\end{document}
