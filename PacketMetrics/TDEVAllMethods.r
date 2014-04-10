@@ -29,18 +29,9 @@ TDEVAll <- function(To,n, N,x,a,b){
 	
 		interimStep <- interimStep ^ 2
 		result <- result + interimStep
-	#	for (k in 1:4){
-	#		interimStep[k] <- interimStep[k] ^ 2
-	#		result[k] <- result[k] + interimStep[k]
-	#	}
 	}
 	result <- result / (6 * (N - (3*n) + 1))
 	result <- sqrt(result)
-	#for (k in 1:4){
-#		result[k] <- result[k] / (6 * (N - (3*n) + 1));
-#		result[k] <- sqrt(result[k])
-#	}
-	#print(result)
 	return(result) 
 }
 
