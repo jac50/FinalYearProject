@@ -1079,18 +1079,18 @@ The time field must also be parsed correctly and the time delta added to the new
 The general script layout has been converted to a flow chart, see below Figure \ref{FC:AwkScript}.
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[node distance = 2.5cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
+\begin{tikzpicture}[framed, node distance = 2.5cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
     % Place nodes
 	\node [block] (init) {Start Script};
-	\node [block,below of =init] (inputargs) {Check any Input Arguments};
-	\node [block,below of =inputargs] (initvars) {Initialise FS and any other variables};
-	\node [decision, below of=initvars] (everyline) {New line of file to read?};
-	\node [decision, below of=everyline] (NR3){If Line Number is less than 3};
-	\node [block, below of=NR3] (inccount) {Increment Counter};
-	\node [block, below of=inccount] (calctime) {Calculate the time delta};
-	\node [block, below of=calctime] (print) {Print time delta and delay data};
-	\node [block, below of=print] (reset) {Set variables to 0};
-	\node [block, right of=NR3] (finish) {End};
+	\node [block,right of =init] (inputargs) {Check any Input Arguments};
+	\node [block,right of =inputargs] (initvars) {Initialise FS and any other variables};
+	\node [decision, right of=initvars] (everyline) {New line of file to read?};
+	\node [decision,  right of=everyline] (NR3){If Line Number is less than 3};
+	\node [block, right of=NR3] (inccount) {Increment Counter};
+	\node [block, right of=inccount] (calctime) {Calculate the time delta};
+	\node [block, right of=calctime] (print) {Print time delta and delay data};
+	\node [block, right of=print] (reset) {Set variables to 0};
+	\node [block, down of=NR3] (finish) {End};
 
 
     % Draw edges
@@ -1139,6 +1139,7 @@ The following table shows some execution times for this part of the script given
 The above results were taking with a 10point average. 
 
 \begin{table}[H]
+\centering
 \caption{Execution Times for Awk Script}
 \begin{tabular}{|l|l|} \hline
 \cellcolor{Black}\textcolor{White}{\textbf{Number of Lines}} & \cellcolor{Black}\textcolor{White}{\textbf{Time (ms)}}  \\ \hline
@@ -1248,9 +1249,10 @@ It can be seen from these different metrics that there is a common format for al
 Therefore each of the packet types will be performed in the smallest number of for loops as possible to cut down on execution time.
 The general format for the packet metric script in a flowchart is the following (Figure \ref{flowchart:General})
 
-\begin{figure}
+\begin{figure}[H]
+\centering
 \label{flowchart:General}
-\begin{tikzpicture}[node distance = 2.5cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
+\begin{tikzpicture}[framed, node distance = 2.5cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
     % Place nodes
 	\node [block] (initvars) {Initialise all required variables};
 	\node [decision, right of=initvars] (forloop) {Loop from 1 to Limit};
@@ -1339,15 +1341,130 @@ The average is then taken by divided the sum by $b - a + 1$.\\
 With these four packet types, and referring to the general form of the script in the previous section, the complete TDEV script can be produced. 
 See Appendix \ref{app:TDEVAll} for the full implementation of the script in R.
 
+
 \subsection{MATIE and MAFE derivatives}
+
+The MATIE and MAFE derivatives were created in a similar method to the TDEV scripts above, but the main difference is that both for loops have different upper bounds, hence why a different script needed to be created.
+The following MATIE and MAFE packet metrics were used: MATIE, minMATIE, MAFE, and minMAFE. 
+
+\begin{description}
+\item[MATIE] MATIE is implemented in a similar fashion to TDEV, using the built in mean function.
+\item[minMATIE] The built in minimum function was used for this metric, in a similar method to the minTDEV script.
+\item[MAFE] As described previously, MAFE is very similar to MATIE but there's a scaling value. 
+Therefore only 2 values will be produced in this function, then MAFE will be calculated at the end before the values are returned. 
+\item[minMAFE] This will be calculated based off of the minMATIE result.
+\end{description}
+
+The MATIE/MAFE script was then created, which can be found in Appendix \ref{app:MATIEAll}. 
 \subsection{Overall Packet Script}
 
+Once the packet metric functions were created, these will need to be both called from a seperate file which will handle file IO and plotting.
+The following is a list of functions that the overall script should perform:
+
+\begin{description}
+\item[Input Arguments] For the script to be fully functional, the script must be able to accept input arguments. 
+\item[Logging] The script may end up taking quite a bit of time to compute the packet metrics. 
+Therefore some functionality of logging must be built in to this script.
+The logs may also be saved to a text file if needed.
+\item[Writing to a File] To save from calculating the same packet metric data for a particular data set, the results can be saved to a text file.
+\item[Plotting] The script must have some plotting functionality, as that is how the data will be displayed.
+\end{description}
+
+\subsubsection{Flow Chart}
+
+
+The general layout of the script will be discussed, then each relevant function will then be discussed in turn. 
+The flow chart for this script can be seen below, in Figure \ref{flowchart:overall}. 
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+
+	\node[block] (loadLib) {Load Libraries and other Scripts};
+	\node[block,right of=loadLib] (initvars) {Initialise variables};
+	\node[block,right of= initvars] (parseArg) {Parse the Arguments and validate them};
+	\node[decision,right of =parseArg] (loop) {For every test};
+	\node[block, right of =loop] (filename) {Parse the correct file name and load};
+	\node[block,right of=filename] (read) {Read and purge the delay data};
+	\node[block,right of =read] (plotDelay) {Plot the delays};
+	\node[block,right of =plotDelay] (metric) {Calculate Metrics};
+	\node[block,right of =metric] (plotMetric) {Plot the metric data};
+	\node[block, right of =plotMetric] (save) {Save the data to a new file};
+	\node[block,right of =save] (end) {End the Script};
+
+
+	\path[line] (loadLib) -- (initvars);
+	\path[line] (forloop) -- (parseArgs);
+	\path[line] (parseArgs) -- (loop);
+	\path[line] (loop) -- (filename);
+	\path[line] (filename) -- (read);
+	\path[line] (read) -- (plotDelay);
+	\path[line] (plotDelay) -- (metric);
+	\path[line] (plotMetric) -- (save);
+	\path[line] (save) -- (end);
+	\draw[->] (save.south) -| ($(save.south)!0.5! (loop.south)$) -| (loop.south);
+
+\end{tikzpicture}
+\caption[Overall Packet Script Flow Chart]
+\label{flowchart:overall}
+\end{figure}
+
+With the following flowchart, there are some decisions to be made on what libraries to use and how to go about implementing certain functions.
+\subsubsection{Input Arguments}
+
+It was intended for this packet metric script to be fairly comprehensive. 
+Thus it would require input arguments so the user can choose what sort of metric to perform or on which set of data.
+The input argument functionality for R is similar in some respects with C: it only consists of positional arguments and uses an argc / argv type structure.
+It would be better to use a more substantial input argument library such that optional flags can also be used.\\
+
+Argparse \cite{argparse}, a library originally written for Python but ported to R, was the most suitable choice. 
+It has numerous useful features including: generates a help command automatically, optional flags, and argument parsing to a data structure.\\
+
+The next decision would be to see what arguments would be required. 
+The following table outlines what arguments were used.
+
+\begin{table}[H]
+\caption{List of Arguments}
+\begin{tabular}{|l|p{4cm}|l|l|l|l|} \hline
+\cellcolor{Black}\textcolor{White}{\textbf{Argument Name}} & \cellcolor{Black}\textcolor{White}{\textbf{Description}} & \cellcolor{Black}\textcolor{White}{\textbf{Argument Flag}} & \cellcolor{Black}\textcolor{White}{\textbf{Type}} & \cellcolor{Black}\textcolor{White}{\textbf{Default Value}} & \cellcolor{Black}\textcolor{White}{\textbf{Destination}} \\ \hline
+Test Number & Which test number should be used? & -nTest & Integer & - 1 & nTest \\ \hline
+Number of Lines & How many samples should be used? & -nLines & Integer & 0 & nLines \\ \hline
+Directory & What is the test directory? & -directory & String & None & directory \\ \hline
+Metric & What metric type do you want to run? & -metric & String & TDEV & metrics \\ \hline
+Direction of Delay & Do you want Master to Slave or Slave to Master & -delayDir & String & Master2Slave & direction \\ \hline
+% Leave blank, as the code can be amended
+CSV File & Do you want to save the data in a CSV file? & -CSV & Boolean & None & CSV \\ \hline
+Verbose Mode & Do you want the logging to be verbose? & -v --verbose & Boolean & None & verbose \\ \hline
+Quiet Mode & Do you want the logging to be quiet? & -q --quiet & Boolean & None & quiet \\ \hline
+Histogram & Do you want a delay histogram saved? & --hist & Boolean & None & hist \\ \hline
+Colour Histogram & Do you want a colour delay histogram saved? & --cHist & Boolean & None & cHist \\ \hline
+Delay Plot & Do you want the delay plotted? & --plotDelay & Boolean & None & pdelay \\ \hline
+Statistics & Do you want to generate a table of Stats? & --stats & Boolean & None & stats \\ \hline
+Starting Point & Set the starting point of the test data & --start & Integer & 0 & start \\ \hline
+Interactive Mode & Enable Interactive Mode & -i & Boolean & None & interactiveMode \\ \hline
+\end{tabular}
+\label{arguments}
+\end{table}
+
+All of the arguments above have been implemented as optional, but there is some logic to work out which ones are required. 
+The following flowchart explains the logic that the parsing argument function goes through in order to check if everything is valid.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+
+\end{tikzpicture}
+\end{figure}
+
+\subsubsection{Logging}
+
+
+\subsection{Function Library}
+
 \subsection{Testing}
+
 \subsection{Optimisation}
 
-\subsubsection{Other Utility Scripts}
-
-explain what utility scripts otherwise not mentioned above that will be used.
 \section{Analysis Methods}
 
 - plotting functions
@@ -1637,8 +1754,10 @@ Weight: & 1150g \\ \\
 \section{TDEVAllMethods}
 \label{app:TDEVAll}
 \lstinputlisting[caption=TDEV All Methods implementation, language = R]{../PacketMetrics/TDEVAllMethods.r}
-\lstinputlisting[caption=MATIE All Methods implementation, language = R]{../PacketMetrics/MATIEAllMethods.r}
 \section{MATIEAllMethods}
+\label{app:MATIEAll}
+\lstinputlisting[caption=MATIE All Methods implementation, language = R]{../PacketMetrics/MATIEAllMethods.r}
+
 \section{Main Packet Metric Script}
 \end{appendices}
 \end{document}
