@@ -362,8 +362,8 @@ for (i in (maxn + 1) : maxNMATIE) {
 	return (returnValue)
 
 }
-
-purgeResult <- function() {
+#
+#purgeResult <- function() {
 	#Purge ResultTDEV and ResultMATIEMAFE for NA values (or 0s)
 	# Work back through the list until there are no NAs. 
 	# Ideally all datasets should be an equal length. 
@@ -373,7 +373,7 @@ purgeResult <- function() {
 	
 
 
-}
+#}
 # This function uses the awk script to convert the two file types. will save the original though.
 convertData <- function(ratio, dir) {
 	# A system call is needed. 
