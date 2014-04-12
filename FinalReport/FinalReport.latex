@@ -1453,14 +1453,104 @@ The following flowchart explains the logic that the parsing argument function go
 \centering
 \begin{tikzpicture}
 
+%Will draw in book
 \end{tikzpicture}
 \end{figure}
 
+The flow chart above was implemented in the main packet metric script as well as some of it ported to another function.
+
+
 \subsubsection{Logging}
 
+Due to the large number of functions and steps that the script has to perform (and possibly a long execution time), it was paramount that a suitable logging system was set up such that any issues can be tracked.
+This can also be used so the user can know which section the script is currently working on.
+A simple custom made system could have been made which just had different print messages depending on the logging level, but due to range of 3rd party libraries available for R, a logging library was used.\\
 
+Similar with ArgParse, the logging library \cite{logging} was based off of the logging library for Python. 
+The library is thread safe and has a number of different logging levels.
+One useful feature is that it can have multiple loggers which will direct output to the console and/or a text file depending on the level of the logging entry.\\
+
+The code extract below (Listing \ref{code:logging}) details the steps to initialise the logger.
+Once initialised a logger entry can be written using one of the functions detailed in the documentation \cite{logging}. 
+
+\begin{lstlisting}[language=R, caption=Setting up Logger, label=code:logging]
+	if (args$verbose == TRUE) {
+		basicConfig(level=10)
+		loginfo("Verbose mode activated")
+	} else if (args$quiet == TRUE) {
+		basicConfig(level=30)
+		loginfo("Quiet mode activated")
+	} else {
+		basicConfig(level=20)
+	}	
+	addHandler(writeToFile,file="LogFiles/Test.Log",level=10)
+	loginfo("-------------------------------------------------")
+	loginfo(" ---------- PacketMetric.R Log ------------------")
+	loginfo("-------------------------------------------------")
+
+
+\end{lstlisting}
+
+Based on the input arguments the logging level is set to either 10 or 30, and a filehandler is added. 
+The following logging messages were used throughout the Packet Metric Script.
+
+\begin{table}[H]
+\caption{Logging Entries}
+\begin{tabular}{|l|l|l|l|} \hline
+\cellcolor{Black}\textcolor{White}{\textbf{Logging Entry Name}} & \cellcolor{Black}\textcolor{White}{\textbf{Level}} & \cellcolor{Black}\textcolor{White}{\textbf{Type}} & \cellcolor{Black}\textcolor{White}{\textbf{Description}} \\ \hline
+Type 1  & Test & Test & Test \\ \hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Overview}
+
+With all of the above, the script was then created.
+The final version can be found in Appendix \ref{app:mainScript}
 \subsection{Function Library}
 
+It was a much neater way to port most of the code into functions and save it into a seperate script.
+The implementation details of each of the functions will not be detailed in this section.
+Instead a short description of each function will be given, and where applicable some implementation details if they are important to highlight.\\
+
+The following is the complete list of functions created.
+
+\begin{description}
+\tem[runHead] \hfill \\ This function is used to trim the original dataset down to the sample size specified.
+It uses the linux system command $head$ and saves the new file into the same directory. 
+There is also a logging command when the command is successful.
+This function is only called when the required file does not exist.
+\item[createArguments] \hfill \\ Due to the large number of arguments required, this function creates all of the arguments, then returns the argument parser to the main script. 
+\item[initLogger] \hfill \\ This function declares the logger based on a few command line arguments (verbose or quiet). 
+It also adds both a command line and a file logger to the object.
+\item [parseFileName]\hfill \\ parseFileName takes in 3 arguments: test number, directory, and the direction of delay (called column in this function). 
+Using the summary test sheet page stored in an .ODS file type, this function will grab the directory name based on the test number.
+Some checks will be made to determine whether the directory or test number is valid. 
+A list is then returned consisting of the fileName, the test number, the delay index and the test sheet object. 
+This is so the test sheet can be used later if necessary.
+\item [readFile] \hfill \\ This function attempts to read the file that the previous function had derived based on the input paramenters.
+If the file is not read successfully an error is thrown. 
+The runHead function is then called to create the correct file, and the file is read again.
+If a second error is thrown then the script quits with a non-zero error message.
+\item [readFileDirect] \hfill \\ Compared with the previous function, this once takes in a raw filename and will exit the script if it fails on the first time round.
+This function is only used when the user knows which file they want to parse.
+\item [purgeData] \hfill \\ Once the data has been written, it will be purged. 
+Depending on the data type (the old or new format), it needs to be handled in two different ways.
+Therefore an if statement is used to determine which file format it is in, then handled accordingly. The two arrays of delays and time are returned along with the correct number of samples. 
+\item [plotArray] \hfill \\ This function plots the metrics as a line graph. 
+It saves them in a postscript format, using the test number, metric type and the sample size in the file name.
+This function can plot $n$ number of plots with a different coloured line.
+\item [generateResultsArray] \hfill \\ This creates a much larger array called $result$ whicvh consists of all of the results. 
+This i sthen later used to output the results to particular formats.
+\item [outputTable] \hfill \\ This function will convert the results table generated by the previous function to a CSV file or a table in LaTeX if requested using the command line arguments. 
+The CSV file is created using a built in function called write.csv, whereas the LaTeX table is generated using a custom made function.
+\item [calculateMetrics] \hfill \\ The different packet metrics are calculated in this function.
+Note that this is the final packet metric function and thus only contains the most recent changes. 
+The original design had two functions implemented in R, as detailed in a previous section.
+Any optimisation techniques are discussed in a latter stage of this report.
+\item[purgeResult] \hfill \\
+
+
+\end{description}
 \subsection{Testing}
 
 \subsection{Optimisation}
@@ -1759,6 +1849,8 @@ Weight: & 1150g \\ \\
 \lstinputlisting[caption=MATIE All Methods implementation, language = R]{../PacketMetrics/MATIEAllMethods.r}
 
 \section{Main Packet Metric Script}
+\label{app:mainScript}
+\lstinputlisting[caption=Main Packet Metric Script, language = R]{../PacketMetrics/PacketMetric.r}
 \end{appendices}
 \end{document}
 
