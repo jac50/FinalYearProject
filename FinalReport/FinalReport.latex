@@ -1547,17 +1547,183 @@ The CSV file is created using a built in function called write.csv, whereas the 
 Note that this is the final packet metric function and thus only contains the most recent changes. 
 The original design had two functions implemented in R, as detailed in a previous section.
 Any optimisation techniques are discussed in a latter stage of this report.
-\item[purgeResult] \hfill \\
-
-
+\item [convertData] \hfill \\ Using the parseData awk script described previously, this R function calls this script to parse the original data file into the new format.
+It firsts checks if the correct directory exists, and creates it if it doesnt using $mkdir -p$. 
+It will then return the path that the file was created in. 
+\item [interactiveMenu] \hfill \\ Finally the last function creates an interactive menu in case the user does not know all of the input argument flags required to run the script. 
 \end{description}
-\subsection{Testing}
 
+
+\subsection{Testing}
+\subsubsection{Overview}
+Throughout the development of these scripts there was testing involved, both formalised unit testing and general development testing of each function. 
+Testing is not just used to determine where bugs lie in the code, as it also helps to identify possible areas for optimisation, determining that all edge cases are covered, and that all input arguments are handled correctly. \\
+
+General code development will not be discussed in this section because that is part of any programming project.
+Instead some information on the unit testing performed will be highlighted as well as the major problems that the script faced during its development.
+
+\subsubsection{Unit Testing}
+
+
+- Issues found when testing
+	+ very slow when running large data sets
+	+ explain that these sets of data need to be large (32 samples per second)
+
+\subsubsection{Runtime and Memory Requirements}
+
+As well as testing to ensure that the script meets the required functionality, it also needs to meet a requirements in that it needs to run in a reasonable amount of time within a suitable memory bound. 
+Defining both of these was difficult as it was hard to predict ahead of time what a reasonable amount of time would be for both of them.
+It was decided that time bound for a set of metric data would be \textbf{5 minutes} and the memory bounds work should be \textbf{1GB}.
+Note that this time refers to the entire script, but some tests may be performed on a per iteration basis.\\
+
+The script was run using the Example Data gathered before the project began.
+It was noted that there wouldn't be a significant time difference between the data sets provided that the length of it was kept the same.\\
+
+There are profiling tools available to R, including Rprof \cite{Rprof}, but the simplest method to profile the speed of the script is to 
+record the time when the script is loaded, then record the new time once it has finished.
+The difference in these two times will be the execution time.\\
+
+Similarly for memory requirements, Rprof is able to profile this, but instead a more simpler method was used which involved calling
+$object.size(x=lapply(ls(), get)))$ at the end of the script. 
+An example output can be shown below, Figure \ref{fig:exampleMem}. 
+
+\begin{figure}
+\centering
+%\includegraphics[scale=0.5]{Figures/Screenshots/examplemem.eps}
+\caption{Example Output for Runtime and Memory Requirements}
+\label{fig:exampleMem}
+\end{figure}
+
+%Explain rprof briefly here
+The following table (Table \ref{table:runtimeMem}outlines both the runtime and memory requirements for a number of different sample sizes.
+All of these tests were performed on the same computer (Netbook). 
+\begin{table}[H]
+\caption{Runtime and Memory Requirements for ExampleData}
+\begin{tabular}{|l|l|l|l|} \hline
+\cellcolor{Black}\textcolor{White}{\textbf{Sample Size}} & \cellcolor{Black}\textcolor{White}{\textbf{Per Iteration (ms)}} &\cellcolor{Black}\textcolor{White}{\textbf{Total Time (ms)}} & \cellcolor{Black}\textcolor{White}{\textbf{Memory (KB)}} \\ \hline
+50 & & & \\ \hline
+100 & & & \\ \hline
+500 & & & \\ \hline
+1000 & & &  \\ \hline
+5000 & & & \\ \hline
+10000 & & & \\ \hline
+100000 & & & \\ \hline
+1000000 & & & \\ \hline
+\end{tabular}
+\label{table:runtimeMem}
+\end{table}
+
+The data has been plotted in Figure \ref{fig:runmemorig} below.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{\textwidth}
+	\centering
+%	\includegraphics[scale=0.5]{Figures/RunTime.eps}
+	\caption{Runtime Requirements}
+	\label{fig:runTimeorig}
+\end{subfigure}%
+\begin{subfigure}{\textwidth}
+	\centering
+%	\includegraphics[scale=0.5]{Figures/MemoryReq.eps}
+	\caption{Memory Requirements}
+	\label{fig:memorig}
+\end{subfigure}
+\label{fig:runmemorig}
+\caption{Runtime and Memory Requirements for Example Data}
+\end{figure}
+
+%Discussion on the above
 \subsection{Optimisation}
 
+Based on the above results, it is clear that there needs to be some speed improvement to the script in order for it to be useful. 
+Because the script will not be run on an embedded system, this problem is not bound by memory, therefore only speed optimisations will be made.\\
+
+It was important to determine which parts of the script were running slowly. 
+It was fairly clear where the slow part of the script lies from the data gathered in the previous
+section.\\
+
+The metric calculation (per iteration) took much longer than previously anticipated.
+The calculation involves a single for loop of unknown length, but the length varies on the sample size.\\
+
+The following were ideas of ways to be able to speed up this process.
+
+\begin{description}
+\item[Use Existing Data] If possible, only incremental calculations can be made on successive iterations, thus cutting out the number of loops required. 
+When looking at this particular application, because the for loop bounds depend  on the current iteration number and the total sample size, it would not be 
+possible. 
+In addition to this the final quotient consists of the sample size and the current iteration, therefore the value will be incorrect if previous sets of 
+data were taken.
+This means that it would not be possible to use this method to speed up the operation.
+\item[Vectorise] The  second possible method would be to vectorise the solution. 
+Similar with Matlab, R can be slow with iterative methods and excels at vector operations.
+The function would speed up significantly if a vectorised method was possible.\\
+
+Some time was spent trying to vectorise the above functions.
+But due to the use of the built in functions $mean$, $min$ and $bandMean$, there doesn't seem like an obvious way in going about this.
+Therefore this method would not be suitable. 
+\item[Port to a lower level language] The final method involves porting the for loop into a more lower level language, such as C or Fortran.
+This would enable the inner part of the for loop to be executed much quicker which would decrease the time of execution.
+\end{description}
+
+Based on the above, C was chosen to implement the inner loops for both TDEV and MATIEMAFEAllMethod R files. 
+The code was directly ported into C from R, but some extra work was required due to C not having the ability to slice arrays.
+Therefore the code looks longer than before, but that's because the window needs to be iterated over. \\
+
+The amended code in C can be found in Appendix \ref{app:TDEVAllC} for the TDEV method in C and \ref{app:MATIEAllC} for the MATIE/MAFE method. \\
+
+Some care had to be taken when converting the code from C to R. 
+Due to the difference between how C and R handle array indices (C is zero indexed and R is one indexed), 
+the for loops had to be changed by 1. 
+Unfortunately there is no direct way to compare the results due to the likelyhood of floating point differences, 
+so the C code will be taken for granted as being correct.
+A table below of the result differences between the C code and the R code have been provided.
+
+\begin{table}[H]
+\caption{Comparing Results from R to C}
+\begin{tabular}{|l|l|l|l|l|}\hline
+\cellcolor{Black}\textcolor{White}{\textbf{Sample number} & \cellcolor{Black}\textcolor{White}{\textbf{TDEV R Result}} &
+\cellcolor{Black}\textcolor{White\}{\textbf{TDEV C Result}} & \cellcolor{Black}\textcolor{White}{\textbf{MATIE MAFE R Result}} &
+\cellcolor{Black}\textcolor{White}{\textbf{MATIE / MAFE C Result}} \\ \hline
+% Need to finish table
+\end{tabular}
+
+% If space permitting add in sections about how the code was created
+
+The speed improvement from making these changes was more than three orders of magnitude. 
+The table below shows the speed improvements that porting the code to C has made.
+
+\begin{table}[H]
+\caption{Speed Improvements from moving from R to C}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|} \hline
+\cellcolor{Black}\textcolor{White}{\textbf{Sample Size}} & \cellcolor{Black}\textcolor{White}{\textbf{TDEV R per iteration}} &
+\cellcolor{Black}\textcolor{White}{\textbf{TDEV C per iteration}} & \cellcolor{Black}\textcolor{White}{\textbf{TDEV R full script}} &
+\cellcolor{Black}\textcolor{White}{\textbf{TDEV C full script}} & \cellcolor{Black}\textcolor{White}{\textbf{MATIE R per iteration}} &
+\cellcolor{Black}\textcolor{White}{\textbf{MATIE C per iteration}} & \cellcolor{Black}\textcolor{White}{\textbf{MATIE R full script}} &
+\cellcolor{Black}\textcolor{White}{\textbf{MATIE C full script }} \\ \hline
+\end{tabular}
+\end{table}
 \section{Analysis Methods}
 
-- plotting functions
+- intro to analyse the data
+	+ different types of data (delays and metrics)
+- plotting
+- tables
+- other statistics
+
+- tables
+	+ not a good way to display the data
+	+ possibly useful to notice general trends
+	+ large data sets, not suitable
+- statistics
+	+ mean, median, mode, stddev, variance
+	+ explain the function used to calcualte
+	+ can tabulate
+- plotting
+	+ types of plots. 
+	+ explain the functions
+	+ list the example plots, and what will be used
+
 \section{Results}
 
 - Info *explain results
@@ -1847,7 +2013,12 @@ Weight: & 1150g \\ \\
 \section{MATIEAllMethods}
 \label{app:MATIEAll}
 \lstinputlisting[caption=MATIE All Methods implementation, language = R]{../PacketMetrics/MATIEAllMethods.r}
-
+\section{TDEV All Methods in C}
+\label{app:TDEVAllC}
+\lstinputlisting[caption = TDEV All Methods Implementation in C, language = C]{../PacketMetrics/TDEVAllMethods.c}
+\section{MATIE MAFE All Methods in C}
+\label{app:MATIEAllC}
+\lstinputlisting[caption = MATIE/MAFE All Methods Implementation in C, language = C]{../PacketMetrics/MATIEAllMethods.c}
 \section{Main Packet Metric Script}
 \label{app:mainScript}
 \lstinputlisting[caption=Main Packet Metric Script, language = R]{../PacketMetrics/PacketMetric.r}
