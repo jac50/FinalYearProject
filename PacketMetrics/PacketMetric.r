@@ -8,6 +8,7 @@
 # -----------------------------------------
 # - Import required functions + libraries -
 # -----------------------------------------
+Rprof(filename = "RProf.out", memory.profiling = TRUE, gc.profiling=TRUE,line.profiling = TRUE)
 system("clear") #Clear screen
 options(warn = 1) # Enables warnings
 cat("Loading Required Scripts..\n")
