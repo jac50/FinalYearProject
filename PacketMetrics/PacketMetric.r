@@ -8,7 +8,7 @@
 # -----------------------------------------
 # - Import required functions + libraries -
 # -----------------------------------------
-Rprof(filename = "RProf.out", memory.profiling = TRUE, gc.profiling=TRUE,line.profiling = TRUE)
+#Rprof(filename = "RProf.out", memory.profiling = TRUE, gc.profiling=TRUE,line.profiling = TRUE)
 system("clear") #Clear screen
 options(warn = 1) # Enables warnings
 cat("Loading Required Scripts..\n")
@@ -138,6 +138,6 @@ for (nTest in tests) {
 	result <- generateResultArray(ResultTDEV, ResultMATIEMAFE)
 	error <- outputTable(result,args$CSV, args$latex)
 	loginfo(paste("Total Run Time: ", round(proc.time()[1] - startTime[1],3)))
-	loginfo(paste("Total memory requirement: ", (object.size(x=lapply(ls(), get)))))
+	loginfo(paste("Total memory requirement: ", format((object.size(x=lapply(ls(), get))),units="KB")))
 }
 
