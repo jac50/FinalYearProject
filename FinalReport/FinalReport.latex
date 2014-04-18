@@ -63,7 +63,7 @@
   morekeywords={*,...}            % if you want to add more keywords to the set
 }
 \renewcommand{\lstlistingname}{Code Extract} 
-\renewcommand{\listlistingname}{List of Code Extracts}
+\renewcommand{\listlstlistingname}{List of Code Extracts}
 \newcommand{\degree}{\ensuremath{^\circ}}
 \renewcommand{\headrulewidth}{0pt} % remove the header rule
 \newcommand{\includecode}[2][c]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
@@ -121,7 +121,9 @@ Abstract goes here
 \acro{CSV}{Comma Seperated Variable}
 \acro{E2E}{End-to-End}
 \acro{GM}{Grandmaster}
+\acro{GNU}{GNU's Not Unix}
 \acro{GPS}{Global Positioning System}
+\acro{IDE}{Integrated Development Environment}
 \acro{IEEE}{Institute of Electrical and Electronic Engineers}
 \acro{ITU}{International Telecommunication Union}
 \acro{LAN}{Local Area Network}
@@ -191,7 +193,7 @@ Figure \ref{fig:NTPHierarchy} on the next page  shows the Stratums numbered from
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale = 0.3]{./Figures/NTPDiagram.eps}
+\includegraphics[scale = 0.3]{Figures/NTPDiagram.eps}
 \caption{\ac{NTP} Network Hierarchy \cite{figRef:NTPHierarchy}}
 \label{fig:NTPHierarchy}
 \end{figure}
@@ -363,7 +365,7 @@ This time is then added on to the offset mentioned previously.
 \end{figure}
 
 There are several different network configurations that could be used when using a \ac{PTP} network.
-The diagram below outlines some possible topologies for \ac{PTP} networks}. 
+The diagram below outlines some possible topologies for \ac{PTP} networks. 
 
 \begin{figure}
 \centering
@@ -714,13 +716,13 @@ minicom -S
 \end{lstlisting}
 
 This then brings up the 2nd layer : the PTP console. 
-The screenshot below (Figure \ref{SyncwatchSecondLayer} shows a list of commands available.
+The screenshot below (Figure \ref{Syncwatch2ndLayer} shows a list of commands available.
 The complete list of commands in both of the modes is shown in the documentation, shown in Appendix \ref{app:SyncwatchDocumentation}. 
 
 \begin{figure}[H]
 \centering
 %\includegraphics[scale=0.5]{Figures/Screenshots/SyncwatchFirstLayer.eps}
-\label{Syncwatch1stLayer}
+\label{Syncwatch2ndLayer}
 \caption{Syncwatch Second Layer Screen}
 \end{figure}
 
@@ -902,11 +904,11 @@ The summary table below shows what hardware is available, based on class, and IP
 \label{table:hardwareSummary}
 \begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
 \cellcolor{Black}\textcolor{White}{\textbf{Clock ID}} & \cellcolor{Black}\textcolor{White}{\textbf{Name}} & \cellcolor{Black}\textcolor{White}{\textbf{Type}} &  \cellcolor{Black}\textcolor{White}{\textbf{PTP IP}} & \cellcolor{Black}\textcolor{White}{\textbf{Control IP}}  & \cellcolor{Black}\textcolor{White}{\textbf{MAC Address}} \\ \hline
-001 & Chronos TimePort & Hardware GM  &TimePort & USB over Serial & ... \\ \hline
-002 & Chronos SyncWatch & Hardware & syncwatchptp & syncwatch & ... \\ \hline
+001 & Chronos TimePort & Hardware GM  &TimePort & USB over Serial &...  \\ \hline
+002 & Chronos SyncWatch & Hardware & syncwatchptp & syncwatch & 00:16:C0:17:20:A1 \\ \hline
 003 & BeagleBone Black & Hardware & beaglebone & beaglebone & ... \\ \hline
-004 & PTPd\_Desktop & Software &  ... & ... & ... \\ \hline 
-005 & PTPd\_Netbook & Software & ... & ... & ... \\ \hline
+004 & PTPd\_Desktop & Software &  Tesla & N/A & N/A \\ \hline 
+005 & PTPd\_Netbook & Software & N/A & N/A & e8:9a:8f:97:64:13 \\ \hline
 \end{tabular}
 \end{table}
 
@@ -924,9 +926,9 @@ The following locations were identified, along with some information on the surr
 \label{table:clockLocations}
 \begin{tabular}{|c|c|c|c|c|} \hline
 \cellcolor{Black}\textcolor{White}{\textbf{Clock Location}} & \cellcolor{Black}\textcolor{White}{\textbf{Room number}} & \cellcolor{Black}\textcolor{White}{\textbf{Room Type}} & \cellcolor{Black}\textcolor{White}{\textbf{Left Unattended}} & \cellcolor{Black}\textcolor{White}{\textbf{Distance from Grandmaster}} \\ \hline
-Watson's Office & 2E 4.10? & Office & Locked office & Same room \\ \hline
+Watson's Office & 2E 4.6 & Office & Locked office & Same room \\ \hline
 2\textsuperscript{nd} floor lab & 2E 2.10 & Lab & Secure lab & Same subnet \\ \hline
-Comms Lab & 2E 3.xx & Lab & Secure & Same subnet \\ \hline
+Comms Lab & 2E 3.14 & Lab & Secure & Same subnet \\ \hline
 Library & Library & Library & No. Busy 24/7 & Differnet subnet \\ \hline
 8W Rooms & 8W 2...& Lecture room & No & Different subnet \\ \hline
 East building & EB 2.. & Lecture room & No & Differnet subnet \\ \hline
@@ -1010,8 +1012,9 @@ Instead there are week blocks allocated in the gantt chart for data collection, 
 The following tests that have been identifed as important tests to run have been included in the table below.
 
 \begin{table}[H]
-\begin{tabular}{|c|c|c|c|c}
-\cellcolor{Black}\textcolor{White}{\textbf{GM Clock Type}} & \cellcolor{Black}\textcolor{White}{\textbf{GM Clock Location}}  &\cellcolor{Black}\textcolor{White}{ \textbf{Slave Clock Type}} & \cellcolor{Black}\textcolor{White}{\textbf{Slave Clock Location}} & \cellcolor{Black}\textcolor{White}{\textbf{Duration}} \hline
+\caption{Some Tests to Run}
+\begin{tabular}{|c|c|c|c|c|}\\	
+\cellcolor{Black}\textcolor{White}{\textbf{GM Clock Type}} & \cellcolor{Black}\textcolor{White}{\textbf{GM Clock Location}}  &\cellcolor{Black}\textcolor{White}{ \textbf{Slave Clock Type}} & \cellcolor{Black}\textcolor{White}{\textbf{Slave Clock Location}} & \cellcolor{Black}\textcolor{White}{\textbf{Duration}} \\ \hline
 Hardware (TimePort)  & Watson's Office & Hardware (Syncwatch) & 2E 3.Comms lab & 24 hours \\ \hline
 Hardware (TimePort) & Watson's Office & Software (PTPd) & Watson's Office & 24 hours \\ \hline
 Hardware (TimePort) & Watson's Office & Software (PTPd) & 2E 2... Lab  & 24 hours \\ \hline
@@ -1090,7 +1093,7 @@ The general script layout has been converted to a flow chart, see below Figure \
 	\node [block, right of=inccount] (calctime) {Calculate the time delta};
 	\node [block, right of=calctime] (print) {Print time delta and delay data};
 	\node [block, right of=print] (reset) {Set variables to 0};
-	\node [block, down of=NR3] (finish) {End};
+	\node [block, south of=NR3] (finish) {End};
 
 
     % Draw edges
@@ -1102,8 +1105,8 @@ The general script layout has been converted to a flow chart, see below Figure \
 	\path[line] (inccount) -- (calctime);
 	\path[line] (calctime) -- (print);
 	\path[line] (print) -- (reset);
-	\draw[->] (reset.west) -| ($(reset.west)!0.5! (everyline.west)$) -| (everyline.west);
-	\draw[->] (NR3.west) -| ($(NR3.west)!0.5! (everyline.west)$) -| (everyline.west);
+	\draw[->] (reset.south) -| ($(reset.south)!0.5! (everyline.west)$) -| (everyline.west);
+	\draw[->] (NR3.north) -| ($(NR3.north)!0.5! (everyline.west)$) -| (everyline.west);
 
 
 \end{tikzpicture}
@@ -1113,15 +1116,14 @@ The general script layout has been converted to a flow chart, see below Figure \
 This flowchart was then used to create the final awk script, shown in Appendix \ref{app:awkscript}. 
 Most of the code is self documenting, but the $add\_time$ will be explained as that was part of the code that required some extra work to get working correctly.
 
-\paragraph{$add\_time$ function}
+\paragraph{\textbf{$add\_time$} function}
 
 The role of this function was to amalgamate the times from the first sample to the Nth sample, with N being the size of the window.
 The main issue with this function was the formatting of the time itself as it was not either an ISO 8601 float nor in the correct format for an inbuilt function $mktime$ to be called.
 Therefore the following steps were performed to convert the time to the correct format. 
 
 \begin{description}
-\item [Regex} Before the function is called, a regular expression substitution is used to replace all colons with spaces and all dashes to spashes. 
-This was important because the end goal is to convert the current time format into one seperate by spaces. 
+\item [Regex] Before the function is called, a regular expression substitution is used to replace all colons with spaces and all dashes to spashes. This was important because the end goal is to convert the current time format into one seperate by spaces. 
 \item [Split Seconds portion by full stop] This step would parse the milliseconds away from the seconds.
 \item [Compare the delta times to see if one was bigger than the other] This was important so the correct sign of the delay was used.
 \item [Calculate delta] Convert time using mktime and take the differences between the delays to work out a delta. Return this difference.
@@ -1218,13 +1220,13 @@ Development Time & How long would it take to develop the first program & \textbf
 \multirow{2}{*}{Ranking Criteria} & \multirow{2}{*}{Weight} & \multicolumn{3}{|c|}{Language} \\ \cline{3-5}
 & & R & Matlab & C \\ \hhline{*{5}{|-}}
 Familiarity with the Language & 9 & \cellcolor{OrangeRed}{18} & \cellcolor{Goldenrod}{36} & \cellcolor{ForestGreen}{45} \\ \hhline{*{5}{|-}}
-Plotting Functionality & 8 & \cellcolor{ForestGreen}{40} & \cellcolor{Green}{32} & \cellcolor{Red}{0} \\ \hhline{*{5}{|-}}
-External Libraries Available  & 7 & \cellcolor{ForestGreen}{28} & \cellcolor{Orange}{21} & \cellcolor{OrangeRed}{14} \\ \hhline{*{5}{|-}}
-Speed & 7 & \cellcolor{Orange}{14} & \cellcolor{OrangeRed}{0} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
-Linux Compatibility  & 7 & \cellcolor{Orange}{14} & \cellcolor{OrangeRed}{0} & \cellcolor{ForestGreen}{28} \\ \hhline{*{5}{|-}}
-Development Time & 7 & \cellcolor{Orange}{21} & \cellcolor{ForestGreen}{28} & \cellcolor{ForestGreen}{28} \\  \hhline{*{5}{|-}}
-Documentation & 6 & \cellcolor{Orange}{18} & \cellcolor{Orange}{18} & \cellcolor{ForestGreen}{30} \\ \hhline{*{5}{|=}}
-\multicolumn{2}{|r|}{\textbf{Total Figure of Merit}} & 151 & 115 & \cellcolor{ForestGreen}{195} \\ \hhline{*{5}{|-}}
+Plotting Functionality & 8 & \cellcolor{ForestGreen}{40} & \cellcolor{Goldenod}{32} & \cellcolor{Red}{0} \\ \hhline{*{5}{|-}}
+External Libraries Available  & 7 & \cellcolor{ForestGreen}{28} & \cellcolor{Goldenrod}{21} & \cellcolor{Orange}{14} \\ \hhline{*{5}{|-}}
+Speed & 7 & \cellcolor{Orange}{14} & \cellcolor{Orange}{14} & \cellcolor{ForestGreen}{35} \\ \hhline{*{5}{|-}}
+Linux Compatibility  & 7 & \cellcolor{ForestGreen}{35} & \cellcolor{Goldenrod}{21} & \cellcolor{ForestGreen}{35} \\ \hhline{*{5}{|-}}
+Development Time & 7 & \cellcolor{Orange}{21} & \cellcolor{ForestGreen}{28} & \cellcolor{OrangeRed}{14} \\  \hhline{*{5}{|-}}
+Documentation & 6 & \cellcolor{ForestGreen}{24} & \cellcolor{ForestGreen}{24} & \cellcolor{Orange}{12} \\ \hhline{*{5}{|=}}
+\multicolumn{2}{|r|}{\textbf{Total Figure of Merit}} & \cellcolor{ForestGreen}{180} & 176 & 195 \\ \hhline{*{5}{|-}}
 \end{tabular}
 \end{table}
 
@@ -1298,7 +1300,7 @@ result += interimStep\\
 result /= (6 * N - (3*n) + 1)
 result = sqrt(result)
 return(result)
-
+}
 \caption{Psuedo-Code for General Packet Metric Script}
 \end{algorithm}
 
@@ -1394,8 +1396,8 @@ The flow chart for this script can be seen below, in Figure \ref{flowchart:overa
 
 
 	\path[line] (loadLib) -- (initvars);
-	\path[line] (forloop) -- (parseArgs);
-	\path[line] (parseArgs) -- (loop);
+	\path[line] (forloop) -- (parseArg);
+	\path[line] (parseArg) -- (loop);
 	\path[line] (loop) -- (filename);
 	\path[line] (filename) -- (read);
 	\path[line] (read) -- (plotDelay);
@@ -1405,7 +1407,7 @@ The flow chart for this script can be seen below, in Figure \ref{flowchart:overa
 	\draw[->] (save.south) -| ($(save.south)!0.5! (loop.south)$) -| (loop.south);
 
 \end{tikzpicture}
-\caption[Overall Packet Script Flow Chart]
+\caption{Overall Packet Script Flow Chart}
 \label{flowchart:overall}
 \end{figure}
 
@@ -1452,8 +1454,22 @@ The following flowchart explains the logic that the parsing argument function go
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
+\node[block] (parseArgs) {Parse Arguments into Array};
+\node[decision,right of=parseArgs] (inter) {Interactive?};
+\node[block,south of=inter] (runInt) {Run Interactive};
+\node[decision,right of=inter] (dirDelay) {Check if Dir or Delay = None};
+\node[decision,south of =dirDelay] (ifError) {If Error};
+\node[block,south of =ifError] (Stop) {Stop};
+\node[decision,right of =dirDelay] (SSValid) {Is SampleSize Valid?};
+\node[block, south of =SSValid] (SetTo50) {Set SS to 50};
+\node[decision,right of =SSValid] (StartNot0) {If Starting Point != 0};
+\node[block, south of =StartNot0] (SetStart) {Set Start Point};
+\node[decision,right of =StartNot0] (SampleSize) {All SampleSize Test?};
+\node[block, south of=SampleSize] (SetSize) {Set Size and Test Nunbers};
+\node[block, right of=SampleSize] (SetTest) {Set Tests to NTest};
+\node[block, right of=SetTest] (Stop) {Stop};
 
-%Will draw in book
+
 \end{tikzpicture}
 \end{figure}
 
@@ -1498,7 +1514,20 @@ The following logging messages were used throughout the Packet Metric Script.
 \caption{Logging Entries}
 \begin{tabular}{|l|l|l|l|} \hline
 \cellcolor{Black}\textcolor{White}{\textbf{Logging Entry Name}} & \cellcolor{Black}\textcolor{White}{\textbf{Level}} & \cellcolor{Black}\textcolor{White}{\textbf{Type}} & \cellcolor{Black}\textcolor{White}{\textbf{Description}} \\ \hline
-Type 1  & Test & Test & Test \\ \hline
+Header  & Info & General & Header for the Log File \\ \hline
+Script Loading & Info & Libraries & Notifies when all libraries have loaded successfully \\ \hline
+Init Logger & Info & Logger & Initialises the Logger \\ \hline
+Interactive Menu & Info & Interactive Menu & Notifies when the interactive menu has been activated. \\ \hline
+Directory / Test No. & Error & Parse Args & Error thrown when no directory or test number is found. \\ \hline
+Sample Size Changed & Warning & Parse Args & Warning when the sample size has been changed to 50. \\ \hline
+Test Notification & Info & Script & Notification on which test is running \\ \hline
+Read File Error & Info & Reading File & Error when reading the correct file. File not exists.\\ \hline
+Data Conversion & Info & Reading File & Data File is being converted \\ \hline
+Head Running & Info & Reading File & Head was successfully run \\ \hline
+File Type Info & Info & Data Parsing & Displays the file version type \\ \hline
+Plot Notification & Info & Plotting & Displays the type of plot that was created \\ \hline
+Iteration Notification & Info & Metrics & Notifies the user iteration number and time \\ \hline
+Run time and Memory & Info & Closing & Notifies the user what the run time and memory usage is \\ \hline
 \end{tabular}
 \end{table}
 
@@ -1515,7 +1544,7 @@ Instead a short description of each function will be given, and where applicable
 The following is the complete list of functions created.
 
 \begin{description}
-\tem[runHead] \hfill \\ This function is used to trim the original dataset down to the sample size specified.
+\item[runHead] \hfill \\ This function is used to trim the original dataset down to the sample size specified.
 It uses the linux system command $head$ and saves the new file into the same directory. 
 There is also a logging command when the command is successful.
 This function is only called when the required file does not exist.
@@ -1564,6 +1593,23 @@ Instead some information on the unit testing performed will be highlighted as we
 
 \subsubsection{Unit Testing}
 
+Unit testing is a formalised method in making sure that when changes are made to a function or a piece of code, that all functions are still working to specification. 
+These are usually combined with building tools, but in the case for R there is a unit testing library available that can be used.\\
+
+Formalised testing takes a long time to put together to catch all errors when developing a program, thus not as much testing was performed on this script as what should've been done.
+The following table (Table \ref{table:unittesting} outlines the list of tests required for each of the functions, with Appendix \ref{UnitTests} showing the unit tests created.
+
+\begin{table}[H]
+\centering
+\caption{Unit Tests Identified}
+\begin{tabular}{|l|l|l|l|l|} \hline
+\cellcolor{Black}\textcolor{White}{\textbf{Test Name}} &
+\cellcolor{Black}\textcolor{White}{\textbf{Function}} &
+\cellcolor{Black}\textcolor{White}{\textbf{Type of Test}} &
+\cellcolor{Black}\textcolor{White}{\textbf{Pass Value}} &
+\cellcolor{Black}\textcolor{White}{\textbf{Fail Value}} \\ \hline
+\end{tabular}
+\end{table}
 
 - Issues found when testing
 	+ very slow when running large data sets
@@ -1587,28 +1633,26 @@ Similarly for memory requirements, Rprof is able to profile this, but instead a 
 $object.size(x=lapply(ls(), get)))$ at the end of the script. 
 An example output can be shown below, Figure \ref{fig:exampleMem}. 
 
-\begin{figure}
+\begin{figure}[H]
 \centering
-%\includegraphics[scale=0.5]{Figures/Screenshots/examplemem.eps}
+\includegraphics[scale=0.8]{Figures/Screenshots/examplemem.eps}
 \caption{Example Output for Runtime and Memory Requirements}
 \label{fig:exampleMem}
 \end{figure}
 
-%Explain rprof briefly here
 The following table (Table \ref{table:runtimeMem}outlines both the runtime and memory requirements for a number of different sample sizes.
 All of these tests were performed on the same computer (Netbook). 
 \begin{table}[H]
+\centering
 \caption{Runtime and Memory Requirements for ExampleData}
 \begin{tabular}{|l|l|l|l|} \hline
 \cellcolor{Black}\textcolor{White}{\textbf{Sample Size}} & \cellcolor{Black}\textcolor{White}{\textbf{Per Iteration (ms)}} &\cellcolor{Black}\textcolor{White}{\textbf{Total Time (ms)}} & \cellcolor{Black}\textcolor{White}{\textbf{Memory (KB)}} \\ \hline
-50 & & & \\ \hline
-100 & & & \\ \hline
-500 & & & \\ \hline
-1000 & & &  \\ \hline
-5000 & & & \\ \hline
-10000 & & & \\ \hline
-100000 & & & \\ \hline
-1000000 & & & \\ \hline
+50 & & & 380.064 \\ \hline
+100 & & & 392.424\\ \hline
+500 & && 491.176\\ \hline
+1000 & & & 614.536 \\ \hline
+5000 & & & 1601.240\\ \hline
+10000 & & & 2834.600 \\ \hline
 \end{tabular}
 \label{table:runtimeMem}
 \end{table}
@@ -1679,55 +1723,228 @@ Unfortunately there is no direct way to compare the results due to the likelyhoo
 so the C code will be taken for granted as being correct.
 A table below of the result differences between the C code and the R code have been provided.
 
-\begin{table}[H]
-\caption{Comparing Results from R to C}
-\begin{tabular}{|l|l|l|l|l|}\hline
-\cellcolor{Black}\textcolor{White}{\textbf{Sample number} & \cellcolor{Black}\textcolor{White}{\textbf{TDEV R Result}} &
-\cellcolor{Black}\textcolor{White\}{\textbf{TDEV C Result}} & \cellcolor{Black}\textcolor{White}{\textbf{MATIE MAFE R Result}} &
-\cellcolor{Black}\textcolor{White}{\textbf{MATIE / MAFE C Result}} \\ \hline
-% Need to finish table
-\end{tabular}
-
 % If space permitting add in sections about how the code was created
 
 The speed improvement from making these changes was more than three orders of magnitude. 
 The table below shows the speed improvements that porting the code to C has made.
+\begin{comment}
 
 \begin{table}[H]
 \caption{Speed Improvements from moving from R to C}
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|} \hline
+\begin{tabular}{|l|l|l|l|l|l|} \hline
 \cellcolor{Black}\textcolor{White}{\textbf{Sample Size}} & \cellcolor{Black}\textcolor{White}{\textbf{TDEV R per iteration}} &
 \cellcolor{Black}\textcolor{White}{\textbf{TDEV C per iteration}} & \cellcolor{Black}\textcolor{White}{\textbf{TDEV R full script}} &
-\cellcolor{Black}\textcolor{White}{\textbf{TDEV C full script}} & \cellcolor{Black}\textcolor{White}{\textbf{MATIE R per iteration}} &
-\cellcolor{Black}\textcolor{White}{\textbf{MATIE C per iteration}} & \cellcolor{Black}\textcolor{White}{\textbf{MATIE R full script}} &
-\cellcolor{Black}\textcolor{White}{\textbf{MATIE C full script }} \\ \hline
+\cellcolor{Black}\textcolor{White}{\textbf{TDEV C full script}} \hline
+50 & & 4 & & 544 \\ \hline
+100 & & 4 & & 644 \\ \hline
+500 & & 4 & & 1640\\ \hline
+1000 & & 4 & & 4316 \\ \hline
+5000 & & 60 & & 199660 \\ \hline
+10000 & & 150 & & 706584 \\ \hline
 \end{tabular}
 \end{table}
+\end{comment}
+
 \section{Analysis Methods}
 
-- intro to analyse the data
-	+ different types of data (delays and metrics)
-- plotting
-- tables
-- other statistics
+\subsection{Overview}
 
-- tables
-	+ not a good way to display the data
-	+ possibly useful to notice general trends
-	+ large data sets, not suitable
-- statistics
-	+ mean, median, mode, stddev, variance
-	+ explain the function used to calcualte
-	+ can tabulate
-- plotting
-	+ types of plots. 
-	+ explain the functions
-	+ list the example plots, and what will be used
+This section details the analysis methods used on the data gathered. 
+This will include the different plotting types used as well as any other relavent statistics.\\
+
+There are three ways that the data could be displayed or handled to be able to draw conclusions from them.
+These have been identified to be:
+
+\begin{description}
+\item[Tables] Tables would be the first method to display the data as the raw data can be added to the table.
+The problem is that it is difficult to infer trends from a large data set, and thus would not be a suitable method for this application.
+Note however that it may be a good method to take a snapshot of the data and be able to determine some characteristics of the data.
+This can still be derived from a plot though.
+\item[Statistics] The second way to process the data is to use some basic statistics in a tabulated form. 
+This allows it to be possible to quite quickly compare sets of data between each other, but it makes it difficult to be able to look within a set of data.
+Each of the statistic types will be computed using inbuilt functions where possible. 
+\item[Plotting] The final method would be to plot the results.
+Due to there being a large number of plot types, this would be a suitable method to choose.
+The data needs to be displayed in such a way that trends can be spotted quite easily. 
+Therefore the following plot types will be used: scatter plots, histograms, heat maps and line graphs. 
+Each of these will be used for a different set of data, and will be discussed below.
+\end{description}
+
+\subsection{Plot Types}
+
+The types of plot types that will be used are:
+
+\subsubsection{Scatter Plots}
+Scatter plots will be the first type of plot used, mainly on the raw delay data. 
+Provided there are enough data points, it is a useful method to be able to see general trends in delay data and to see if there are any abnormalities.
+The plot below (Figure \ref{scatterExample}) shows two different examples of a scatterplot. 
+Figure \ref{scatterExample:R} is one created using an R script, and the second is from the Syncwatch Lab program, discussed briefly in an earlier section.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{\textwidth}
+	\centering
+	\includegraphics[scale=0.25,angle=270]{Figures/ScatterExampleR.eps}
+	\caption{Scatter Plot Example in R}
+	\label{scatterExample:R}
+\end{subfigure}%
+\begin{subfigure}{\textwidth}
+	\centering
+	%\includegraphics[scale=0.5]{Figures/ScatterExampleSync.eps}
+	\caption{Scatter Plot Example in Syncwatch Lab}
+	\label{scatterExample:Sync}
+\end{subfigure}
+\label{scatterExample}
+\caption{Scatter Plot Examples}
+\end{figure}
+
+Both of these plots are very similar, with the R plot being more flexible in the fact that you can plot the whole data set instead of part of it.
+The Syncwatch scatter plot will instead be used to show some anomalies in the results.\\
+
+\subsubsection{Histograms}
+
+The second plot type is histograms of the raw delay values.
+This is another method of displaying the same data as before, but it is more related to the distribution of delays across the entire data set.
+The figure below (Figure \ref{histogramExample} shows the two examples of histogram that will be used.
+\begin{figure}[H]
+\centering
+\begin{subfigure}{\textwidth}
+	\centering
+	\includegraphics[scale=0.25, angle = 270]{Figures/HistogramExampleR.eps}
+	\caption{Histogram Plot Example in R}
+	\label{histogramExample:R}
+\end{subfigure}%
+\begin{subfigure}{\textwidth}
+	\centering
+	%\includegraphics[scale=0.5]{Figures/HistogramExampleSync.eps}
+	\caption{Histogram Plot Example in Syncwatch Lab}
+	\label{histogramExample:Sync}
+\end{subfigure}
+\label{histogramExample}
+\caption{Histogram Plot Examples}
+\end{figure}
+
+The two histogram plots will show similar results, so instead the second histogram plot will be used for the long term data collection.
+\subsubsection{Heat Maps}
+
+If slices of time are taken, then converted to histograms and flattened to a 1dimensional coloured bar, a heat map of these time slices can be produced.
+These can be produced in any language, such as Matlab or R.
+An R implementation has been produced, and an example can be found below in Figure \ref{heatmapExample}. 
+
+\begin{figure}[H]
+\centering
+%\includegraphics[scale=0.5]{Figures/HeatMapExample.eps}
+\caption{Heat Map Example in Matlab/R}
+\label{heatmapExample}
+\end{figure}
+
+This is a very pictorial way in showing changes in delay across a set of data.
+
+\subsubsection{Line Graphs}
+
+The final method of plotting the data will plot the metric data for both TDEV and minTDEV.
+As it is difficult to determine how this data should be plotted, a set of simple line graphs will be produced initially.
+If a further plot type is required this will be highlighted in the results section. 
+
+Two plot examples for a line graph are shown below, in Figure \ref{lineExample}.
+\begin{figure}[H]
+\begin{subfigure}{\textwidth}
+	\centering
+	\includegraphics[scale=0.3,angle=270]{Figures/LineExampleR.eps}
+	\caption{Line Graph Example in R}
+	\label{histogramExample:R}
+\end{subfigure}%
+\begin{subfigure}{\textwidth}
+	\centering
+%	\includegraphics[scale=0.5]{Figures/LineExampleSync.eps}
+	\caption{Line Plot Example in Syncwatch Lab}
+	\label{histogramExample:Sync}
+\end{subfigure}
+\label{histogramExample}
+\caption{Line PlotExamples}
+\end{figure}
+
+
+\subsection{Plotting Implementation}
+
+Taking these plots above, these plots can be implemented in R. 
+The correct axis labels, legends (if appropriate), and line colours are also automatically generated.
+The implementations of the plotting functions will not be explained in much detail, but they can be found in Appendix \ref{app:plot}, \ref{app:Hist} and \ref{app:cHist}. 
 
 \section{Results}
 
-- Info *explain results
+This section will detail the results gathered from the above metrics as well as the other testing that was performed.
+The summary table of all of the tests performed can be found in Appendix \ref{app:testsummary}. 
+The following elements of PTP will be investigated using these results:
+
+\begin{itemize}
+\item Long Term Grandmaster Drift
+\item Delay Distribution
+\item Delay anomalies
+\item Metric Results
+\item Master to Slave vs Slave to Master
+\item Comparing times of Day / locations
+\end{itemize}
+
+\subsection{Long Term Grandmaster Drift}
+
+The first set of results gathered was measuring the long term drift of the Chronos TimePort Grandmaster clock with respect to a Rubidium clock available in the lab. 
+The clock used to compare it is a .... 
+
+%Explanation about the clock above
+\subsection{Delay Distribution}
+
+The next set of results is to compare delay distribution of the sets and to se if there are any interesting anomalies with the results.
+See below the first set of data: the example set.
+The time that these results were taken was unknown, but this will be used as a base line to compare the other results to. \\
+
+\begin{figure}[H]
+\centering
+\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test0/Plot of Delays - Test:0 Sample -9996 size.eps}
+\caption{Example Data Set Delay Plot}
+\label{Test0Delay}
+\end{figure}
+
+The first thing to note is that this has been taken at the start of the data set, and thus that is why there is a large delay that slowly tails off. 
+After around 1800 samples (which is about a minute), the delays have stabilised. 
+This same distribution can be seen throughout the data sets collected, with a sample of them shown in the multi figure below.\\
+
+There was a set of results (from Test 1 to Test #) that were using the TimePort when it was in freewheeling mode.
+
+
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+	%\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test#/Plot of Delays - Test:# Sample -9996 size.eps}
+	\label{delay:test#}
+	\caption{Delay Plot - Test #}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+	%\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test#/Plot of Delays - Test:# Sample -9996 size.eps}
+	\label{delay:test#}
+	\caption{Delay Plot - Test #}
+\end{subfigure}%
+
+\begin{subfigure}{0.5\textwidth}
+	%\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test#/Plot of Delays - Test:# Sample -9996 size.eps}
+	\label{delay:test#}
+	\caption{Delay Plot - Test #}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+	%\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test#/Plot of Delays - Test:# Sample -9996 size.eps}
+	\label{delay:test#}
+	\caption{Delay Plot - Test #}
+\end{subfigure}%
+
+
+
+\subsection{Master to Slave vs Slave to Master}
+\subsection{Comparing times of day}
+\subsection{Metric Results}
+
 \section{Discussion}
+
 \section{Challenges}
 \section{Milestones}
 \section{Further Work}
@@ -1738,7 +1955,7 @@ PTP Security Tutorial
 http://www.ispcs.org/security/downloads/PTPSecurityTutorial.pdf \\
 
 PTP is inherently an unsecure system with no standard methods in either encrypting communications between the master and the slave devices or any method of verifying that a particular grandmaster is legitamate.
-Therefore the slave clocks rely on trusting the grandmaster is an accurate time reference and blindly syncronising with the masters.
+	Therefore the slave clocks rely on trusting the grandmaster is an accurate time reference and blindly syncronising with the masters.
 The issue arises if a master or grandmaster was compromised and clock shift delays were spoofed.
 This would cause all of the slave clocks on the network to drift away from the actual time reference.
 The impact on critical systems mentioned in this report would be huge: timestamps for telecommunications data would be invalid or power transmission relays would trigger in the wrong order.
@@ -2000,6 +2217,7 @@ Weight: & 1150g \\ \\
 \end{tabular}
 \end{table}
 \section{Test Sheet Summary Sheet}
+\label{app:testsummary}
 \input{SummaryTestSheet.latex}
 \section{Awk Script}
 \label{app:awkscript}
@@ -2022,6 +2240,88 @@ Weight: & 1150g \\ \\
 \section{Main Packet Metric Script}
 \label{app:mainScript}
 \lstinputlisting[caption=Main Packet Metric Script, language = R]{../PacketMetrics/PacketMetric.r}
+\section{Plotting Function - Line}
+\label{app:plot}
+\begin{lstlisting}[language=R, caption=Plotting Function for Line Graphs]
+plotArray <- function(values,whichPlot) {
+	#Global Vars: args$nTest, N, 
+	rangeOfValues <- range(0,values) #Determines a max range for the plot
+	if (whichPlot == 0) metric = "TDEV" #TDEV
+	else metric = "MATIE-MAFE"
+	outputFileName = paste("../PTPData/Plots/Test: ", args$nTest, " - ", metric, " - ", N, " size.eps",sep = "")
+	postscript(outputFileName)
+	plottingColours = rainbow(ncol(values))
+	plot(values[,1], type='o',xaxt='n', yaxt='n',pch='+',col=plottingColours[1],log="xy",xlab="", ylab="")
+	for (i in 2:ncol(values)) { 
+		#if (values[1,i] == 0) {
+		#	loginfo("Column Ignored")
+		#	continue
+		#}
+		lines(values[,i], type='o',pch='+',col=plottingColours[i])
+	}
+	legend(1,max(values[,2:ncol(values)]),colnames(values) , col=plottingColours, cex = 0.8,lty=1, pch='+', title="Metrics Legend",box.lwd = 0,box.col = "white",bg = "white") 
+	if (metric == "TDEV") title(main=paste("Packet Metrics - TDEV - Sample Size", sampleSize),ylab="", xlab="Index/Time")
+	else title(main=paste("Packet Metrics - MATIE-MAFE - Sample Size", sampleSize),ylab="", xlab="Index/Time")
+	mtext(side = 2, text="    Index/Time", line = 3)
+	axis(side = 1)
+	axis(side = 2, las = 1)
+	dev.off()
+	loginfo(paste(metric, "Plot Created"))
+}
+\end{lstlisting}
+\section{Plotting Functions - Histograms}
+\label{app:hist}
+\begin{lstlisting}[language=R]
+
+plotHistogram <- function(data) { 
+	
+	outputFileName = paste("../PTPData/Plots/HistogramsOfDelays/Histogram of Delays - Test:", args\$nTest, " Sample - N", N, " size.eps",sep = "")
+	postscript(outputFileName)
+	hist(data, xlab = "Bins of Delay", ylab="Frequency", main = )
+
+}
+\end{lstlisting}
+\section{Plotting Functions - Delay Plot}
+\label{app:delay}
+\begin{lstlisting}
+
+plotDelay <- function(delay) {
+	
+	outputFileName = paste("../PTPData/Plots/PlotOfDelays/Plot of Delays - Test:", args\$nTest, " Sample -", N, " size.eps",sep = "")
+	postscript(outputFileName)
+	plot(delay * 1000, pch = 16, cex = .9, xlab = "Sample Number", ylab = "Delays (ms)")
+}
+\end{lstlisting}
+\section{Plotting Functions - Colour Histogram}
+\label{app:chist}
+\begin{lstlisting}
+
+plotCHistogram <- function (delay) { 
+	# Work in Progress. Comment out all lines until it is completed
+	#outputFileName = paste("../PTPData/Plots/PlotOfDelays/Colour Histogram of Delays - Test:", args\$nTest, " Sample -", N, " size.eps",sep = "")
+	#postscript(outputFileName)
+	step <- 32 * 60
+	j <- 0
+	#delay <- rnorm(n=5000,m=24.2,sd=2.2)
+	# -- Flatten the histogram into their corresponding colours. 
+	nStep <- floor(length(delay) / step ) # 100 steps for the time being. 
+	colouredDelayArray = matrix(0,nStep,100) #temp matrix. need to define size
+	bins <- seq(0.00000, 0.00010, by = 0.00005)
+	
+	for (i in seq(1, length(delay),by=step))  {
+		if (is.na(delay[(i+step - 1)])) break
+		histogram <- hist(delay[i:step + i - 1],breaks=30)\$counts
+		colouredDelayArray[j,1:length(histogram)] <- histogram
+		j = j + 1
+	}
+	png("simpleIm.png")
+	
+	image(log(t(colouredDelayArray[,1:30])), col=heat.colors(30,alpha=1))
+
+}
+
+\end{lstlisting}
+
 \end{appendices}
 \end{document}
 
