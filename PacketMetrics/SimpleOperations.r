@@ -33,7 +33,6 @@ plotCHistogram <- function (delay) {
 		colouredDelayArray[j,1:length(histogram)] <- histogram
 		j = j + 1
 	}
-	#print(colouredDelayArray)	
 	png("simpleIm.png")
 	
 	image(log(t(colouredDelayArray[,1:30])), col=heat.colors(30,alpha=1))
