@@ -339,7 +339,7 @@ for (i in 1:maxn){
 	#ResultMATIEMAFE[i,3] = RawResultMATIE[2]
 	#ResultMATIEMAFE[i,2] = RawResultMATIE[3]
 	#ResultMATIEMAFE[i,4] = RawResultMATIE[4]
-	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],3), "\n" )) # Print line which prints the iteration time
+	loginfo(paste("Iteration", i,"complete in Time:", round(proc.time()[1] - ptm[1],5), "\n" )) # Print line which prints the iteration time
 	
 }
 # ----- Extension of the main loop to handle the extra iterations needed for MATIE / MAFE
