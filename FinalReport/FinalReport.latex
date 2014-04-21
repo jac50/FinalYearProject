@@ -1889,7 +1889,8 @@ The following elements of PTP will be investigated using these results:
 \subsection{Long Term Grandmaster Drift}
 
 The first set of results gathered was measuring the long term drift of the Chronos TimePort Grandmaster clock with respect to a Rubidium clock available in the lab. 
-The clock used to compare it is a .... 
+The clock used to compare it is a Rubidium oscillator.
+The full specification sheet \cite{Rubidium} has been summarised in a tabular form in Appendix \ref{rubidium}.
 
 %Explanation about the clock above
 \subsection{Delay Distribution}
@@ -1940,7 +1941,34 @@ There was a set of results (from Test 1 to Test #) that were using the TimePort 
 
 
 \subsection{Master to Slave vs Slave to Master}
+
+The next test would be to compare the one way delay direction against each other for similar tests.
+Test 0 (The example data set) will first be used to see what the delay differences are if any.
+The plot below (Figure \ref{delay:bothDir})is the Master to Slave and Slave to Master delay plotted on the same graph.
+
+\begin{figure}[H]
+\centering
+%\includegraphics[scale=0.5]{Figures/FinalResults/Test0Both.eps}
+\label{delay:bothDir}
+\caption{Bi-directional delay for the example set of Data}
+\end{figure}
+
+%Comment on the results above
+%Calculate some other plot types and carry on with the results
+
 \subsection{Comparing times of day}
+
+This next text aims to try and see how time of day affects the testing. 
+The hypothesis for this part of the test guesses that as the network is busier there will be a bigger spread of delays. 
+The tests used for this will have the biggest difference associated with them. 
+
+\begin{figure}[H]
+\centering
+%\includegraphics[scale=0.5]{Figures/FinalResults/...eps}
+\label{timeOfDay}
+\caption{}
+\end{figure}
+
 \subsection{Metric Results}
 
 \section{Discussion}
