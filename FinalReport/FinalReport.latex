@@ -365,8 +365,9 @@ This time is then added on to the offset mentioned previously.
 \end{figure}
 
 There are several different network configurations that could be used when using a \ac{PTP} network.
-The diagram below outlines some possible topologies for \ac{PTP} networks. 
-
+The most minimal network configuration would include a Grandmaster clock and a single slave, but they can get more complicated if boundary and transparent clocks are used in larger \ac{PTP} networks. 
+%The diagram below outlines some possible topologies for \ac{PTP} networks. 
+\begin{comment}
 \begin{figure}
 \centering
 	\begin{subfigure}{\textwidth}
@@ -398,9 +399,12 @@ The diagram below outlines some possible topologies for \ac{PTP} networks.
 \label{fig:NetworkDiagrams}
 \caption{Examples of some \ac{PTP} Networks}
 \end{figure}
+\end{comment}
 
 
-%Need to explain a typical PTP network in here.
+There are some areas of concern with \ac{PTP} that will be addressed in this report. 
+Firstly it is unknown how well \ac{PTP} operates on a busy network when standard switches are used instead of boundary clocks.
+Secondly there are some security concerns with \ac{PTP} as all messages are transmitted in plain text. 
 \subsubsection{\acf{BMC}}
 \label{ref:BMC}
 
@@ -427,19 +431,14 @@ The 2008 standard uses a hierarchical selection algorithm system, which is outli
 \end{enumerate}
 
 The \ac{BMC} algorithm is used to determine each master, and ultimately the grandmaster of the entire \ac{PTP} network. 
-
+\begin{comment}
 \subsubsection{Management Commands}
 \label{ref:ManagementCommands}
 
 - explanation of the management portion of PTP
 	+ explain the distributed maangement structure etc
-\subsubsection{Issues}
+\end{comment}
 
-There are some areas of concern with \ac{PTP} that will be addressed in this report. 
-Firstly it is unknown how well \ac{PTP} operates on a busy network when standard switches are used instead of boundary clocks.
-Secondly there are some security concerns with \ac{PTP} as all messages are transmitted in plain text. 
-
-% - Expand and/or move to a different section
 \subsection{Project Description}
 This project aims to investigate \ac{PTP} performance on a heavily used Ethernet network, and to attempt to quantify \ac{PTP} performance using packet metrics. \\
 There are also some deliverables as part of the Final Year Project which are: an interim report, a log book, a final year report and a poster. 
@@ -472,14 +471,7 @@ This would also be useful internally in case the hardware documentation is limit
 
 \section{Literature Review}
 
-With the following objectives and tasks in mind, a literature review was performed with some suitable documentation: mainly packet metric related, but also on cryptographically signing PTP packets.\\
-
-The reports below will be discussed in some detail:
-\begin{description}
-\item[Definitions and terminology for synchronization in packet networks \cite{ITUPacketMetrics}] A standard regarding different packet metrics that could be used in order to try and quantify network delay. 
-\item[Prevention of Packet Collisions \cite{IEEECollision}] A journal article describing an algorithm that aims to prevent packet collisions in an Ethernet network.
-\end{description}
-
+With the following objectives and tasks in mind, a literature review was performed on any relavent material. 
 
 \subsection{Definitions and Terminology for Synchronisation in Packet Networks \cite{ITUPacketMetrics}}
 \label{metricReview}
@@ -503,6 +495,8 @@ Therefore this method is more suitable when trying to specify network limits. Th
 There are four examples of packet selection methods that are mentioned in the recommendation report. 
 These are: Minimum Packet Selection Method, Percentile Packet Selection Method, Band Packet Selection Method and Cluster Range Packet Selection Method. 
 These will be discussed in turn and will be implemented.
+
+%Need to explain these in a bit more detail
 \subsubsection{Packet Metrics without Pre-filtering}
 
 The first packet method technique discussed is \ac{TDEV}. It is used to specify network wander limits for timing signals and can also be used for packet data
@@ -510,18 +504,85 @@ The first packet method technique discussed is \ac{TDEV}. It is used to specify 
 \ac{TDEV} can be applied to both integrated and pre-processed packet selection methods. \\
 
 The implementation equations are quoted in the reference. The approximation equations were used when implementing the functions. 
+
+\subsubsection{TDEV}
+The basic TDEV equation has been given below, in Equation \ref{TDEVnorm}
+
+\begin{equation}
+\label{TDEVnorm}
+TDEV(\tau) = \sqrt{\frac{1}{6n^2}\langle [\sum\limits_{i=1}^n (x_{i+2n} -2x_{i+n} + x_i )]^2 \rangle }
+\end{equation}
+
+Because of the angular brackets denoting an ensemble average sum, this would not be possible to be implemented. 
+Therefore there's an approximation to this, given below in  Equation \ref{TDEVapprox}.
+From now on any equations quoted will be in this approximate form.  
+
+\begin{equation}
+\label{TDEVapprox}
+TDEV(n\tau_0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1}[x(i+2n) - 2x(i+n) x(i)]^2]}
+for n = 1, 2, ... integer part (\frac{N}{3})
+\end{equation}
+
+The value in brackets next to $x$ denote the window that the particular selection method will be operating over. 
+It has been assumed for this to mean that the window is weighted to 1, with the centre point in the window being the current point.
+Therefore care will need to be taken when implementing these correctly.\\
+
+The minTDEV uses the same approximation formula as above, but the minimum value is taken of th window instead of the mean. 
+
+There are pros and cons for both of these metrics.
+Firstly the minTDEV calculation is suitable for packet delay noise processes but not for frequency offset calculation \cite{ITUPacketMetrics}.
+One downside however is that it is very sensitive to low lying outliers. \\
+
+The next set of packet metrics discussed in the document was those based on the bandMean.
+The bandMean is a mean calculating over a subset of the window size. 
+An equation for this has been given below. 
+\begin{equation}
+
+x_{band\_mean}(i) = \frac{1}{m}\sum\limits_{j=a}^{b} x_j+1
+\end{equation}
+
+The approximation equation for this metric has been provided below. 
+
+\begin{equation}
+bandTDEV(n\tau0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1} [x_{band\_mean}(i+2n) - 2x_{band\_mean}(i+n) + x_{band\_mean}(i)]^2 }
+for n = 1, 2, 3, ... integer part (\frac{N}{3})
+\end{equation}
+
+The last metric type used in this set was a percentile TDEV. 
+This is very similar to the bandTDEV, but the value of a is set to 0. \\
+
+\subsubsection{\ac{MATIE}
+
+The next set of packet metrics performed were \acf{MATIE} and \ac{MAFE}.
+These are used to be able to analyse any time error of a set of packet delay . 
+The estimation formula for \ac{MATIE} has been provided below. 
+
+\begin{equation}
+MATIE(n\tau_0) \equiv max\limits_{1\leq k \leq N - 2n + 1 }  \frac{1}{n} | \sum\limits_{i=k}^{n + k -1} (x_{i+n} - x_i) |
+for n = 1, 2, ..., integer part (\frac{N}{2})
+\end{equation}
+
+To calculate the MAFE, the simple relationship below is used.
+
+\begin{equation}
+MAFE(n\tau_0) = MATIE(n\tau_0) / n\tau_0
+\end{equation}
+
+Same as before, these two metrics can also be used with the minimum packet selection type. 
+
+
 \subsubsection{Packet Metrics with Pre-filtering}
 
 The other method is using pre-filtering before the metric is calculated. 
 An averaging function is applied to the set of data, but care must be taken to not over-filter the input.
 This filtered packet sequence can then applied to the metrics mentioned previously in the report. 
-Prefiltered metrics are useful as they can help specify network limits. 
-\subsection{Other Relevant Reading}
+Prefiltered metrics are useful as they can help specify network limits. \\
 
-There was other relevant reading performed in the first week of the project to do with cryptography and how packet collisions can be prevented. 
--cryptography ?
+Note that these metrics weren't initially planned to be implemented, so the full explanation will not be added here.
+Instead these can be found in the report \cite{ITUPacketMetrics}.
 
 
+%Should a section on any other reading be added here?
 \section{Project Methods}
 
 Based on the objectives mentioned previously, the project can be split into some distinct sections:  
@@ -569,7 +630,7 @@ Typical methods of doing this would involve using a Caesium atomic clock [REF] o
 The TimePort is best suited over these two operaitons because it is much lower power and much more transportable than an atomic clock.
 It also removes the requirement of \ac{GPS} equipment.\\
 
-Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 TimePort. Below are a few labelled photos of the clock.
+Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 TimePort. %Below are a few labelled photos of the clock.
 
 \begin{figure}
 \centering
@@ -606,7 +667,7 @@ SSH is unavailable as the control port has not been implemented yet.
 The firmware version that the TimePort we have available does not have the control port active. 
 Therefore the only method to connect to the TimePort is via a serial connection.\\
 
-To connect to the TimePort: connect the serial to USB cable (seen pictured below, Figure \ref{fig:USB2Serial}). 
+To connect to the TimePort: connect the serial to USB cable %(seen pictured below, Figure \ref{fig:USB2Serial}). 
 
 \begin{figure}[H]
 \centering
@@ -623,7 +684,7 @@ screen /dev/ttyUSB0 115200, cs8, ixoff
 This will connect you to the first layer of the TimePort. 
 The system is a restricted linux distribution, so some commands you may be familiar with do exist.
 A full list of commands and the rest of the documentation can be found in Appendix \ref{app:TimePortDocumentation}. 
-Figure \ref{fig:TP1stLayer} is a screenshot of this first layer
+%Figure \ref{fig:TP1stLayer} is a screenshot of this first layer
 
 \begin{figure}
 \centering
