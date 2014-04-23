@@ -63,7 +63,7 @@
   morekeywords={*,...}            % if you want to add more keywords to the set
 }
 \renewcommand{\lstlistingname}{Code Extract} 
-\renewcommand{\listlstlistingname}{List of Code Extracts}
+%\renewcommand{\listlstlistingname}{List of Code Extracts}
 \newcommand{\degree}{\ensuremath{^\circ}}
 \renewcommand{\headrulewidth}{0pt} % remove the header rule
 \newcommand{\includecode}[2][c]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
@@ -108,7 +108,15 @@ University of Bath}
 \vfill
 
 \begin{abstract}
-Abstract goes here
+There is an ever increasing importance to synchronise either clocks or processes in several applications including the telecommunications industry and the power distribution industry.
+With the current method of synchronisation being with \acf{GPS}, this method has some limitations to it due to its jammiblilty. 
+Therefore relying on this technology heavily would not be wise, and an alternative method should be used alongside \ac{GPS}. 
+Examples of such methods such a distributed network for synchronisation: either \ac{NTP} or \acf{PTP}. 
+This project investigates the newer of the two technologies \ac{PTP} and how it performs on an Ethernet network.
+Some existing hardware and software clocks were used to try and quantify network delay and how it changes at different points along the network.
+Finally packet metrics were used to attempt to quantify this delay. 
+
+%Some info on results.
 \end{abstract}
 \newpage
 \tableofcontents
@@ -636,10 +644,12 @@ Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 Tim
 \centering
 \begin{subfigure}{\textwidth}
 	\centering
-%	\includegraphics{Figures/TimePortOutside.eps}
+	\includegraphics{Figures/TimePort.eps}
 	\label{TimePortOutside}
 	\caption{Chronos TimePort Outside}
-\end{subfigure}%
+\end{subfigure}
+\end{figure}
+\begin{comment}
 \begin{subfigure}{\textwidth}
 	\centering
 %	\includegraphics{Figures/TimePortInside.eps}
@@ -649,7 +659,7 @@ Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 Tim
 \label{TimePortDiagrams}
 \caption{Chronos TimePort Labelled Diagrams}
 \end{figure}
-
+\end{comment}
 The difference between the release TimePort and the TimePort that will be used in this project is that the firmware on the TimePort is bleeding edge. 
 With that in mind time needs to be allocated to allow for any issues that the clock may have.
 The university has close links with Chronos thus it should be straightforward to either get our issues solved or to receive a new TimePort. \\
@@ -671,7 +681,7 @@ To connect to the TimePort: connect the serial to USB cable %(seen pictured belo
 
 \begin{figure}[H]
 \centering
-% \includegraphics[scale=0.5]{Figures/USB2Serial.eps}
+ \includegraphics[scale=0.5]{Figures/USB2Serial.eps}
 \label{fig:USB2Serial}
 \caption{USB to Serial Converter}
 \end{figure}
@@ -716,11 +726,12 @@ The figures below show labelled diagrams of a block diagram and the outside of t
 \centering
 \begin{subfigure}{\textwidth}
 	\centering
-%	\includegraphics{Figures/SyncwatchOutside.eps"}
+    \includegraphics{Figures/SyncwatchOutside.eps"}
 	\label{SyncwatchOutside}
 	\caption{Chronos Syncwatch Outside}
 \end{subfigure}%
-
+\end{figure}
+\begin{comment}
 \begin{subfigure}{\textwidth}
 	\centering
 %	\includegraphics{Figures/SyncwatchInside.eps}
@@ -730,6 +741,8 @@ The figures below show labelled diagrams of a block diagram and the outside of t
 \label{SyncwatchDiagrams}
 \caption{Chronos Syncwatch Labelled Diagrams}
 \end{figure}
+\end{comment}
+
 This product is similar to the TimePort in the fact that there isn't much documentation around for it. 
 Therefore Appendix \ref{app:SyncwatchDocumentation} shows the documentation written up for the Syncwatch.\\
 
@@ -762,7 +775,7 @@ screen /dev/ttyUSB0 115200, cs8, ixoff
 
 The username is root and the password is syncwatch.
 At this point the first layer has been connected to. 
-This brings up the following prompt (shown in Figure \ref{Syncwatch1stLayer}. \\
+% This brings up the following prompt (shown in Figure \ref{Syncwatch1stLayer}. \\
 \begin{figure}[H]
 \centering
 %\includegraphics[scale=0.5]{Figures/Screenshots/SyncwatchFirstLayer.eps}
@@ -782,7 +795,7 @@ The complete list of commands in both of the modes is shown in the documentation
 
 \begin{figure}[H]
 \centering
-%\includegraphics[scale=0.5]{Figures/Screenshots/SyncwatchFirstLayer.eps}
+%\includegraphics[scale=0.5]{Figures/Screenshots/SyncwatchSecondLayer.eps}
 \label{Syncwatch2ndLayer}
 \caption{Syncwatch Second Layer Screen}
 \end{figure}
@@ -803,7 +816,7 @@ Below (Figure \ref{fig:BBBLabelled} is a labelled picture of the BeagleBone Blac
 
 \begin{figure}
 \centering
-%\includegraphics{Figures\BBB.eps}
+\includegraphics{Figures\BBB.eps}
 \caption{Labelled BeagleBone Black}
 \label{fig:BBBLabelled}
 \end{figure}
@@ -911,7 +924,7 @@ A screenshot below (Figure \ref{fig:rsync} shows the rsync script transferring a
 
 It was important to gzip the file beforehand or the transfer would have taken a lot longer. 
 %--------------------------------------------------------------------------
-The rate of data collection is around RATE OF DATA HERE
+The rate of data collection is around 10MB an hour. 
 %--------------------------------------------------------------------------
 
 \subsection{Software - PTPd}
@@ -1000,9 +1013,10 @@ The full list of clock locations have been placed on the map below, Figure \ref{
 
 \begin{figure}[H]
 \centering
-%\includegraphics[scale=0.5]{Figures/UniMap.eps}
+\includegraphics[scale=0.5]{Figures/UniMap.eps}
 \label{UniMap}
-\caption{University Map with clock locations labelled}
+\caption{University Map}
+%\caption{University Map with clock locations labelled}
 \end{figure}
 
 A broad range of locations were attempted, within the limitations of the network. 
@@ -1718,6 +1732,7 @@ All of these tests were performed on the same computer (Netbook).
 \label{table:runtimeMem}
 \end{table}
 
+\begin{comment}
 The data has been plotted in Figure \ref{fig:runmemorig} below.
 
 \begin{figure}[H]
@@ -1737,7 +1752,7 @@ The data has been plotted in Figure \ref{fig:runmemorig} below.
 \label{fig:runmemorig}
 \caption{Runtime and Memory Requirements for Example Data}
 \end{figure}
-
+\end{comment}
 %Discussion on the above
 \subsection{Optimisation}
 
@@ -1851,7 +1866,7 @@ Figure \ref{scatterExample:R} is one created using an R script, and the second i
 \end{subfigure}%
 \begin{subfigure}{\textwidth}
 	\centering
-	%\includegraphics[scale=0.5]{Figures/ScatterExampleSync.eps}
+	\includegraphics[scale=0.5]{Figures/ScatterExampleSync.eps}
 	\caption{Scatter Plot Example in Syncwatch Lab}
 	\label{scatterExample:Sync}
 \end{subfigure}
@@ -1877,7 +1892,7 @@ The figure below (Figure \ref{histogramExample} shows the two examples of histog
 \end{subfigure}%
 \begin{subfigure}{\textwidth}
 	\centering
-	%\includegraphics[scale=0.5]{Figures/HistogramExampleSync.eps}
+    \includegraphics[scale=0.5]{Figures/HistogramExampleSync.eps}
 	\caption{Histogram Plot Example in Syncwatch Lab}
 	\label{histogramExample:Sync}
 \end{subfigure}
@@ -1954,6 +1969,16 @@ The clock used to compare it is a Rubidium oscillator.
 The full specification sheet \cite{Rubidium} has been summarised in a tabular form in Appendix \ref{rubidium}.
 
 %Explanation about the clock above
+
+A photo of the Rubidium clock used can be seen below, Figure \ref{fig:rubidium}. 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{Figures/rubidium.eps}
+\label{fig:rubidium}
+\caption{Rubidium Clock}
+\end{figure}
+
 \subsection{Delay Distribution}
 
 The next set of results is to compare delay distribution of the sets and to se if there are any interesting anomalies with the results.
@@ -1978,25 +2003,25 @@ There was a set of results (from Test 1 to Test #) that were using the TimePort 
 \begin{figure}[H]
 \centering
 \begin{subfigure}{0.5\textwidth}
-	%\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test#/Plot of Delays - Test:# Sample -9996 size.eps}
-	\label{delay:test#}
-	\caption{Delay Plot - Test #}
+	\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test2/Plot of Delays - Test:2 Sample -9996 size.eps}
+	\label{delay:test2}
+	\caption{Delay Plot - Test 2}
 \end{subfigure}%
 \begin{subfigure}{0.5\textwidth}
-	%\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test#/Plot of Delays - Test:# Sample -9996 size.eps}
-	\label{delay:test#}
-	\caption{Delay Plot - Test #}
+	\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test6/Plot of Delays - Test:6 Sample -9996 size.eps}
+	\label{delay:test6}
+	\caption{Delay Plot - Test 6}
 \end{subfigure}%
 
 \begin{subfigure}{0.5\textwidth}
-	%\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test#/Plot of Delays - Test:# Sample -9996 size.eps}
-	\label{delay:test#}
-	\caption{Delay Plot - Test #}
+	\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test7/Plot of Delays - Test:# Sample -9996 size.eps}
+	\label{delay:test7}
+	\caption{Delay Plot - Test 7}
 \end{subfigure}%
 \begin{subfigure}{0.5\textwidth}
-	%\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test#/Plot of Delays - Test:# Sample -9996 size.eps}
-	\label{delay:test#}
-	\caption{Delay Plot - Test #}
+	\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test9/Plot of Delays - Test:# Sample -9996 size.eps}
+	\label{delay:test9}
+	\caption{Delay Plot - Test 9}
 \end{subfigure}%
 
 
@@ -2036,7 +2061,24 @@ The tests used for this will have the biggest difference associated with them.
 
 \section{Challenges}
 \section{Milestones}
+\section{Conclusion}
 \section{Further Work}
+
+Due to the openness of the project, there is a number of additional tasks that could be completed to continue the investigation.
+These have been identified below.
+
+\begin{description}
+\item[Different Network Topologies] Due to the equipment available, it was difficult to test \ac{PTP} on different network types.
+Therefore it would be beneficial to perform the same tests as before but with different topologies.
+This would enable to better test the protocol in more common scenarios with the use of boundary and transparent clocks. 
+
+\item[More Packet Metrics] Once a better understanding of the packet metrics is gathered, more packet metrics can be implemented where necessary. 
+
+\item[Verify Packet Metric Scripts against existing programs]
+\item[Secure PTP]
+
+\end{description}
+
 \section{Other Work}
 
 \subsection{Securing PTP against attacks}
