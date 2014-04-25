@@ -34,7 +34,7 @@
 \usepackage{tikz}
 %\usepackage{siunitx}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
-\usetikzlibrary{arrows,positioning, shapes,patterns, chains,calc}
+\usetikzlibrary{backgrounds, arrows,positioning, shapes,patterns, chains,calc}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 \lstset{ %
@@ -136,6 +136,8 @@ Finally packet metrics were used to attempt to quantify this delay.
 \acro{ITU}{International Telecommunication Union}
 \acro{LAN}{Local Area Network}
 \acro{MAC}{Media Access Control}
+\acro{MAFE}{Maximum Average Frequency Error}
+\acro{MATIE}{Maximum Average Time Interval Error}
 \acro{NERC}{North American Electric Reliability Company}
 \acro{NTP}{Network Time Protocol}
 \acro{P2P}{Peer-to-Peer}
@@ -527,8 +529,9 @@ From now on any equations quoted will be in this approximate form.
 
 \begin{equation}
 \label{TDEVapprox}
-TDEV(n\tau_0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1}[x(i+2n) - 2x(i+n) x(i)]^2]}
-for n = 1, 2, ... integer part (\frac{N}{3})
+TDEV(n\tau_0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1}[x(i+2n) - 2x(i+n) x(i)]^2]} \\
+
+for n = 1, 2, ... integer part (\frac{N}{3})\\
 \end{equation}
 
 The value in brackets next to $x$ denote the window that the particular selection method will be operating over. 
@@ -552,21 +555,23 @@ x_{band\_mean}(i) = \frac{1}{m}\sum\limits_{j=a}^{b} x_j+1
 The approximation equation for this metric has been provided below. 
 
 \begin{equation}
-bandTDEV(n\tau0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1} [x_{band\_mean}(i+2n) - 2x_{band\_mean}(i+n) + x_{band\_mean}(i)]^2 }
-for n = 1, 2, 3, ... integer part (\frac{N}{3})
+bandTDEV(n\tau0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1} [x_{band\_mean}(i+2n) - 2x_{band\_mean}(i+n) + x_{band\_mean}(i)]^2 } \\
+
+for n = 1, 2, 3, ... integer part (\frac{N}{3})\\
 \end{equation}
 
 The last metric type used in this set was a percentile TDEV. 
 This is very similar to the bandTDEV, but the value of a is set to 0. \\
 
-\subsubsection{\ac{MATIE}
+\subsubsection{\ac{MATIE}}
 
 The next set of packet metrics performed were \acf{MATIE} and \ac{MAFE}.
 These are used to be able to analyse any time error of a set of packet delay . 
 The estimation formula for \ac{MATIE} has been provided below. 
 
 \begin{equation}
-MATIE(n\tau_0) \equiv max\limits_{1\leq k \leq N - 2n + 1 }  \frac{1}{n} | \sum\limits_{i=k}^{n + k -1} (x_{i+n} - x_i) |
+MATIE(n\tau_0) \equiv \max_{1\leq k \leq N - 2n + 1 }  \frac{1}{n} | \sum\limits_{i=k}^{n + k -1} (x_{i+n} - x_i) | \\
+
 for n = 1, 2, ..., integer part (\frac{N}{2})
 \end{equation}
 
@@ -644,7 +649,7 @@ Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 Tim
 \centering
 \begin{subfigure}{\textwidth}
 	\centering
-	\includegraphics{Figures/TimePort.eps}
+	\includegraphics[scale=0.5]{Figures/TimePort.eps}
 	\label{TimePortOutside}
 	\caption{Chronos TimePort Outside}
 \end{subfigure}
@@ -726,7 +731,7 @@ The figures below show labelled diagrams of a block diagram and the outside of t
 \centering
 \begin{subfigure}{\textwidth}
 	\centering
-    \includegraphics{Figures/SyncwatchOutside.eps"}
+    \includegraphics[scale=0.5]{Figures/Syncwatch.eps}
 	\label{SyncwatchOutside}
 	\caption{Chronos Syncwatch Outside}
 \end{subfigure}%
@@ -816,7 +821,7 @@ Below (Figure \ref{fig:BBBLabelled} is a labelled picture of the BeagleBone Blac
 
 \begin{figure}
 \centering
-\includegraphics{Figures\BBB.eps}
+\includegraphics[scale=0.7]{Figures/BBB.eps}
 \caption{Labelled BeagleBone Black}
 \label{fig:BBBLabelled}
 \end{figure}
@@ -1088,7 +1093,7 @@ The following tests that have been identifed as important tests to run have been
 
 \begin{table}[H]
 \caption{Some Tests to Run}
-\begin{tabular}{|c|c|c|c|c|}\\	
+\begin{tabular}{|c|c|c|c|c|}\hline	
 \cellcolor{Black}\textcolor{White}{\textbf{GM Clock Type}} & \cellcolor{Black}\textcolor{White}{\textbf{GM Clock Location}}  &\cellcolor{Black}\textcolor{White}{ \textbf{Slave Clock Type}} & \cellcolor{Black}\textcolor{White}{\textbf{Slave Clock Location}} & \cellcolor{Black}\textcolor{White}{\textbf{Duration}} \\ \hline
 Hardware (TimePort)  & Watson's Office & Hardware (Syncwatch) & 2E 3.Comms lab & 24 hours \\ \hline
 Hardware (TimePort) & Watson's Office & Software (PTPd) & Watson's Office & 24 hours \\ \hline
@@ -1295,13 +1300,13 @@ Development Time & How long would it take to develop the first program & \textbf
 \multirow{2}{*}{Ranking Criteria} & \multirow{2}{*}{Weight} & \multicolumn{3}{|c|}{Language} \\ \cline{3-5}
 & & R & Matlab & C \\ \hhline{*{5}{|-}}
 Familiarity with the Language & 9 & \cellcolor{OrangeRed}{18} & \cellcolor{Goldenrod}{36} & \cellcolor{ForestGreen}{45} \\ \hhline{*{5}{|-}}
-Plotting Functionality & 8 & \cellcolor{ForestGreen}{40} & \cellcolor{Goldenod}{32} & \cellcolor{Red}{0} \\ \hhline{*{5}{|-}}
+Plotting Functionality & 8 & \cellcolor{ForestGreen}{40} & \cellcolor{Goldenrod}{32} & \cellcolor{Red}{0} \\ \hhline{*{5}{|-}}
 External Libraries Available  & 7 & \cellcolor{ForestGreen}{28} & \cellcolor{Goldenrod}{21} & \cellcolor{Orange}{14} \\ \hhline{*{5}{|-}}
 Speed & 7 & \cellcolor{Orange}{14} & \cellcolor{Orange}{14} & \cellcolor{ForestGreen}{35} \\ \hhline{*{5}{|-}}
 Linux Compatibility  & 7 & \cellcolor{ForestGreen}{35} & \cellcolor{Goldenrod}{21} & \cellcolor{ForestGreen}{35} \\ \hhline{*{5}{|-}}
 Development Time & 7 & \cellcolor{Orange}{21} & \cellcolor{ForestGreen}{28} & \cellcolor{OrangeRed}{14} \\  \hhline{*{5}{|-}}
 Documentation & 6 & \cellcolor{ForestGreen}{24} & \cellcolor{ForestGreen}{24} & \cellcolor{Orange}{12} \\ \hhline{*{5}{|=}}
-\multicolumn{2}{|r|}{\textbf{Total Figure of Merit}} & \cellcolor{ForestGreen}{180} & 176 & 195 \\ \hhline{*{5}{|-}}
+\multicolumn{2}{|r|}{\textbf{Total Figure of Merit}} & \cellcolor{ForestGreen}{\textbf{180}} & 176 & 195 \\ \hhline{*{5}{|-}}
 \end{tabular}
 \end{table}
 
@@ -1455,7 +1460,8 @@ The flow chart for this script can be seen below, in Figure \ref{flowchart:overa
 
 \begin{figure}
 \centering
-\begin{tikzpicture}
+\begin{tikzpicture}[framed, node distance = 2.5cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
+
 
 	\node[block] (loadLib) {Load Libraries and other Scripts};
 	\node[block,right of=loadLib] (initvars) {Initialise variables};
@@ -1528,7 +1534,8 @@ The following flowchart explains the logic that the parsing argument function go
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}
+\begin{tikzpicture}[framed, node distance = 2.5cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
+
 \node[block] (parseArgs) {Parse Arguments into Array};
 \node[decision,right of=parseArgs] (inter) {Interactive?};
 \node[block,south of=inter] (runInt) {Run Interactive};
@@ -1858,13 +1865,13 @@ Figure \ref{scatterExample:R} is one created using an R script, and the second i
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}{\textwidth}
+\begin{subfigure}{0.5\textwidth}
 	\centering
 	\includegraphics[scale=0.25,angle=270]{Figures/ScatterExampleR.eps}
 	\caption{Scatter Plot Example in R}
 	\label{scatterExample:R}
 \end{subfigure}%
-\begin{subfigure}{\textwidth}
+\begin{subfigure}{0.5\textwidth}
 	\centering
 	\includegraphics[scale=0.5]{Figures/ScatterExampleSync.eps}
 	\caption{Scatter Plot Example in Syncwatch Lab}
@@ -1884,13 +1891,13 @@ This is another method of displaying the same data as before, but it is more rel
 The figure below (Figure \ref{histogramExample} shows the two examples of histogram that will be used.
 \begin{figure}[H]
 \centering
-\begin{subfigure}{\textwidth}
+\begin{subfigure}{0.5\textwidth}
 	\centering
 	\includegraphics[scale=0.25, angle = 270]{Figures/HistogramExampleR.eps}
 	\caption{Histogram Plot Example in R}
 	\label{histogramExample:R}
 \end{subfigure}%
-\begin{subfigure}{\textwidth}
+\begin{subfigure}{0.5\textwidth}
 	\centering
     \includegraphics[scale=0.5]{Figures/HistogramExampleSync.eps}
 	\caption{Histogram Plot Example in Syncwatch Lab}
@@ -1972,11 +1979,11 @@ The full specification sheet \cite{Rubidium} has been summarised in a tabular fo
 
 A photo of the Rubidium clock used can be seen below, Figure \ref{fig:rubidium}. 
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{Figures/rubidium.eps}
 \label{fig:rubidium}
-\caption{Rubidium Clock}
+:\caption{Rubidium Clock}
 \end{figure}
 
 \subsection{Delay Distribution}
@@ -1987,7 +1994,7 @@ The time that these results were taken was unknown, but this will be used as a b
 
 \begin{figure}[H]
 \centering
-\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test0/Plot of Delays - Test:0 Sample -9996 size.eps}
+\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test0/DelayPlot.eps}
 \caption{Example Data Set Delay Plot}
 \label{Test0Delay}
 \end{figure}
@@ -1996,34 +2003,42 @@ The first thing to note is that this has been taken at the start of the data set
 After around 1800 samples (which is about a minute), the delays have stabilised. 
 This same distribution can be seen throughout the data sets collected, with a sample of them shown in the multi figure below.\\
 
-There was a set of results (from Test 1 to Test #) that were using the TimePort when it was in freewheeling mode.
+%There was a set of results (from Test 1 to Test \#) that were using the TimePort when it was in freewheeling mode.
 
 
 
 \begin{figure}[H]
 \centering
 \begin{subfigure}{0.5\textwidth}
-	\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test2/Plot of Delays - Test:2 Sample -9996 size.eps}
+	\includegraphics[scale = 0.3, angle=270]{Figures/FinalResults/Test2/DelayPlot.eps}
 	\label{delay:test2}
 	\caption{Delay Plot - Test 2}
 \end{subfigure}%
 \begin{subfigure}{0.5\textwidth}
-	\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test6/Plot of Delays - Test:6 Sample -9996 size.eps}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test6/DelayPlot.eps}
 	\label{delay:test6}
 	\caption{Delay Plot - Test 6}
-\end{subfigure}%
+\end{subfigure}
 
 \begin{subfigure}{0.5\textwidth}
-	\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test7/Plot of Delays - Test:# Sample -9996 size.eps}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test7/DelayPlot.eps}
 	\label{delay:test7}
 	\caption{Delay Plot - Test 7}
 \end{subfigure}%
 \begin{subfigure}{0.5\textwidth}
-	\includegraphics[angle = 270, scale = 0.3]{Figures/FinalResults/Test9/Plot of Delays - Test:# Sample -9996 size.eps}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test9/DelayPlot.eps}
 	\label{delay:test9}
 	\caption{Delay Plot - Test 9}
-\end{subfigure}%
+\end{subfigure}
+\label{Example of Delay Plots}
+\end{figure}
 
+Notice that there are some differences between these four examples.
+Test 6 was the first Beaglebone test performed and it seems to show very similar results to the example data mentioned previously.
+The reason for the high values of delays in some of these tests were due to the freewheeling mode that the \ac{GM} clock was under, and thus only the distribution can be looked into in any detail.\\
+
+One interesting point to note however is with Test 7. 
+The delay spread look initially a wide spread, but this is because as the scale has automatically changed, the total delay spread is actually much less in this case.
 
 
 \subsection{Master to Slave vs Slave to Master}
@@ -2074,7 +2089,9 @@ This would enable to better test the protocol in more common scenarios with the 
 
 \item[More Packet Metrics] Once a better understanding of the packet metrics is gathered, more packet metrics can be implemented where necessary. 
 
-\item[Verify Packet Metric Scripts against existing programs]
+\item[Verify Packet Metric Scripts against existing programs] Because there were no existing packet metric programs available to be used during this project, the scripts were not tested for validity. 
+The results looked correct hence why these were used for investigating \ac{PTP} performance. 
+Chronos has a packet metric software suite as an add on to the Syncwatch software  
 \item[Secure PTP]
 
 \end{description}
@@ -2225,15 +2242,19 @@ The \ac{SA} is generated by the sender, and can be sent to all of the receivers,
 
 %Replay protection mechanism
 
-\paragraph{Requirements}
+%\paragraph{Requirements}
 
 
 
-\subsection{Sub-microsecond accuracy}
 
 \section{Conclusion}
-\section{Acknowledgements}
 
+In conclusion the \ac{PTP} protocol was investigated successfully in a number of different ways.
+\ac{PTP} data was collected in a number of different locations throughout the university on several different clock configurations.
+This data was then analysed: both through looking at the raw delays and from the use of packet metric scripts.
+It was found that...
+Secure PTP was also looked into to see how PTP can be made more secure. 
+%\section{Acknowledgements}
 \bibliographystyle{ieeetr}
 \bibliography{Bibliography}
 \begin{appendices}
