@@ -67,11 +67,12 @@ if (args$AllSampleSize!="None") {
 	sampleSize <- args$AllSampleSize
 	tests <- seq(0,9)
 } else tests <- NTEST
-
+ifLoad = FALSE
 for (nTest in tests) {
 	loginfo(paste("Running script on Test number", nTest))
 	if (args$loadDelays != "None") {
 		Data <-readFileDirect(paste("/home/james/FinalYearProject/PTPData/TestData/", args$loadDelays, sep=""))
+		ifLoad = TRUE
 	} else {
 		tempResult <- parseFileName(nTest, args$directory, args$direction)
 		fileName <- tempResult$fileName
@@ -93,14 +94,13 @@ for (nTest in tests) {
 #---------------------------------------------------------------------------------------------------------------------------------------------
 #### - May need to be dynamic To ? or at least an option to change / work out #####
 
-	To <- 1/16 #Assume To = 1/16  
-	dataPacket <- purgeData(Data)
+	To <- 1/32 #Assume To = 1/16  
+	dataPacket <- purgeData(Data,ifLoad)
 	delays <- dataPacket$delays
 	time <- dataPacket$time
 	N <- dataPacket$N
 #---- Currently To == Time, but will sort out once I understand what to do with To ----
 #----- As Delay variable has been written, it can now be plotted into histograms ------
-
 
 	if (args$hist) {
 		plotHistogram(delays)
@@ -113,7 +113,7 @@ for (nTest in tests) {
 	if (args$pdelay) {
 		plotDelay(delays)
 	}
-
+	print("OK")
 	results <- calculateMetrics(To, N, delays)
 	ResultTDEV <- results$ResultTDEV
 	ResultMATIEMAFE <- results$ResultMATIEMAFE
