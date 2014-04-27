@@ -181,10 +181,9 @@ readFileDirect <- function(fileName) {
 	
 	loginfo("CSV Data has been written to Data variable\n")
 	return(Data)
-
 }
 
-# --------------------------------------------------------------
+# -------------------------------
 # -             Name: purgeData                                -
 # -             Description: Purges the initial values in the  -
 # -				file                           -
@@ -192,25 +191,33 @@ readFileDirect <- function(fileName) {
 # -             Output: returnValue (delays, N, time)          -
 # -             GlobalVarDepend: None                          -
 # --------------------------------------------------------------
-purgeData <- function(Data) {
+purgeData <- function(Data,ifLoad) {
 	#----- Work out what type of file is Data (ie new file type or old)
-	if (ncol(Data) == 9) {
-		loginfo("Parsing Old File Type.")
-		#Index is global. careful...
-		delays <- as.matrix(Data[index]) # Currently taking only one of the delays
-		time <- 1/16 #Fixed Value
-		delays = delays[-1] # remove for new file type
-		delays = delays[-1]
-		delays = delays[-1]
-		N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
-	} else if (ncol(Data == 3)) {
-		loginfo("Parsing New File Type.")
-	        time <- as.matrix(Data[1])
-		if (index == 4) delays <- as.matrix(Data[2])
-		else delays <- as.matrix(Data[3])
-		N <- as.numeric(nrow(Data))
+	if (ifLoad == FALSE){
+		if (ncol(Data) == 9) {
+			loginfo("Parsing Old File Type.")
+			#Index is global. careful...
+			delays <- as.matrix(Data[index]) # Currently taking only one of the delays
+			time <- 1/16 #Fixed Value
+			delays = delays[-1] # remove for new file type
+			delays = delays[-1]
+			delays = delays[-1]
+			N <- as.numeric(sampleSize) - 4 #1 for the header, 2 for init, and 1 for the null value
+		} else if (ncol(Data == 3)) {
+			loginfo("Parsing New File Type.")
+	       	 time <- as.matrix(Data[1])
+			if (index == 4) delays <- as.matrix(Data[2])
+			else delays <- as.matrix(Data[3])
+			N <- as.numeric(nrow(Data))
 		
+		}
+	} else {
+		print("New Test!! \n")
+		time <- as.matrix(Data[2])
+		delays <- as.matrix(Data[4])
+		N <- sampleSize
 	}
+	
 	
 	returnValue<- list("delays" = delays, "N" = N, "time" = time)
 	return (returnValue)
@@ -410,3 +417,5 @@ if (nLines < 0 || is.na(as.numeric(nLines)) == TRUE) {
 vars <- list("nLines" = nLines, "nTest" = nTest)
 return (vars)
 }
+
+
