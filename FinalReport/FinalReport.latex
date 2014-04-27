@@ -923,7 +923,7 @@ It was important to gzip the file beforehand or the transfer would have taken a 
 The rate of data collection is around 10MB an hour. 
 %--------------------------------------------------------------------------
 
-\subsection{Software - \acf{PTPd}
+\subsection{Software - \acf{PTPd}}
 
 The final type of clock that can be used is a software daemon called PTPd (or sometimes PTPd2). 
 It is a program written in C that meets most aspects of the IEEE1588 specification. 
@@ -1155,8 +1155,6 @@ If appropriate the script should also average N number of data points and save t
 The time field must also be parsed correctly and the time delta added to the new file. \\
 
 The general script layout has been converted to a flow chart, see below Figure \ref{FC:AwkScript}.
-\begin{figure}[H]
-\centering
 \begin{tikzpicture}[framed, node distance = 2.5cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
     % Place nodes
 	\node [block] (init) {Start Script};
@@ -1186,9 +1184,6 @@ The general script layout has been converted to a flow chart, see below Figure \
 
 
 \end{tikzpicture}
-\caption{Awk Script Flow Chart}
-\label{FC:AwkScript}
-\end{figure}
 
 This flowchart was then used to create the awk script, shown in Appendix \ref{app:awkscript}. 
 Most of the code is self documenting, but the $add\_time$ will be explained as that was part of the code that required some extra work to get working correctly.
@@ -2079,7 +2074,7 @@ This is in contrast to Figure \ref{Syncwatch:strange}, where it seems like there
     \caption{Syncwatch Plot Abnormal}
     \label{Syncwatch:strange}
 \end{subfigure}%
-
+\end{figure}
 It can be seen in Figure \ref{Syncwatch:strange} that there are around three discrete delay values with a couple of other noise peaks. 
 This was very interesting when you compare it to the data discussed in the previous section where there was a clear spread of delay values without seeing any discreteness.
 
@@ -2223,6 +2218,7 @@ The tests used for this will have the biggest difference associated with them.
     \includegraphics[scale=0.5]{Figures/FinalResults/Test0/Direction/Difference.eps}
 \label{timeOfDay}
 \caption{Example Data Comparison between Directions}
+\end{subfigure}
 \end{figure}
 
 %Explanation of the delay differences being the same. 
