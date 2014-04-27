@@ -67,6 +67,7 @@
 \newcommand{\degree}{\ensuremath{^\circ}}
 \renewcommand{\headrulewidth}{0pt} % remove the header rule
 \newcommand{\includecode}[2][c]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
+\renewcommand*{\listlistingname}{List of XYZ}
  
 \addtolength{\voffset}{-1.5cm}
 \addtolength{\hoffset}{-1.3cm}
@@ -96,7 +97,8 @@
     minimum height=2em]
 
 
-\title {Final Year Report - Investigation into the Precision Time Protocol}
+\bibliographystyle{ieeetr}
+\title {EE40150 - Final Year Project- Investigation into the Precision Time Protocol}
 \author {James Cox
 \\ Department of Electrical and Electronic Engineering \\
 \\
@@ -108,11 +110,11 @@ University of Bath}
 \vfill
 
 \begin{abstract}
-There is an ever increasing importance to synchronise either clocks or processes in several applications including the telecommunications industry and the power distribution industry.
-With the current method of synchronisation being with \acf{GPS}, this method has some limitations to it due to its jammiblilty. 
-Therefore relying on this technology heavily would not be wise, and an alternative method should be used alongside \ac{GPS}. 
-Examples of such methods such a distributed network for synchronisation: either \ac{NTP} or \acf{PTP}. 
-This project investigates the newer of the two technologies \ac{PTP} and how it performs on an Ethernet network.
+There is an ever increasing importance to synchronise clocks or processes in several industries including telecommunications and power distribution.
+With the current method of synchronisation using the \acf{GPS} high precision clocks onboard the satellites, this method has some limitations to it due to its jammiblilty. 
+Therefore solely relying on this technology would not be wise, and an alternative method should be used alongside \ac{GPS}. 
+Examples of such methods are a distributed network for synchronisation: either the \ac{NTP} or the \acf{PTP}. 
+This project investigates the newer of the two technologies (\ac{PTP}) and how it performs on an Ethernet network.
 Some existing hardware and software clocks were used to try and quantify network delay and how it changes at different points along the network.
 Finally packet metrics were used to attempt to quantify this delay. 
 
@@ -146,6 +148,8 @@ Finally packet metrics were used to attempt to quantify this delay.
 \acro{PTPd}{PTP Daemon}
 \acro{SA}{Security Association}
 \acro{SNTP}{Simple Network Time Protocol}
+\acro{SRS}{Stanford Research Systems}
+\acro{TAI}{International Atomic Time}
 \acro{TDEV}{Time Deviation}
 \acro{UTC}{Coordinated Universal Time}
 \end{acronym}
@@ -157,49 +161,51 @@ Finally packet metrics were used to attempt to quantify this delay.
 \lstlistoflistings
 \newpage
 \section{Introduction}
-In a few applications there is an ever increasing requirement for high accurate clocks.  
-These clocks mmay be used for either a timestamp, such as in the telecommunications industry,  or a way to synchronise processes, as is what happens in the automotive industry. 
+In a few high profile applications there is an ever increasing requirement for high accurate clocks.  
+These clocks may be used for generating an accurate timestamp, such as in the telecommunications industry,  or a way to synchronise processes in the case of the automotive industry. 
 Multiple clocks will be used in these applications, and thus they all should be synchronised with one another. \\
 
-In some applications it is not feasible to have a high accuracy atomic clock (or \ac{CSAC}) due to space or cost constraints.
-An alternative to this could be to use a \ac{GPS} receiver and time can then be synchronised to the accurate clocks onboard the \ac{GPS} satellites.
+It may not be feasible to have a high accuracy atomic clock (or \ac{CSAC}) due to space or cost constraints.
+An alternative to this would be to use a \ac{GPS} receiver and time can then be synchronised to the accurate atomic clocks onboard the \ac{GPS} satellites.
 Using high accuracy clocks like the ones mentioned would help to reduce any clock accuracies.\\
 
 There are two types of clock inaccuracies when synchronising clocks. 
-Firstly they may have started at a different time relative to the others, and adjusting for this is called offset correction.
-The second effect is that clocks do not necessarily run at exactly the same speed.
-Therefore clocks need to be continuously adjusted, which is called drift correction.
+Firstly they may have started at a different time relative to the others. 
+Adjusting for this error is called offset correction. 
+The second effect is due to the fact that the clocks do not necessarily run at exactly the same speed.
+Therefore they need to be continuously adjusted (also known as drift correction.
 The amount of drift correction required depends on the quality of the clock.
-Appendix \ref{clockaccuracies} shows a table of clocks and their corresponding accuracies.
+Appendix \ref{clockaccuracies} shows a table of clocks and their corresponding accuracies.\\
 
-The following industries are examples that would require highly accurate clocks.
+The following industries are examples that would require this level of timing accuracy.
 
 \begin{description}
 \item[Automation Industry] \hfill \\ Processes will need to be synchronised exactly, and can only be if their clocks are in sync with one another.
 If clocks are in sync then processes can also be separated away from communication between each machine and the processing of the control commands. \cite{IEEEApplications} 
-\item[Power Transmission] \hfill \\ Time synchronisation is very important in the power transmission industry. An example of a situation where timing would have mitigated an event from occurring is the North American blackout in August 2003 \cite{PTPFuturePower}. 
+\item[Power Transmission] \hfill \\ Time synchronisation is very important in the power transmission industry. An example of a situation where timing would have mitigated a fault from occurring is the North American blackout in August 2003 \cite{PTPFuturePower}. 
 It made it difficult for the investigation team to be able to sort through the data received when the timestamps were gathered from an inaccurate clock. 
 From the events of this blackout a regulation was put in place to define a minimum absolute accuracy for timestamped data.
 The adoption of the \ac{NERC}  Standard PRC018-1 in 2006 \cite{NERCPRC0181} made it a requirement for any substation in the USA to log data to a minimum accuracy. The timestamped data must be accurate to within 2ms relative  to \ac{UTC}.
 \item[Telecommunications] \hfill\\ In telecommunications, timing protocols are considered when networks need to be synchronised or if mobile base stations need synchronisation pulses.
-With the increase in \ac{GPS} jamming, systems such as 4G must rely on other timing methods in case \ac{GPS} is affected. 
+With the increase in \ac{GPS} jamming, systems such as 4G mobile telephony must rely on other timing methods in case \ac{GPS} is affected. 
 \end{description}
 
 All of the industries mentioned above could feasibly use \ac{GPS} for a highly accurate timing reference.
-But if there is an issue with the system, for example a jamming incident, then there will be some major consequences should timing drift out of line.  
-It is known that jamming of GPS receivers is becoming more common and thus an alternative method of time synchronisation should be used.  \cite{GPSJamming}\\
+But if there is an issue with the system, for example a jamming incident, then there will be some major consequences should timing drift.
+It is known that jamming of GPS receivers is becoming more common and thus an alternative method of time synchronisation should be used.  \cite{GPSJamming}
+There are multiple cases where jamming may occur (both accidental and intentional) and thus a way of synchronising time with this threat must be realised. \\
 
 One way of realising this is by using a distributed timing system, such as \ac{NTP} or \ac{PTP}. 
-This would allow for nodes to be able to synchronise their clocks with a much more accurate time source without having to rely on \ac{GPS}
+This would allow for nodes to be able to synchronise their clocks with a more accurate time source.
 
-\subsection{How NTP Works}
-
+\subsection{How the \acf{NTP} Works}
+\textit{This section has been taken from the Interim Report \cite{interimReport}and has been modified. Some sections however may be exact copies. }
 This is a technology originally designed in 1985 and is used to synchronise clocks over a packet switched network. 
 It is able to achieve synchronisation with \ac{UTC} within a few milliseconds, but can maintain sub-millisecond accuracy on a \ac{LAN} if ideal conditions are met. 
-Errors due to different packet routes or network congestion can decrease this ~accuracy by 100ms or more. \cite{NTPWhitePaper}
+Errors due to different packet routes or network congestion can reduce this ~accuracy by 100ms or more \cite{NTPWhitePaper}.\\
 
-\ac{NTP} uses a client-server hierarchy split into "Stratums". 
-Figure \ref{fig:NTPHierarchy} on the next page  shows the Stratums numbered from 0 to 3. 
+\ac{NTP} uses a client-server hierarchy split into stratums. 
+Figure \ref{fig:NTPHierarchy} on the next page shows the typical stratums numbered from 0 to 3. 
 
 \begin{figure}[H]
 \centering
@@ -208,20 +214,19 @@ Figure \ref{fig:NTPHierarchy} on the next page  shows the Stratums numbered from
 \label{fig:NTPHierarchy}
 \end{figure}
 
-The reference clocks located in Stratum 0 are high precision such as  atomic clocks or they use \ac{GPS} synchronisation.  
-The clocks in Stratum 2 will base their time off of the clocks in Stratum 1. 
-A number of the clocks in Stratum 1 will be used for time synchronising each clock in Stratum 2. This is done so that the time is more accurate and robust. 
-Within a Stratum, clocks may also synchronise for sanity checking to ensure that all clocks within a Stratum are accurate between each other.
+The reference clocks located in stratum 0 are high precision such as  atomic clocks or they utilise \ac{GPS} synchronisation.  
+The clocks in stratum 2 will base their time off of the clocks in stratum 1. 
+A number of the clocks in stratum 1 will be used for time synchronising each clock in stratum 2. This is done so that the time is more accurate and robust. 
+Within a stratum, clocks may also synchronise for sanity checking to ensure that all clocks within a Stratum are accurate between each other.
 Any layers below Stratum 2 will mirror the same algorithm, and there can be up to 15 layers. 
-Stratum 16 is reserved for clocks that are not synchronised with \ac{NTP} \cite{NTP}.
+Stratum 16 is reserved for clocks that are not synchronised with \ac{NTP} \cite{NTP}.\\
 
-\ac{SNTP} is used in applications which do not require a high timing accuracy.
-It does this by ignoring drift values.
-Therefore it is recommended that \ac{SNTP} is only used in the higher Stratums \cite{SNTP}.
-The \ac{SNTP} specification is part of the \ac{NTP} specification, cited here \cite{NTPV4Specification}. 
+\ac{SNTP} is used in applications which do not require a high timing accuracy and achieves this by ignoring drift values.
+Therefore it is recommended that \ac{SNTP} is only used in the higher stratums \cite{SNTP}.
+The \ac{SNTP} specification is part of the \ac{NTP} specification \cite{NTPV4Specification}. \\
 
 Issues arise when synchronising time over a packet switched network where sub millisecond accuracies are required.  
-\ac{PTP} was developed as a successor to the existing \ac{NTP} standard which aims to reach sub millisecond accuracies. 
+\ac{PTP} was developed as a successor to the existing \ac{NTP} standard which aims to reach higher levels of accuracy. 
 Meeting this value of accuracy is very difficult however with a traditional Ethernet network. \\
 
 When standard switches are used, the packet delay between two nodes is indeterminate. 
@@ -229,51 +234,42 @@ This may be because the packet route from A to B changes depending on network lo
 Therefore this is undesired for \ac{PTP} as this packet delay must be taken into account when working out the clock offset. 
 Specific timing switches can be used which will prioritise \ac{PTP} packets, but these may not be available in existing networks or be too expensive to be suitable. 
 
-\subsection{How PTP Works}
-
-\ac{PTP} was developed as a successor to the existing \ac{NTP} standard which aims to reach sub millisecond accuracies. 
-Meeting this value of accuracy is very difficult however with a traditional Ethernet network. \\
-
-When standard switches are used, the packet delay between two nodes is indeterminate. 
-This may be because the packet route from A to B changes depending on network load, or a packet may be held in a switch for an unspecified amount of time whilst working with other data.
-Therefore this is undesired for \ac{PTP} as this packet delay must be taken into account when working out the clock offset. 
-One part of this project will be to investigate the extent of this variation in packet delay on an ethernet network.\\
+\subsection{How the \acf{PTP} Works}
 
 There are a few important elements of how \ac{PTP} works in order to be able to start the project. 
 These are: general \ac{PTP} operation and the \ac{BMC} algorithm.
-There are other aspects that will be covered in this report (such as token passing and Secure \ac{PTP}), but these will be covered in a later section. 
-A comparison with \ac{NTP}, a similar technology will also be made.
-This will be important when considering some security aspects of the technology.
+A comparison between \ac{NTP} and \ac{PTP} will be made, as well as any security aspects regarding \ac{PTP}.
 
 \subsubsection{PTP Explanation}
 
 \ac{PTP} uses a similar master-slave hierarchy of \ac{NTP}, but it does not  use the stratum method. 
 Instead it uses domains which separate out \ac{PTP} synchronisation networks. 
 The master clock for the domain will broadcast out the current time to all of the other clocks on the network using a multicast message.
-In IEEE1588-2008 this can occur up to one message every 32 and a quarter milliseconds. \\
+In IEEE1588-2008 \cite{IEEE1588}this can occur up to one message every 32 $\frac{1}{4}$ ms. \\
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.3]{Figures/DelayPTP.eps}
 \label{fig:ptptiming}
-\caption{PTP timing diagram (based on \cite{PTPTiming})}
+\caption{PTP timing diagram (based on diagram referenced here \cite{PTPTiming})}
 \end{figure}
 
-The list below shows the basic steps that \ac{PTP} follows \cite{ieee1588}:
+The list below shows the basic steps that \ac{PTP} follows \cite{IEEE1588}:
 
 \begin{enumerate}
 \item Broadcast begins at $t_{1}$ where the master sends a \textit{sync} message to all clocks on the domain.
 \item Each slave clock takes a note of when the message was received using their local clock.  
 This timestamp is labelled $t_{1}^{'}$.
-\item An optional \textit{follow\_up} message may be sent that includes an accurate timestamp of $t_{1}$. 
-this step occurs if the master clock does not have the capability to create an accurate timestamp when sending the \textit{sync} message.
-\item In order for the slave to synchronise with the master, the round trip delay needs to be known. therefore a \textit{delay\_req} message is sent by the slave clock at time $t_{2}$. 
+\item An optional \textit{follow\_up} message may be sent which includes an accurate timestamp of $t_{1}$. 
+This step occurs if the master clock does not have the capability to create an accurate timestamp when sending the \textit{sync} message.
+\item In order for the slave to synchronise with the master, the round trip delay needs to be known. 
+Therefore a \textit{delay\_req} message is sent by the slave clock at time $t_{2}$. 
 \item The master will respond to this message with a \textit{delay\_resp} message. this timestamp is called $t_{2}^{'}$.
 \end{enumerate}
 
 At this point $t_{1}$, $t_{1}^{'}$, $t_{2}$ and $t_{2}^{'}$ are now known. \\
 
-If we define $d$ as the transit time, and $\widetilde{o}$ as the constant offset between the two clocks: 
+If we define $d$ as the transit time, and $\widetilde{o}$ as the constant offset between the two clocks, the one one delay is: 
 
 \begin{equation}
 \label{eqn:t1delay}
@@ -292,7 +288,7 @@ If we rearrange equation \ref{eqn:t2delay} for $d$ :
 d = t_{2}^{'} - t_{2} + \widetilde{o}
 \end{equation}
 
-Substituting equation \ref{eqn:3} into \ref{eqn:t1delay}: 
+Substituting Equation \ref{eqn:3} into \ref{eqn:t1delay}: 
 \begin{equation}
 t_{1}^{'} - t_{1} = \widetilde{o} + t_{2}^{'} - t_{2} + \widetilde{o}
 \end{equation}
@@ -301,15 +297,13 @@ t_{1}^{'} - t_{1} -  t_{2}^{'} +  t_{2} = 2 \widetilde{o}
 \end{equation}
 \begin{equation}
 \widetilde{o} = \frac{t_{1}^{'} - t_{1} -  t_{2}^{'} +  t_{2}}{2}
-
-\label{eqn:final}
 \end{equation}
 \\
 
 The offset is now known and can be adjusted for. 
 The following assumptions have been made to create the calculations above. 
 \begin{enumerate}
-\item Message exchange occurs over a short period of time that the delay is assumed to be constant. 
+\item Message exchange occurs over such a short period of time that the delay is assumed to be constant. 
 \item Transit time is symmetrical (i.e. time from master to slave is the same as slave to master). 
 \item Both the slave and the master can measure the transmit and receive times of messages accurately (~ignoring clock drift).
 \end{enumerate}
@@ -317,9 +311,9 @@ The following assumptions have been made to create the calculations above.
 \subsubsection{Comparison with \ac{NTP}}
 
 The \acf{PTP} was first developed in 2003 with the intention to build on the existing \ac{NTP} standard. 
-Version 1 improvement improved on \ac{NTP} in a number of different ways.
 A new \ac{PTP} standard was introduced in 2008 with some new features such as boundary clocks and using domains instead of stratums. 
-These changes and comparison with \ac{NTP} have been tabulated below, table \ref{table:ntpptp}.
+\ac{NTP} is used by Microsoft to synchronise clocks over the internet, whereas \ac{PTP} is used in industry where higher accuracy is needed.
+These changes and comparison with \ac{NTP} have been tabulated below, Table \ref{table:ntpptp}.
 
 \begin{table}[h]
 \centering
@@ -348,15 +342,15 @@ There are several different configurations for a \ac{PTP} network to take using 
 \begin{description}
 \item[Grandmaster Clock] The grandmaster clock is the main source of time synchronisation using \ac{PTP} within the same \ac{PTP} domain. 
 This clock will consist of a highly accurate timing source, such as a \ac{CSAC} or be based off of a \ac{GPS} time reference. 
-This clock is picked using the \ac{BMC} algorithm detailed in the next section. 
+This clock is picked using the \ac{BMC} algorithm.
 \item[Ordinary Clock] An ordinary clock is a \ac{PTP} clock with a single ethernet port. 
 They are also called nodes in a \ac{PTP} network.
 These are the most common types of clocks on the \ac{PTP} network as these are the end nodes that are then connected to devices that require synchronisation.
 \item[Boundary Clock] A boundary clock is a replacement to a standalone switch.
 It usually has multiple \ac{PTP} ports and thus provides a link between domains. 
+Boundary clocks prioritise \ac{PTP} packets in order for the one way delay to be reduced as much as possible. 
 \item[Transparent Clock]  A transparent clock main role is to account for switch delay by updating the time interval field of the \ac{PTP} packet.
-There are two types of transparent clocks which might be used in a typical network. 
-These are \ac{E2E} and \ac{P2P} transparent clocks.\\
+There are two types of transparent clocks which might be used in a typical network which are \ac{E2E} and \ac{P2P} transparent clocks.\\
 
 They both measure the event message transit time (also known as the resident time) for both $sync$ and $Delay\_rq$ messages. 
 This information is then added to the correction field in the two messages.
@@ -370,12 +364,12 @@ This time is then added on to the offset mentioned previously.
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{Figures/PTPNetwork.eps}
-\caption{A Typical PTP Network}
+\caption{A Typical PTP Network \cite{CiscoPTP}}
 \label{PTPNet}
 \end{figure}
 
 There are several different network configurations that could be used when using a \ac{PTP} network.
-The most minimal network configuration would include a Grandmaster clock and a single slave, but they can get more complicated if boundary and transparent clocks are used in larger \ac{PTP} networks. 
+The most minimal network configuration would include a grandmaster clock and a single slave, but they can get more complicated if boundary and transparent clocks are used.
 %The diagram below outlines some possible topologies for \ac{PTP} networks. 
 \begin{comment}
 \begin{figure}
@@ -426,7 +420,7 @@ The following criteria are used when determine which clock on the network is the
 \item[Quality] This refers to the technology used to implement the clock, and takes into account the expected time deviation.
 \item[Priority] This is an admin assigned precedence to select a particular grandmaster. 
 In IEEE1588-2008 there are 2 8bit priority fields.
-\item[Variance] This refers to the stability of the clock based on itsd performancr against the \ac{PTP} reference. 
+\item[Variance] This refers to the stability of the clock based on its performance against the \ac{PTP} reference. 
 \end{description}
 
 The 2008 standard uses a hierarchical selection algorithm system, which is outlined below.
@@ -452,8 +446,7 @@ The \ac{BMC} algorithm is used to determine each master, and ultimately the gran
 \subsection{Project Description}
 This project aims to investigate \ac{PTP} performance on a heavily used Ethernet network, and to attempt to quantify \ac{PTP} performance using packet metrics. \\
 There are also some deliverables as part of the Final Year Project which are: an interim report, a log book, a final year report and a poster. 
-These deliverables, along with the sub tasks involved in order to complete them have been detailed in the Gantt chart, as seen in Appendix \ref{ganttchart}. \\
-
+These deliverables, along with the sub tasks involved in order to complete them have been detailed in the Gantt chart, as seen in Appendix \ref{app:ganttchart}.
 The following project objectives have been identified:
 
 
@@ -461,21 +454,24 @@ The following project objectives have been identified:
 \item[Learn about \ac{PTP} and other work in relation to the protocol] \hfill \\ 
 This stage would occur at the beginning of the project to understand how \ac{PTP} works.
 This is important so work can then be carried out to investigate \ac{PTP} performance on a network. 
+This section will also include any relevant literature reviews
 \item[Collect PTP Data] \hfill \\ 
 In parallel with the above, PTP data can be collected. 
 This will be monitoring the performance of \ac{PTP} across the network as well as how using multiple types of grandmaster/slaves affect the performance. 
 Different clock locations in the network will also be considered.
-\item[Implement some packet metric scripts] \hfill \\ 
+\item[Implement packet metric scripts] \hfill \\ 
 To be able to understand the performance of the network, some packet metric scripts will be created. 
 A suitable language will be chosen once this part of the project begins.
 \item[Determine packet performance using these scripts] \hfill \\
+In combination with the collected data and the metric script development, the scripts will be run with the data collected and \ac{PTP} performance will be evaluated based on them. 
+
 Multiple window sizes and types of metric will be used to quantify network performance.
 \item[Test Chronos' equipment and provide feedback] \hfill \\ 
 As Chronos has provided this project with some equipment, this equipment will also be thoroughly tested and any information gathered can be passed to them once the project is completed.
 \item[Documentation] \hfill \\ It was noted that it would be beneficial to document as much as possible about the hardware used, which can then be fed back to Chronos if need be. 
-This would also be useful internally in case the hardware documentation is limited. 
-\item[Investigate into security measures] \hfill \\ Some research into how to secure \ac{PTP} will be made along with some recommendations in possible. 
-
+This would also be useful internally. 
+\item[Investigate into security measures] \hfill \\ Some research into how to secure \ac{PTP} will be made along with some recommendations where applicable. 
+As \ac{PTP} messages are sent in plain text there is room for exploitation or hacking of the protocol.
 \end{description}
 
 
@@ -486,7 +482,7 @@ With the following objectives and tasks in mind, a literature review was perform
 \subsection{Definitions and Terminology for Synchronisation in Packet Networks \cite{ITUPacketMetrics}}
 \label{metricReview}
 
-The first paper defines a number of definitions and terms when dealing with Packet Synchronisation. The areas of interest in this report were packet metrics which are found in Appendix I3 and I4.  
+The first paper defines a number of definitions and terms when dealing with packet synchronisation. The areas of interest in this report were packet metrics which are found in Appendix I3 and I4.  
 These can be split into three sections: Packet Selection Methods, Packet Metrics without Pre-filtering, and Packet Metrics with Pre-filtering.
 
 \subsubsection{Packet Selection Methods}
@@ -504,18 +500,19 @@ Therefore this method is more suitable when trying to specify network limits. Th
 
 There are four examples of packet selection methods that are mentioned in the recommendation report. 
 These are: Minimum Packet Selection Method, Percentile Packet Selection Method, Band Packet Selection Method and Cluster Range Packet Selection Method. 
+The normal packet selection method uses a mean value across the window, whereas the minimum packet selection method takes the lowest value.
+The band packet and percentile packet uses a band mean type method, with the percentile version setting the lower band to 0. 
 These will be discussed in turn and will be implemented.
 
 %Need to explain these in a bit more detail
 \subsubsection{Packet Metrics without Pre-filtering}
 
-The first packet method technique discussed is \ac{TDEV}. It is used to specify network wander limits for timing signals and can also be used for packet data
-
+The first packet method technique discussed is \ac{TDEV}. It is used to specify network wander limits for timing signals and can also be used for packet data. 
 \ac{TDEV} can be applied to both integrated and pre-processed packet selection methods. \\
 
 The implementation equations are quoted in the reference. The approximation equations were used when implementing the functions. 
 
-\subsubsection{TDEV}
+\subsubsection{\acf{TDEV}}
 The basic TDEV equation has been given below, in Equation \ref{TDEVnorm}
 
 \begin{equation}
@@ -529,17 +526,17 @@ From now on any equations quoted will be in this approximate form.
 
 \begin{equation}
 \label{TDEVapprox}
-TDEV(n\tau_0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1}[x(i+2n) - 2x(i+n) x(i)]^2]} \\
+TDEV(n\tau_0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1} [x(i+2n) - 2x(i+n) +  x(i)]^2]} \\
 
-for n = 1, 2, ... integer part (\frac{N}{3})\\
+for n = 1, 2, ... integer part (\frac{N}{3})
 \end{equation}
 
 The value in brackets next to $x$ denote the window that the particular selection method will be operating over. 
 It has been assumed for this to mean that the window is weighted to 1, with the centre point in the window being the current point.
-Therefore care will need to be taken when implementing these correctly.\\
+Therefore care will need to be taken when implementing these correctly. 
+The mean of each of these windows will be taken. \\
 
 The minTDEV uses the same approximation formula as above, but the minimum value is taken of th window instead of the mean. 
-
 There are pros and cons for both of these metrics.
 Firstly the minTDEV calculation is suitable for packet delay noise processes but not for frequency offset calculation \cite{ITUPacketMetrics}.
 One downside however is that it is very sensitive to low lying outliers. \\
@@ -548,7 +545,6 @@ The next set of packet metrics discussed in the document was those based on the 
 The bandMean is a mean calculating over a subset of the window size. 
 An equation for this has been given below. 
 \begin{equation}
-
 x_{band\_mean}(i) = \frac{1}{m}\sum\limits_{j=a}^{b} x_j+1
 \end{equation}
 
@@ -557,11 +553,11 @@ The approximation equation for this metric has been provided below.
 \begin{equation}
 bandTDEV(n\tau0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1} [x_{band\_mean}(i+2n) - 2x_{band\_mean}(i+n) + x_{band\_mean}(i)]^2 } \\
 
-for n = 1, 2, 3, ... integer part (\frac{N}{3})\\
+for n = 1, 2, 3, ... integer part (\frac{N}{3})
 \end{equation}
 
 The last metric type used in this set was a percentile TDEV. 
-This is very similar to the bandTDEV, but the value of a is set to 0. \\
+This is very similar to the bandTDEV, but the value of a (the lower percentage) is set to 0. \\
 
 \subsubsection{\ac{MATIE}}
 
@@ -570,7 +566,7 @@ These are used to be able to analyse any time error of a set of packet delay .
 The estimation formula for \ac{MATIE} has been provided below. 
 
 \begin{equation}
-MATIE(n\tau_0) \equiv \max_{1\leq k \leq N - 2n + 1 }  \frac{1}{n} | \sum\limits_{i=k}^{n + k -1} (x_{i+n} - x_i) | \\
+MATIE(n\tau_0) \equiv \max_{1\leq k \leq N - 2n + 1 }  \frac{1}{n} \arrowvert \sum\limits_{i=k}^{n + k -1} (x_{i+n} - x_i) \arrowvert \\
 
 for n = 1, 2, ..., integer part (\frac{N}{2})
 \end{equation}
@@ -606,6 +602,11 @@ It will consist of using a number of different clock types and locations on the 
 \item[Packet Methods] This section will mainly involve the implementations of the packet metric scripts based on the referenced report above.
 Focus on the implementation will be made in this section rather than the metrics themselves. 
 \item[Calculating/Analysing Results] Once the metrics have been implemented fully, there needs to be some supplementary scripts written to process some of this data. 
+\item[Clock Drift] It would be interesting to see how much the grandmaster clocks drift themselves over a long period of time.
+\end{description}
+
+There are some other topics that will be completed time permitting:
+\begin{description}
 \item[Securing PTP Considerations] As \ac{PTP} is inherently an unsecure system, there will be some work into investigating how PTP could be secured from rogue hosts on the network.
 \item[Methods to reduce Packet Collisions] Due to the way Ethernet networks work, there is a high probability of packet collisions.  
 Thus it would be useful to investigate, based on the results collected above, ways to reduce these packet collisions.
@@ -622,7 +623,7 @@ The following hardware was identifed as being available to use for the duration 
 \item Hardware Slave - Chronos Syncwatch \cite{SyncWatch}
 \item Hardware Slave - Beaglebone Black \cite{BBB}
 \item Software Grandmaster - \ac{PTPd}
-\item Software Slave - \ac{PTPd}
+\item Software Slave - \acf{PTPd}
 \end{itemize}
 
 The above were identified to be suitable enough to carry out this project. 
@@ -634,16 +635,17 @@ If any assistance is required with the two Chronos hardware devices it will be p
 The Chronos CTL4540 Timeport is a low powered portable device that is able to maintain its time to a high accuracy when disconnected from a synchronisation source.
 It is able to maintain accuracy within a couple hundred nanoseconds without needing to be connected to \ac{GPS}. 
 It also has an internal LiPo battery. 
-This enables the device to be used to transport and measure time. \\
+This enables the device to be used to transport and measure time without using an external power source.
+Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 TimePort. 
 
 With the above features in mind, it is thus suited for a number of markets, including the power industry and telecommunication network operators. 
 It can also be used to correct for any time errors caused by any cabling or equipment. \\
 
-Typical methods of doing this would involve using a Caesium atomic clock [REF] or setting up a \ac{GPS} attenna and connecting this to some other equipment. 
-The TimePort is best suited over these two operaitons because it is much lower power and much more transportable than an atomic clock.
-It also removes the requirement of \ac{GPS} equipment.\\
+Typical methods of doing this would originally have involved using a Caesium atomic clock or setting up a \ac{GPS} attenna and connecting this to some other equipment. 
+The TimePort is best suited over these two operations because it is much lower power and much more transportable than an atomic clock.
+It also removes the requirement of relying on \ac{GPS}.\\
 
-Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 TimePort. %Below are a few labelled photos of the clock.
+%Below are a few labelled photos of the clock.
 
 \begin{figure}
 \centering
@@ -666,39 +668,31 @@ Appendix \ref{app:TimePortSpec} shows the full specifications of the CTL4540 Tim
 \end{figure}
 \end{comment}
 The difference between the release TimePort and the TimePort that will be used in this project is that the firmware on the TimePort is bleeding edge. 
-With that in mind time needs to be allocated to allow for any issues that the clock may have.
+With that in mind time needs to be allocated to allow for any issues that the clock may have or to update the firmware.
 The university has close links with Chronos thus it should be straightforward to either get our issues solved or to receive a new TimePort. \\
 
-This clock will mainly be kept in the same position on the network and will acct as a Grandmaster. \\
+This clock will mainly be kept in the same position on the network and will act as a Grandmaster. \\
 
 In terms of documentation there is not much available for this device apart from some emails sent between Chronos and Dr Robert Watson. 
 Therefore Appendix \ref{TimePortDocumentation} shows some documentation put together for my own use during this project. 
 The documentation includes details on how to interface with the clock and a list of basic commands. \\
 
 To access the device it needs to be accessed locally over a USB to Serial connection. 
-SSH is unavailable as the control port has not been implemented yet.
-\subsubsection{How to Set Up the TimePort}
+\subsubsection{Using the Chronos TimePort}
 
 The firmware version that the TimePort we have available does not have the control port active. 
-Therefore the only method to connect to the TimePort is via a serial connection.\\
+Therefore the only method to connect to the TimePort is via a USB connection.\\
 
-To connect to the TimePort: connect the serial to USB cable %(seen pictured below, Figure \ref{fig:USB2Serial}). 
+To connect to the TimePort: connect the USB cable and run the following command. 
 
-\begin{figure}[H]
-\centering
- \includegraphics[scale=0.5]{Figures/USB2Serial.eps}
-\label{fig:USB2Serial}
-\caption{USB to Serial Converter}
-\end{figure}
-Type the following command into a linux terminal:
 
 \begin{lstlisting}[language=Bash, caption="Bash - Using Screen to connect to TimePort"]
 screen /dev/ttyUSB0 115200, cs8, ixoff
 \end{lstlisting}
 
-This will connect you to the first layer of the TimePort. 
+This command sets the baud rate to 115200, and will connect you to the first layer of the TimePort. 
 The system is a restricted linux distribution, so some commands you may be familiar with do exist.
-A full list of commands and the rest of the documentation can be found in Appendix \ref{app:TimePortDocumentation}. 
+A full list of commands and the rest of the documentation can be found in Appendix \ref{TimePortDocumentation}. 
 %Figure \ref{fig:TP1stLayer} is a screenshot of this first layer
 
 \begin{figure}
@@ -708,33 +702,28 @@ A full list of commands and the rest of the documentation can be found in Append
 \label{fig:TP1stLayer}
 \end{figure}
 
-A complete list of commands can be found in the TimePort documentation that has been written (Appendix \ref{app:TimePortDocumentation}. 
 % Need screenshots for this section
 \subsection{Hardware - Chronos Syncwatch \cite{Syncwatch}}
 \subsubsection{Description}
 The Chronos Syncwatch is a hardware slave clock used to synchronise time in  a number of different applications.
-It operates in all of the current synchronisation technologies such as SyncE, ESMC,  PTPv2, 1PPS+TOD, 1PPS, Frequencies(64k-200MHz), T1 \& E1 protocols and interfaces are supported. \\
-
+It operates in all of the current synchronisation technologies such as SyncE, ESMC,  PTPv2, 1PPS+TOD, 1PPS, Frequencies(64k-200MHz), T1 \& E1 protocols and interfaces are supported. 
 It can be used on both legacy and modern Ethernet/IP networks. 
 It can simultaneously operate on a number of the protocols above. 
-It can also operate in both local and remote modes. \\
-
+It can also operate in both local and remote modes. 
 It is a small modular device with a simple user interface. 
-It also integrates with with Symmetricom's TimeMonitor software. \\
-
+It also integrates with with Symmetricom's TimeMonitor software. 
 The device markets include telecommunications, TV and radio broadcasting, and the power industry. \\
 
 The table shown in Appendix \ref{app:SyncwatchSpec} details the Syncwatch specifications. 
-The figures below show labelled diagrams of a block diagram and the outside of the Chronos Syncwatch. \\
+The figures below shows the outside panel of the device. \\
 
-\begin{figure}
+
+\begin{figure}[H]
 \centering
-\begin{subfigure}{\textwidth}
 	\centering
     \includegraphics[scale=0.5]{Figures/Syncwatch.eps}
 	\label{SyncwatchOutside}
 	\caption{Chronos Syncwatch Outside}
-\end{subfigure}%
 \end{figure}
 \begin{comment}
 \begin{subfigure}{\textwidth}
@@ -748,38 +737,43 @@ The figures below show labelled diagrams of a block diagram and the outside of t
 \end{figure}
 \end{comment}
 
-This product is similar to the TimePort in the fact that there isn't much documentation around for it. 
+This product is similar to the TimePort in the fact that it is an engineering release version therefore all of the features are not fully documented.
 Therefore Appendix \ref{app:SyncwatchDocumentation} shows the documentation written up for the Syncwatch.\\
 
-The Syncwatch will be mainly kept in the upstairs Level 3 Communications lab as it is a larger device. 
+The Syncwatch will be mainly kept in the Level 3 Communications lab.
 As this device is a release product, all of the ports used for controlling the device are enabled.
-Therefore the syncwatch can be set up via SSH or using the program. 
-This is all explained in the documentation in Appendix \ref{app:SyncwatchDocumentation}.\\
+Therefore the Syncwatch can be set up via SSH or using the program. 
 
-\subsubsection{How to Set Up the SyncWatch}
+\subsubsection{Using the Chronos Syncwatch}
 
 The device can be accessed using either ssh, serial, or through the Syncwatch-Lab program. 
 As the first two stages are similar, these will be discussed at the same time.\\
 
+\begin{figure}[H]
+\centering
+ \includegraphics[scale=0.5]{Figures/USB2Serial.eps}
+\caption{USB to Serial Converter}
+\label{fig:USB2Serial}
+\end{figure}
 To connect via ssh: log in using a terminal program using the following command:
 
-\begin{lstlisting}[language=Bash]
+\begin{lstlisting}[language=Bash,caption=SSH Command to Connect to the Syncwatch]
 ssh root@eepc-rjw-syncwatch.bath.ac.uk
 \end{lstlisting}
 
 using password: $syncwatch$ .\\
 
-You are now in the first layer of the Syncwatch device. 
-The alternative method to access this same terminal window is by using a USB to Serial converter, as pictured earlier, Figure \ref{fig:USB2Serial}.
+This is the first Syncwatch layer. 
+The alternative method to access this same terminal window is by using a USB to Serial converter, as pictured earlier, Figure \ref{fig:USB2Serial}.\\
 
 Plug in the device to a computer, and connect to it using the following command:
 
-\begin{lstlisting}[language=Bash]
+\begin{lstlisting}[language=Bash, caption= Screen Command to Connect to the Device]
 screen /dev/ttyUSB0 115200, cs8, ixoff
 \end{lstlisting}
 
-The username is root and the password is syncwatch.
-At this point the first layer has been connected to. 
+As before, the command sets the baudrate to 115200, and connects to the device using screen.
+
 % This brings up the following prompt (shown in Figure \ref{Syncwatch1stLayer}. \\
 \begin{figure}[H]
 \centering
@@ -788,21 +782,21 @@ At this point the first layer has been connected to.
 \caption{Syncwatch First Layer Screen}
 \end{figure}
 
-To access the \ac{PTP} console, type the following into the screen connection:
+To access the \ac{PTP} console, type the following:
 
-\begin{lstlisting}[language=Bash]
+\begin{lstlisting}[language=Bash, caption= Command to Access the PTP Console]
 minicom -S
 \end{lstlisting}
 
-This then brings up the 2nd layer : the PTP console. 
+This then brings up the 2nd layer: the PTP console. 
 The screenshot below (Figure \ref{Syncwatch2ndLayer} shows a list of commands available.
 The complete list of commands in both of the modes is shown in the documentation, shown in Appendix \ref{app:SyncwatchDocumentation}. 
 
 \begin{figure}[H]
 \centering
 %\includegraphics[scale=0.5]{Figures/Screenshots/SyncwatchSecondLayer.eps}
-\label{Syncwatch2ndLayer}
 \caption{Syncwatch Second Layer Screen}
+\label{Syncwatch2ndLayer}
 \end{figure}
 
 \subsubsection{Hardware - Beaglebone Black \cite{BBB}}
@@ -810,6 +804,7 @@ The complete list of commands in both of the modes is shown in the documentation
 The Beaglebone Black is a hardware device but it is running a software PTP Daemon (called PTPd). 
 Throughout this report the Beaglebone Black will be called a hardware clock, but in reality it is running a \ac{PTP} software implementation. \\
 
+The Beaglebone Black is a cheap development platform that runs Linux. 
 In terms of hardware capabilities it has an ARM Cortex A-8 processor with 512MB of DDR3 RAM.
 It runs a cut down version of Linux called Angstrom Linux.
 It has Ethernet connectivity and runs off of a 5V DC supply.\\
@@ -819,19 +814,17 @@ This made it easy to start the PTP daemon. \\
 
 Below (Figure \ref{fig:BBBLabelled} is a labelled picture of the BeagleBone Black.
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{Figures/BBB.eps}
-\caption{Labelled BeagleBone Black}
+\caption{Labelled BeagleBone Black \cite{BBBImg}}
 \label{fig:BBBLabelled}
 \end{figure}
 
 The Beaglebone will be a useful device to use as a slave clock because of its portability.
 It would be able to be placed anywhere on the network without any disruption to that particular lecture room or lab space.
 
-\subsubsection{How to Set up the Beaglebone Black}
-
-When the project was started, Robert Watson had the BeagleBone Black working with PTPd already, so there was only some work to be done in order to automate the process. \\
+\subsubsection{Using the Beaglebone Black}
 
 To set up the Beaglebone Black:
 
@@ -843,17 +836,16 @@ To set up the Beaglebone Black:
 
 Type:
 
-\begin{lstlisting}
-ssh jac50@eepc-rjw-beaglebone.bath.ac.uk
+\begin{lstlisting}[caption = SSH command to connect to the Beaglebone Black, language = Bash]
+ssh <username>@eepc-rjw-beaglebone.bath.ac.uk
 \end{lstlisting}
 
-to log in, replacing jac50 with the username on the device. 
-The users on the device were eerjw, jac50, and root.\\
+To log in, replace $<username$  with the username on the device. \\
 
 The screenshot below (Figure \ref{SSH_To_Beaglebone}) demonstrates this.
 The ls command was typed to show that the connection was successful.
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{Figures/Screenshots/SSH_To_Beaglebone.eps}
 \caption{SSH to Beaglebone}
@@ -861,8 +853,7 @@ The ls command was typed to show that the connection was successful.
 \end{figure}
 
 Once SSH'd into the device, then the device can be accessed like any other linux machine.
-Note however that there is a restricted command set. \cite{AngstromInstructionSet}
-
+Note however that there is a restricted command set \cite{AngstromInstructionSet}. 
 When the BeagleBone boots, it was required that the SD card used to store the test data on would be automounted and that the PTP daemon automatically runs.
 Several attempts in trying to automount the SD card using conventional means such as adding in an entry to fstab were attempted, but this did not work.\\
 
@@ -883,7 +874,7 @@ sudo /home/eesrjw/ptpd2 -i eth0 -C -S -g -d 17 -V > /mnt/sd/eesrjw/timeport\_\$d
 
 Line 1 is the bash shebang which lets the operating system know that the following script is written in bash. 
 The second line mounts the SD card to the correct location. 
-In this case the SD card is device mmcblk1p1, and the mount location is /mnt/sd/.\\
+In this case the SD card is device $mmcblk1p1$, and the mount location is /mnt/sd/.\\
 
 The third line defines a date variable in Year\_Month\_Day format. 
 The forth line runs the PTPd2 daemon. 
@@ -897,7 +888,7 @@ The final step is to transfer the text file from the beaglebone to the local mac
 
 \subsubsection{Sending Data to the Local Machine}
 
-There are two ways to retrieve the data from the Beaglebone: either pulling out the SD card and using an SD card reader to transfer the text file, or remotely using a utility such as rsync. \\
+There are two ways to retrieve the data from the Beaglebone: either pulling out the SD card and using an SD card reader to transfer the text file, or remotely using a utility such as $rsync$. \\
 
 It was decided that as all other commands are sent to the device remotely, that a short rsync script will be made. 
 Code Extract \ref{lst:rsync} below is the rsync script used. 
@@ -920,11 +911,11 @@ As this script was not run very often it was not an issue.
 If it was however more research would have been done to see if that could be fixed. 
 A screenshot below (Figure \ref{fig:rsync} shows the rsync script transferring across a gzipped data file.
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.3]{Figures/Screenshots/Rsync_From_Beaglebone.eps}
-\label{fig:rsync}
 \caption{Rsync Example}
+\label{fig:rsync}
 \end{figure}
 
 It was important to gzip the file beforehand or the transfer would have taken a lot longer. 
@@ -932,7 +923,7 @@ It was important to gzip the file beforehand or the transfer would have taken a 
 The rate of data collection is around 10MB an hour. 
 %--------------------------------------------------------------------------
 
-\subsection{Software - PTPd}
+\subsection{Software - \acf{PTPd}
 
 The final type of clock that can be used is a software daemon called PTPd (or sometimes PTPd2). 
 It is a program written in C that meets most aspects of the IEEE1588 specification. 
@@ -940,34 +931,34 @@ PTPd2 meets the changes made in the 2008 standard.\\
 
 In-depth code analysis of the script will not be provided in this report.
 Instead the different flags that may be used for this project will be tabulated below (Table \ref{table:FlagsPTPd}).
+The flags below were used throughout the project. 
 
 \begin{table}[H]
 \centering
 \caption{Flags used for PTPd}
 \begin{tabular}{|l|l|l|l|} \hline
-\cellcolor{Black}\textcolor{White}{\textbf{Flag Name}} & \cellcolor{Black}\textcolor{White}{\textbf{Flag Letter V2.3.0 or above}} & \cellcolor{Black}\textcolor{White}{\textbf{Old Flag Letter}} & \cellcolor{Black}\textcolor{White}{\textbf{Description}} \\ \hline
-Interface & i & b & Network Interface to use \\ \hline
-Domain & d & i & PTP Domain Number \\ \hline
-Foreground & C & C & Run program in foreground \\ \hline
-Verbose & V & None & Run in Verbose mode \\ \hline
-No Clock Adjust & n & t & Do not adjust the local clock \\ \hline 
-Slave only mode & s & g & Set PTPd as Slave \\ \hline
+\cellcolor{Black}\textcolor{White}{\textbf{Flag Name}} & \cellcolor{Black}\textcolor{White}{\textbf{Description}}  & \cellcolor{Black}\textcolor{White}{\textbf{Flag Letter V2.3.0 or above}} & \cellcolor{Black}\textcolor{White}{\textbf{Old Flag Letter}}\\ \hline
+Interface & Network Interface to use & i & b \\ \hline
+Domain & PTP Domain Number & d & i \\ \hline
+Foreground & Run program in foreground &  C & C \\ \hline
+Verbose &  Run in Verbose mode &  V & None \\ \hline
+No Clock Adjust & Do not adjust the local clock & n & t\\ \hline 
+Slave only mode &  Set PTPd as Slave &  s & g \\ \hline
 \end{tabular}
 \label{table:FlagsPTPd}
 \end{table}
 
 PTPd can be used as both a slave and a grandmaster.
 As there is already a dedicated grandmaster, PTPd will be used mainly as a slave, but some software grandmaster clock tests may be performed.
-
 The script call has already been given for the beaglebone. The code extract below has been used for the PTPd\_Netbook 
 
-\begin{lstlisting}[language=bash,label=lst:ptpd2]
+\begin{lstlisting}[language=bash,label=lst:ptpd2, caption = Running the PTPd Script]
 ./ptpd2 -C -S -g -i 17 -t | tee /home/james/FinalYearProject/PTPData/TestData/TimePort-To-Soft-Test4/RawData.txt
 \end{lstlisting}
 
-The difference in the call to ptpd2 above is that tee has also been used so the data is displayed both on the screen and sent to the text file. 
+The difference in the call to ptpd2 above is that the command $tee$ has also been used so the data is displayed both on the screen and sent to the text file. 
 An alternative method to this would be to redirect the standard output to the text file, then call $tail -f file\_name\_here$ to display the file in the terminal. 
-This script can be run on any linux computer with root access. 
+This script can be run on any linux computer with root access with the script saved in the current working directory.
 Note that the above script in Extract \ref{lst:ptpd2} is already run as a root user.
 The other method to do this would be to run the script with sudo. 
 
@@ -983,17 +974,20 @@ The summary table below shows what hardware is available, based on class, and IP
 \label{table:hardwareSummary}
 \begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
 \cellcolor{Black}\textcolor{White}{\textbf{Clock ID}} & \cellcolor{Black}\textcolor{White}{\textbf{Name}} & \cellcolor{Black}\textcolor{White}{\textbf{Type}} &  \cellcolor{Black}\textcolor{White}{\textbf{PTP IP}} & \cellcolor{Black}\textcolor{White}{\textbf{Control IP}}  & \cellcolor{Black}\textcolor{White}{\textbf{MAC Address}} \\ \hline
-001 & Chronos TimePort & Hardware GM  &TimePort & USB over Serial &...  \\ \hline
+001 & Chronos TimePort & Hardware GM  &TimePort & USB over Serial & Unkown  \\ \hline
 002 & Chronos SyncWatch & Hardware & syncwatchptp & syncwatch & 00:16:C0:17:20:A1 \\ \hline
-003 & BeagleBone Black & Hardware & beaglebone & beaglebone & ... \\ \hline
+003 & BeagleBone Black & Hardware & beaglebone & beaglebone & Unknown \\ \hline
 004 & PTPd\_Desktop & Software &  Tesla & N/A & N/A \\ \hline 
 005 & PTPd\_Netbook & Software & N/A & N/A & e8:9a:8f:97:64:13 \\ \hline
 \end{tabular}
 \end{table}
 
 The clock ID was used with internal documentation to know which clock was used where. 
-Note that the IPs listed are just part of the full name. 
+Note that the domains listed in the table are just part of the full domain name. 
 To access one of them on the university network, add the prefix eepc-rjw- and the suffix .bath.ac.uk.
+For example, to access the Beaglebone the address is eepc-rjw-beaglebone.bath.ac.uk. 
+
+
 
 \subsection{Locations for Clocks}
 
@@ -1008,13 +1002,14 @@ The following locations were identified, along with some information on the surr
 Watson's Office & 2E 4.6 & Office & Locked office & Same room \\ \hline
 2\textsuperscript{nd} floor lab & 2E 2.10 & Lab & Secure lab & Same subnet \\ \hline
 Comms Lab & 2E 3.14 & Lab & Secure & Same subnet \\ \hline
-Library & Library & Library & No. Busy 24/7 & Differnet subnet \\ \hline
+Library & Library & Library & No. Busy 24/7 & Different subnet \\ \hline
 8W Rooms & 8W 2...& Lecture room & No & Different subnet \\ \hline
-East building & EB 2.. & Lecture room & No & Differnet subnet \\ \hline
+East building & EB 2.. & Lecture room & No & Different subnet \\ \hline
 \end{tabular}
 \end{table}
 
-The full list of clock locations have been placed on the map below, Figure \ref{UniMap}
+The locations above and in the diagram below (Figure \ref{UniMap}) are only examples of possible locations. 
+Due to getting access to rooms or the possibility of PTP not been transmitted out of the particular subnet it may not be possible to use some of the rooms listed above. 
 
 \begin{figure}[H]
 \centering
@@ -1025,22 +1020,22 @@ The full list of clock locations have been placed on the map below, Figure \ref{
 \end{figure}
 
 A broad range of locations were attempted, within the limitations of the network. 
-Connecting via a VPN was attempted but it was deemed that the \ac{PTP} packets were not transmitted outside of the network.
+Connecting via a VPN was attempted but it was deemed that the \ac{PTP} packets were not transmitted outside of the network and thus were not suited for the job.
 A network topology map has also been added, see below Figure \ref{NetworkMap}. 
 
 \begin{figure}[H]
 \centering
 %\includegraphics[scale=0.5]{Figures/NetworkMap.eps}
-\label{NetworkMap}
 \caption{Network Topology Map}
+\label{NetworkMap}
 \end{figure}
 
 % Any discussion here
 \subsection{Test Sheets}
 
-As there will be quite a few tests performed during the project, and it is important to note times and locations of each test, a test sheet has been created using LibreOffice Calc. An example of a test sheet is found in Appendix \ref{app:testsheet} \\
+As there will be several tests performed during the project, and it is important to note times and locations of each test, a test sheet has been created using LibreOffice Calc. An example of a test sheet is found in Appendix \ref{app:testsheet} \\
 
-Each test will have the following:
+Each test sheet will have the following:
 
 \begin{description}
 \item[Test ID] Each test gets a unique ID number. 
@@ -1070,8 +1065,7 @@ This is used to correlate delay spread with network activity.
 
 
 All of the test sheets will not be shown in this report, but the information has been compiled into a summary test sheet.
-The summary sheet will include the Test name, date, directory, and start and end times of the tests. 
-This will show up later in the report, in Appendix \ref{app:SummaryTestSheet}. 
+The summary sheet (Appendix \ref{app:SummaryTestSheet})will include the Test name, date, directory, and start and end times of the tests. 
 
 \subsection{Testing Schedule}
 
@@ -1089,7 +1083,7 @@ The tests that are to be completed will include:
 An explicit testing schedule has not been produced, but the full list of tests that would like to be completed have been listed below. 
 Instead there are week blocks allocated in the gantt chart for data collection, and tests will be carried out throughout that time.\\
 
-The following tests that have been identifed as important tests to run have been included in the table below.
+The following tests that have been identified as important tests to run have been included in the table below.
 
 \begin{table}[H]
 \caption{Some Tests to Run}
@@ -1107,13 +1101,13 @@ Any other tests may also be performed, including but not limited to: different g
 \subsection{Data Processing}
 
 The final section of this part of the project consisted of initially processing the data that is gathered from the various clocks mentioned above.
-This is important because certain parts of the data is only needed for certain metrics and can thus be reduced to reduce the overall memory usage for the scripts.
+This is important because certain parts of the data is only needed for certain metrics and can thus be reduced to reduce the overall memory usage of the scripts.
 
 \subsubsection{Example Data File}
 
 An example file output for the PTPd implementation which is run on the majority of the clocks is shown below in Figure \ref{FileOutput}.  
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{Figures/Screenshots/ExampleData.eps}
 \caption{Example of the File Output}
@@ -1131,7 +1125,8 @@ The time is displayed in an HH:MM:SS.\#\#\#\#\#\# type format, with the hashes d
 \item[Offset from Master] This is the difference between the master clock timestamp and the current slave clock timestamp.
 \item[Slave to Master] This is the propagation delay from Slave to Master. 
 \item[Master to Slave] This is the propagation delay from Master to Slave. 
-\item[Drift]
+\item[Drift] This refers to the drift of the slave clock relative to the grandmaster. 
+It is unclear exactly what this number is though since it is an integer. 
 \item[Last Packet Received] This is a single character which is the type of packet received. 
 For example, S is a sync packet, and D is a delay packet.
 \end{description}
@@ -1142,14 +1137,14 @@ It can be seen that depending on what calculation is performed, there is quite a
 Assuming that there will be 32 of these messages every second, the RAM requirement will be high if a long test was performed.
 Therefore it was decided to create a script that would parse this data into a correct form for use later on.
 Even with the data parsed, there may be too many data points. 
-Thus a method to average the data by an arbitary value will also be added into this script.
+Thus a method to average the data by an arbitary value will also be added into this script.\\
 
-Because this was a preprocessing step, it is important to try and keep the execution time of this script to as low as possible. 
-Due to the script having to operate on a line by line basis, it was decided to use the scripting language Awk \cite{awk}.
+Because this was a preprocessing step, it is important to try and keep the execution time of this script as low as possible. 
+Due to the script having to operate on a line by line basis, it was decided to use the scripting language Awk \cite{awk}.\\
 
 Awk has several advantages over other similar tools, but its main strength is that it is a very useful and efficient tool in parsing rows and columns of log files\cite{awkAdvantages}.
 It can perform operations on a line by line basis, or when certain conditions are met (for example every N lines, or at the start and end of the file). 
-Because it's used for file parsing, it has a built in regular expression engine which is handy for string manipulations. 
+Because it is used for file parsing, it has a built in regular expression engine which is handy for string manipulations. 
 Its simple structure makes it a suitable tool for the job. 
 It was also identifed to be a useful tool to know in the future, and thus it was decided to use awk for this part of the project.\\
 
@@ -1157,7 +1152,7 @@ It was also identifed to be a useful tool to know in the future, and thus it was
 
 The script needs to be able to: read in the text file, save the correct columns to a new file.
 If appropriate the script should also average N number of data points and save these to the new input file instead.
-The time field must also be parsed correctly and the time delta added to the new file. 
+The time field must also be parsed correctly and the time delta added to the new file. \\
 
 The general script layout has been converted to a flow chart, see below Figure \ref{FC:AwkScript}.
 \begin{figure}[H]
@@ -1173,7 +1168,7 @@ The general script layout has been converted to a flow chart, see below Figure \
 	\node [block, right of=inccount] (calctime) {Calculate the time delta};
 	\node [block, right of=calctime] (print) {Print time delta and delay data};
 	\node [block, right of=print] (reset) {Set variables to 0};
-	\node [block, south of=NR3] (finish) {End};
+	\node [block, down of=everyline] (finish) {End};
 
 
     % Draw edges
@@ -1185,31 +1180,33 @@ The general script layout has been converted to a flow chart, see below Figure \
 	\path[line] (inccount) -- (calctime);
 	\path[line] (calctime) -- (print);
 	\path[line] (print) -- (reset);
-	\draw[->] (reset.south) -| ($(reset.south)!0.5! (everyline.west)$) -| (everyline.west);
+	%\draw[->] (reset.south) -| ($(reset.south)!0.5! (everyline.west)$) -| (everyline.west);
+    \draw[->] (reset.south) -| everyline.west;
 	\draw[->] (NR3.north) -| ($(NR3.north)!0.5! (everyline.west)$) -| (everyline.west);
 
 
 \end{tikzpicture}
 \caption{Awk Script Flow Chart}
+\label{FC:AwkScript}
 \end{figure}
 
-This flowchart was then used to create the final awk script, shown in Appendix \ref{app:awkscript}. 
+This flowchart was then used to create the awk script, shown in Appendix \ref{app:awkscript}. 
 Most of the code is self documenting, but the $add\_time$ will be explained as that was part of the code that required some extra work to get working correctly.
 
-\paragraph{\textbf{$add\_time$} function}
+\paragraph{\textbf{add\_time} function}
 
 The role of this function was to amalgamate the times from the first sample to the Nth sample, with N being the size of the window.
 The main issue with this function was the formatting of the time itself as it was not either an ISO 8601 float nor in the correct format for an inbuilt function $mktime$ to be called.
 Therefore the following steps were performed to convert the time to the correct format. 
 
-\begin{description}
-\item [Regex] Before the function is called, a regular expression substitution is used to replace all colons with spaces and all dashes to spashes. This was important because the end goal is to convert the current time format into one seperate by spaces. 
-\item [Split Seconds portion by full stop] This step would parse the milliseconds away from the seconds.
-\item [Compare the delta times to see if one was bigger than the other] This was important so the correct sign of the delay was used.
-\item [Calculate delta] Convert time using mktime and take the differences between the delays to work out a delta. Return this difference.
-\end{description}
+\begin{enumerate}
+\item \textbf{Regex:} Before the function is called, a regular expression substitution is used to replace all colons with spaces and all dashes to spashes. This was important because the end goal is to convert the current time format into one seperate by spaces. 
+\item \textbf{Split Seconds portion by full stop:} This step would parse the milliseconds away from the seconds.
+\item \textbf{Compare the delta times to see if one was bigger than the other:} This was important so the correct sign of the delay was used.
+\item \textbf{Calculate delta:} This is used to determine the size of the time deltas.
+\end{enumerate}
 
-This set of code was tested quite thoroughly to make sure all of the cases were covered, but this was not fully documented.
+This script was tested quite thoroughly to make sure all of the cases were covered, but this was not fully documented.
  
 \paragraph{Conclusion to the Script}
 
@@ -1238,34 +1235,25 @@ Based on the table above, the script is suitable enough considering that this wi
 This section of the project is the bulk of the programming development.
 Packet metrics will be created in a suitable language and will be run against the data collected in the previous section.\\
 
-A range of packet metrics were chosen to be implemented from the report detailed in the literature review section of this report. The following packet metrics will be implemented:
-
-\begin{itemize}
-\item TDEV
-\item minTDEV
-\item percentileTDEV
-\item bandTDEV
-\item MATIE
-\item MAFE 
-\end{itemize}
-
+A range of packet metrics were chosen to be implemented from the report detailed in the literature review section of this report. 
+The following packet metrics will be implemented: TDEV, minTDEV, percentileTDEV, bandTDEV, MATIE, and MAFE. 
 Note that both MATIE and MAFE can have different packet selection methods (min, percentile, or band), so there may be more than the above implemented in the final script. 
-\subsection{Choosing a suitable language}
+
+\subsection{Choosing a Suitable Language}
 
 The first decision to make for this section of the project was to choose a suitable programming language. 
 Based on the languages that would be suitable for a task such as this, the following languages were identified: R, C, Matlab, or Python. \\
 
 The requirements that the language must meet in order to be suitable for the project are listed below.\\
 
-Note that parts of this section has been copied from the Individual Technical Report for the Third Year Group Business and Design Project as there are some parts that are applicable. 
-
 \begin{description}
 \item[REQ1- Familiarity with the Language] \hfill \\ \textit{Spec: Used for a sufficient length of time} \\ If the language was very familiar the development time of the scripts would be quicker. 
 This extra time may be acceptable however if there is a much better language ssuited for the task. 
 \item[REQ2 - Well Documented] \hfill \\ \textit{Spec: Not Applicable} \\ The majority of modern high level languages are well documented, with some online resources better than others. 
-The language must be well documented so \textbf{[REQ7]} can be met. 
+The language must be well documented. 
 This will also make it easier if \textbf{[REQ1]} has not been met fully as it would be easier to learn the language with good documentation. 
-\item[REQ3 - Plotting Functionality] \hfill \\ \textit{Spec: Sufficient plotting functionality available} \\ Does the language support complex plotting as standard or are external libraries required?
+\item[REQ3 - Plotting Functionality] \hfill \\ \textit{Spec: Sufficient plotting functionality available to meet the task} \\ 
+The language must have enough functionality to be able to plot the data gathered in several different forms. 
 \item[REQ4 - External libraries already available] \hfill \\ \textit{Spec: All available} \\ Some external libraries may be needed in case some specific functionality is required. Examples of external libraries that will be required are a command line argument tool and logging functionality.  
 \item[REQ5 - Speed] \hfill \\ \textit{Spec: Performs the metrics in a reasonable length of time} \\ The metrics should be able to run on a relatively large dataset in a reasonable length of time.
 As it is unknown how long the scripts will take, this reasonable length of time will be decided later.
@@ -1283,8 +1271,8 @@ The table below shows the criteria that the above languages were compared agains
 Familiarity with the Language & Is the engineer familiar with the language syntax and style? & \textbf{[REQ1]} & 9 & Developed a few large projects. & No familiarity \\ \hline
 Plotting functionality & What plotting functionality is available for the language& \textbf{[REQ3]}& 8 & Lots of plotting functionality & All plotting functions would need to be written from scratch \\ \hline
 External Libraries available & Are all of the libraries available to complete the project? & \textbf{[REQ4]} & 7 & All of the required libraries are available. & Minimal library support. \\ \hline
-Speed & Is the chosen language going to be fast enough for the application? & \textbf{[REQ5]} & 6 & Fast enough. & Not fast at all. Needs careful programming to make as efficient as possible. \\ \hline
-Linux Compatibility & Is the language compatible in a linux development environment?  & \textbf{[REQ6]} & 6 & Yes, it is compatible. & No. Windows Only \\ \hline
+Speed & Is the chosen language going to be fast enough for the application? & \textbf{[REQ5]} & 7 & Fast enough. & Not fast at all. Needs careful programming to make as efficient as possible. \\ \hline
+Linux Compatibility & Is the language compatible in a linux development environment?  & \textbf{[REQ6]} & 7 & Yes, it is compatible. & No. Windows Only \\ \hline
 Development Time & How long would it take to develop the first program & \textbf{None} & 7 & Less than a month & Longer than 3 months \\ \hline
  Documentation & Is the language mature enough to have a full set of documentation? & \textbf{[REQ2]} & 6 & Yes. The language has clear and concise for all of the documentation. & Very limited. \\ \hline
 \end{tabular}
@@ -1299,14 +1287,14 @@ Development Time & How long would it take to develop the first program & \textbf
 \multicolumn{5}{|l|}{\cellcolor{black}\textcolor{white}{\textbf{Programming Language}}} \\ \hline
 \multirow{2}{*}{Ranking Criteria} & \multirow{2}{*}{Weight} & \multicolumn{3}{|c|}{Language} \\ \cline{3-5}
 & & R & Matlab & C \\ \hhline{*{5}{|-}}
-Familiarity with the Language & 9 & \cellcolor{OrangeRed}{18} & \cellcolor{Goldenrod}{36} & \cellcolor{ForestGreen}{45} \\ \hhline{*{5}{|-}}
+Familiarity with the Language & 9 & \cellcolor{OrangeRed}{9} & \cellcolor{Goldenrod}{36} & \cellcolor{ForestGreen}{45} \\ \hhline{*{5}{|-}}
 Plotting Functionality & 8 & \cellcolor{ForestGreen}{40} & \cellcolor{Goldenrod}{32} & \cellcolor{Red}{0} \\ \hhline{*{5}{|-}}
-External Libraries Available  & 7 & \cellcolor{ForestGreen}{28} & \cellcolor{Goldenrod}{21} & \cellcolor{Orange}{14} \\ \hhline{*{5}{|-}}
+External Libraries Available  & 7 & \cellcolor{ForestGreen}{35} & \cellcolor{Goldenrod}{21} & \cellcolor{Orange}{14} \\ \hhline{*{5}{|-}}
 Speed & 7 & \cellcolor{Orange}{14} & \cellcolor{Orange}{14} & \cellcolor{ForestGreen}{35} \\ \hhline{*{5}{|-}}
 Linux Compatibility  & 7 & \cellcolor{ForestGreen}{35} & \cellcolor{Goldenrod}{21} & \cellcolor{ForestGreen}{35} \\ \hhline{*{5}{|-}}
 Development Time & 7 & \cellcolor{Orange}{21} & \cellcolor{ForestGreen}{28} & \cellcolor{OrangeRed}{14} \\  \hhline{*{5}{|-}}
-Documentation & 6 & \cellcolor{ForestGreen}{24} & \cellcolor{ForestGreen}{24} & \cellcolor{Orange}{12} \\ \hhline{*{5}{|=}}
-\multicolumn{2}{|r|}{\textbf{Total Figure of Merit}} & \cellcolor{ForestGreen}{\textbf{180}} & 176 & 195 \\ \hhline{*{5}{|-}}
+Documentation & 6 & \cellcolor{ForestGreen}{30} & \cellcolor{ForestGreen}{24} & \cellcolor{Orange}{12} \\ \hhline{*{5}{|=}}
+\multicolumn{2}{|r|}{\textbf{Total Figure of Merit}} & \cellcolor{ForestGreen}{\textbf{184}} & 176 & 155 \\ \hhline{*{5}{|-}}
 \end{tabular}
 \end{table}
 
@@ -1316,8 +1304,8 @@ In addition to this there are some R scripts as part of the PTPd which may also 
 R is a programming language that used primarily for statistical computing. 
 It is similar to the S programming language but under the \ac{GNU} umbrella.
 R has many strengths in statistics due to the wide range of libraries available to it.
-In addition to this it has extensive plotting functionality, both as standard and those written by thir parties.
-For computationally difficult tasks functions can also be ported into C, C++ or Fortran.\\
+In addition to this it has extensive plotting functionality, both as standard and those written by third parties.
+For computationally difficult tasks functions can also be ported into C, C++, or Fortran.\\
 
 The development environment used for this project will be between a Linux Mint netbook and a virtual machine running Debian.
 A standard text editor (vim) and R will be used to run the scripts, rather than using a full \ac{IDE} such as R-Studio.
@@ -1326,9 +1314,9 @@ Note that the code will be written so it can run cross platform, provided that t
 \subsection{General Packet Metric Implementation}
 
 The packet metric literature review section of this report ( Section \ref{metricReview}) outlines the equations used to calculate the metrics.
-It can be seen from these different metrics that there is a common format for all of them, and thus this will be exploited where possible.\\
+It can be seen from these different metrics that there is a common format for all of them, and this will be exploited where possible.\\
 
-Therefore each of the packet types will be performed in the smallest number of for loops as possible to cut down on execution time.
+Each of the packet types will be performed in the smallest number of for loops as possible to cut down on execution time.
 The general format for the packet metric script in a flowchart is the following (Figure \ref{flowchart:General})
 
 \begin{figure}[H]
@@ -1361,7 +1349,7 @@ The general format for the packet metric script in a flowchart is the following 
 \caption{General Packet Metric Flowchart}
 \end{figure}
 
-The flow chart above has been converted into psuedo code, seen below.
+The flow chart above has been converted into psuedo code, seen below.\\
 
 \begin{algorithm}[H]
 \SetKwFunction{TDEV}{TDEVAllMethods}%
@@ -1374,13 +1362,13 @@ Initialise all required variables to 0\;
 \For (Loop from 1 to the end of the summation) {1 to end of summation}{
 Set inner step value to 0\\
 Calculate Metric;\\
-interimStep = interimStep \^2\\
+interimStep = interimStep * interimStep\\
 result += interimStep\\
 }
-result /= (6 * N - (3*n) + 1)
-result = sqrt(result)
+result = result / (6 * N - (3*n) + 1) \\
+result = sqrt(result)\\
 return(result)
-}
+}\\
 \caption{Psuedo-Code for General Packet Metric Script}
 \end{algorithm}
 
@@ -1392,13 +1380,13 @@ This limit is determined by the particular metric and has been discussed in the 
 Because the TDEV and MATIE packet metrics have different looping conditions, they will be created in two seperate scripts, as discussed in the later sections. 
 \subsection{TDEV and TDEV derivatives}
 
-Using the above flow chart as a base for the script, the TDEV and TDEV derivative functions were created.
-As mentioned previously, all of the TDEV scripts will be created in one source file in R. \\
+Using the above flow chart as a base for the script, the TDEV and derivative functions were created.
+All of the TDEV scripts will be created in one source file in R. \\
 
-The four metrics that will be implemented were: TDEV, minTDEV, bandMeanTDEV and percentileTDEV. 
+The four metrics that will be implemented were: TDEV, MinTDEV, BandMeanTDEV and PercentileTDEV. 
 
 \begin{description}
-\item [TDEV] The TDEV script requires means to be taken of the individual slices.
+\item [TDEV] The TDEV script requires that mean values are taken of each individual window. 
 As there is a built in mean function to R, this will be used.
 Optimisation of this mean algorithm will not be looked into.
 \item [minTDEV] Same as above, as a minimum function exists in R, this function will not be written directly. 
@@ -1409,7 +1397,7 @@ As this function does not exist in R, this would have to be created.\\
 The bandMean implementation can be found below, in Code Listing \ref{code:bandMean}. 
 This can also be found in Appendix \ref{app:bandMean}.
 
-\lstinputlisting[caption=Band Mean Implementation, label = code:bandMean, language=R]{../PacketMetrics/bandMean.r}
+\lstinputlisting[caption=Band Mean Implementation, label=code:bandMean, language=R]{../PacketMetrics/bandMean.r}
 
 The script converts the bands $a$ and $b$ into an integer. 
 If the window size was 5, and $a$ was 0 and $b$ was 100 (i.e the total window size), then a would be 1 and b would be 5. 
@@ -1426,11 +1414,11 @@ See Appendix \ref{app:TDEVAll} for the full implementation of the script in R.
 
 \subsection{MATIE and MAFE derivatives}
 
-The MATIE and MAFE derivatives were created in a similar method to the TDEV scripts above, but the main difference is that both for loops have different upper bounds, hence why a different script needed to be created.
-The following MATIE and MAFE packet metrics were used: MATIE, minMATIE, MAFE, and minMAFE. 
+The MATIE and MAFE derivatives were created in a similar method to the TDEV scripts above, but the main difference is both for loops have different upper bounds, hence why a different script needed to be created.
+The following MATIE and MAFE packet metrics were used: MATIE, MinMATIE, MAFE, and MinMAFE. 
 
 \begin{description}
-\item[MATIE] MATIE is implemented in a similar fashion to TDEV, using the built in mean function.
+\item[MATIE] This is implemented in a similar fashion to TDEV, using the built in mean function.
 \item[minMATIE] The built in minimum function was used for this metric, in a similar method to the minTDEV script.
 \item[MAFE] As described previously, MAFE is very similar to MATIE but there's a scaling value. 
 Therefore only 2 values will be produced in this function, then MAFE will be calculated at the end before the values are returned. 
@@ -1457,6 +1445,7 @@ The logs may also be saved to a text file if needed.
 
 The general layout of the script will be discussed, then each relevant function will then be discussed in turn. 
 The flow chart for this script can be seen below, in Figure \ref{flowchart:overall}. 
+With the following flowchart, there are some decisions to be made on what libraries to use and how to go about implementing certain functions.
 
 \begin{figure}
 \centering
@@ -1492,7 +1481,6 @@ The flow chart for this script can be seen below, in Figure \ref{flowchart:overa
 \label{flowchart:overall}
 \end{figure}
 
-With the following flowchart, there are some decisions to be made on what libraries to use and how to go about implementing certain functions.
 \subsubsection{Input Arguments}
 
 It was intended for this packet metric script to be fairly comprehensive. 
@@ -1501,7 +1489,7 @@ The input argument functionality for R is similar in some respects with C: it on
 It would be better to use a more substantial input argument library such that optional flags can also be used.\\
 
 Argparse \cite{argparse}, a library originally written for Python but ported to R, was the most suitable choice. 
-It has numerous useful features including: generates a help command automatically, optional flags, and argument parsing to a data structure.\\
+It has numerous useful features such as it generates a help command automatically and allows for the use of optional flags.\\
 
 The next decision would be to see what arguments would be required. 
 The following table outlines what arguments were used.
@@ -1547,7 +1535,7 @@ The following flowchart explains the logic that the parsing argument function go
 \node[decision,right of =SSValid] (StartNot0) {If Starting Point != 0};
 \node[block, south of =StartNot0] (SetStart) {Set Start Point};
 \node[decision,right of =StartNot0] (SampleSize) {All SampleSize Test?};
-\node[block, south of=SampleSize] (SetSize) {Set Size and Test Nunbers};
+\node[block, down of=SampleSize] (SetSize) {Set Size and Test Nunbers};
 \node[block, right of=SampleSize] (SetTest) {Set Tests to NTest};
 \node[block, right of=SetTest] (Stop) {Stop};
 
@@ -1568,8 +1556,8 @@ Similar with ArgParse, the logging library \cite{logging} was based off of the l
 The library is thread safe and has a number of different logging levels.
 One useful feature is that it can have multiple loggers which will direct output to the console and/or a text file depending on the level of the logging entry.\\
 
-The code extract below (Listing \ref{code:logging}) details the steps to initialise the logger.
-Once initialised a logger entry can be written using one of the functions detailed in the documentation \cite{logging}. 
+The code extract below (Code Extract \ref{code:logging}) details the steps to initialise the logger.
+Once initialised a logger entry can be written using one of the functions detailed in the documentation.
 
 \begin{lstlisting}[language=R, caption=Setting up Logger, label=code:logging]
 	if (args$verbose == TRUE) {
@@ -1613,15 +1601,11 @@ Run time and Memory & Info & Closing & Notifies the user what the run time and m
 \end{tabular}
 \end{table}
 
-\subsubsection{Overview}
-
-With all of the above, the script was then created.
-The final version can be found in Appendix \ref{app:mainScript}
 \subsection{Function Library}
 
 It was a much neater way to port most of the code into functions and save it into a seperate script.
 The implementation details of each of the functions will not be detailed in this section.
-Instead a short description of each function will be given, and where applicable some implementation details if they are important to highlight.\\
+Instead a short description of each function will be given.\\
 
 The following is the complete list of functions created.
 
@@ -1634,14 +1618,13 @@ This function is only called when the required file does not exist.
 \item[initLogger] \hfill \\ This function declares the logger based on a few command line arguments (verbose or quiet). 
 It also adds both a command line and a file logger to the object.
 \item [parseFileName]\hfill \\ parseFileName takes in 3 arguments: test number, directory, and the direction of delay (called column in this function). 
-Using the summary test sheet page stored in an .ODS file type, this function will grab the directory name based on the test number.
+Using the summary test sheet page stored in an .ODS file, this function will take the directory name based on the test number.
 Some checks will be made to determine whether the directory or test number is valid. 
 A list is then returned consisting of the fileName, the test number, the delay index and the test sheet object. 
-This is so the test sheet can be used later if necessary.
 \item [readFile] \hfill \\ This function attempts to read the file that the previous function had derived based on the input paramenters.
 If the file is not read successfully an error is thrown. 
 The runHead function is then called to create the correct file, and the file is read again.
-If a second error is thrown then the script quits with a non-zero error message.
+If a second error is thrown then the script quits with a non-zero return value.
 \item [readFileDirect] \hfill \\ Compared with the previous function, this once takes in a raw filename and will exit the script if it fails on the first time round.
 This function is only used when the user knows which file they want to parse.
 \item [purgeData] \hfill \\ Once the data has been written, it will be purged. 
@@ -1650,10 +1633,10 @@ Therefore an if statement is used to determine which file format it is in, then 
 \item [plotArray] \hfill \\ This function plots the metrics as a line graph. 
 It saves them in a postscript format, using the test number, metric type and the sample size in the file name.
 This function can plot $n$ number of plots with a different coloured line.
-\item [generateResultsArray] \hfill \\ This creates a much larger array called $result$ whicvh consists of all of the results. 
-This i sthen later used to output the results to particular formats.
-\item [outputTable] \hfill \\ This function will convert the results table generated by the previous function to a CSV file or a table in LaTeX if requested using the command line arguments. 
-The CSV file is created using a built in function called write.csv, whereas the LaTeX table is generated using a custom made function.
+\item [generateResultsArray] \hfill \\ This creates a much larger array called $result$ which consists of all of the results. 
+This is then later used to output the results to particular formats.
+\item [outputTable] \hfill \\ This function will convert the results table generated by the previous function to a CSV file or a table in \LaTeX if requested using the command line arguments. 
+The CSV file is created using a built in function called write.csv, whereas the \LaTeX table is generated using a custom made function.
 \item [calculateMetrics] \hfill \\ The different packet metrics are calculated in this function.
 Note that this is the final packet metric function and thus only contains the most recent changes. 
 The original design had two functions implemented in R, as detailed in a previous section.
@@ -1690,13 +1673,16 @@ The following table (Table \ref{table:unittesting} outlines the list of tests re
 \cellcolor{Black}\textcolor{White}{\textbf{Type of Test}} &
 \cellcolor{Black}\textcolor{White}{\textbf{Pass Value}} &
 \cellcolor{Black}\textcolor{White}{\textbf{Fail Value}} \\ \hline
+Sample Size Bounds & runHead & Integer Test & 0 < Value < Max & < 0 or > Max \\ \hline
+Sample Size Type & runHead & Type Test & Integer & Not Integer \\ \hline
+Arg Parser & createArguments & Library Exist & Library exists & Library does not exist \\ \hline
+Init Logger Logical & initLogger & Input & Set to correct mode & Throw error \\ \hline
+Init Logger Dir. not exist & initLogger & Directory & Successfully created & Throw error \\ \hline
+
 \end{tabular}
 \end{table}
 
-- Issues found when testing
-	+ very slow when running large data sets
-	+ explain that these sets of data need to be large (32 samples per second)
-
+The tests above are some of the tests performed on the functions detailed above. 
 \subsubsection{Runtime and Memory Requirements}
 
 As well as testing to ensure that the script meets the required functionality, it also needs to meet a requirements in that it needs to run in a reasonable amount of time within a suitable memory bound. 
@@ -1704,8 +1690,8 @@ Defining both of these was difficult as it was hard to predict ahead of time wha
 It was decided that time bound for a set of metric data would be \textbf{5 minutes} and the memory bounds work should be \textbf{1GB}.
 Note that this time refers to the entire script, but some tests may be performed on a per iteration basis.\\
 
-The script was run using the Example Data gathered before the project began.
-It was noted that there wouldn't be a significant time difference between the data sets provided that the length of it was kept the same.\\
+The script was run using the example data gathered before the project began.
+It was noted that there would not be a significant time difference between the data sets provided that the length of it was kept the same.\\
 
 There are profiling tools available to R, including Rprof \cite{Rprof}, but the simplest method to profile the speed of the script is to 
 record the time when the script is loaded, then record the new time once it has finished.
@@ -1722,8 +1708,8 @@ An example output can be shown below, Figure \ref{fig:exampleMem}.
 \label{fig:exampleMem}
 \end{figure}
 
-The following table (Table \ref{table:runtimeMem}outlines both the runtime and memory requirements for a number of different sample sizes.
-All of these tests were performed on the same computer (Netbook). 
+The following table (Table \ref{table:runtimeMem}) outlines both the runtime and memory requirements for a number of different sample sizes.
+All of these tests were performed on the same computer. 
 \begin{table}[H]
 \centering
 \caption{Runtime and Memory Requirements for ExampleData}
@@ -1756,8 +1742,8 @@ The data has been plotted in Figure \ref{fig:runmemorig} below.
 	\caption{Memory Requirements}
 	\label{fig:memorig}
 \end{subfigure}
-\label{fig:runmemorig}
 \caption{Runtime and Memory Requirements for Example Data}
+\label{fig:runmemorig}
 \end{figure}
 \end{comment}
 %Discussion on the above
@@ -1771,9 +1757,9 @@ It was fairly clear where the slow part of the script lies from the data gathere
 section.\\
 
 The metric calculation (per iteration) took much longer than previously anticipated.
-The calculation involves a single for loop of unknown length, but the length varies on the sample size.\\
+The calculation involves a single for loop of different length, but the length varies on the sample size.\\
 
-The following were ideas of ways to be able to speed up this process.
+The following were a few ideas to speed up this process.
 
 \begin{description}
 \item[Use Existing Data] If possible, only incremental calculations can be made on successive iterations, thus cutting out the number of loops required. 
@@ -1784,10 +1770,8 @@ data were taken.
 This means that it would not be possible to use this method to speed up the operation.
 \item[Vectorise] The  second possible method would be to vectorise the solution. 
 Similar with Matlab, R can be slow with iterative methods and excels at vector operations.
-The function would speed up significantly if a vectorised method was possible.\\
-
-Some time was spent trying to vectorise the above functions.
-But due to the use of the built in functions $mean$, $min$ and $bandMean$, there doesn't seem like an obvious way in going about this.
+The function would speed up significantly if a vectorised method was possible.
+But due to the use of the built in functions $mean$, $min$ and $bandMean$, there is not an obvious way in going about this.
 Therefore this method would not be suitable. 
 \item[Port to a lower level language] The final method involves porting the for loop into a more lower level language, such as C or Fortran.
 This would enable the inner part of the for loop to be executed much quicker which would decrease the time of execution.
@@ -1795,7 +1779,6 @@ This would enable the inner part of the for loop to be executed much quicker whi
 
 Based on the above, C was chosen to implement the inner loops for both TDEV and MATIEMAFEAllMethod R files. 
 The code was directly ported into C from R, but some extra work was required due to C not having the ability to slice arrays.
-Therefore the code looks longer than before, but that's because the window needs to be iterated over. \\
 
 The amended code in C can be found in Appendix \ref{app:TDEVAllC} for the TDEV method in C and \ref{app:MATIEAllC} for the MATIE/MAFE method. \\
 
@@ -1810,14 +1793,13 @@ A table below of the result differences between the C code and the R code have b
 
 The speed improvement from making these changes was more than three orders of magnitude. 
 The table below shows the speed improvements that porting the code to C has made.
-\begin{comment}
 
 \begin{table}[H]
 \caption{Speed Improvements from moving from R to C}
 \begin{tabular}{|l|l|l|l|l|l|} \hline
 \cellcolor{Black}\textcolor{White}{\textbf{Sample Size}} & \cellcolor{Black}\textcolor{White}{\textbf{TDEV R per iteration}} &
 \cellcolor{Black}\textcolor{White}{\textbf{TDEV C per iteration}} & \cellcolor{Black}\textcolor{White}{\textbf{TDEV R full script}} &
-\cellcolor{Black}\textcolor{White}{\textbf{TDEV C full script}} \hline
+\cellcolor{Black}\textcolor{White}{\textbf{TDEV C full script}} \\ \hline
 50 & & 4 & & 544 \\ \hline
 100 & & 4 & & 644 \\ \hline
 500 & & 4 & & 1640\\ \hline
@@ -1826,15 +1808,13 @@ The table below shows the speed improvements that porting the code to C has made
 10000 & & 150 & & 706584 \\ \hline
 \end{tabular}
 \end{table}
-\end{comment}
 
 \section{Analysis Methods}
 
 \subsection{Overview}
 
 This section details the analysis methods used on the data gathered. 
-This will include the different plotting types used as well as any other relavent statistics.\\
-
+This will include the different plotting types used as well as any other relevant statistics.
 There are three ways that the data could be displayed or handled to be able to draw conclusions from them.
 These have been identified to be:
 
@@ -1842,7 +1822,6 @@ These have been identified to be:
 \item[Tables] Tables would be the first method to display the data as the raw data can be added to the table.
 The problem is that it is difficult to infer trends from a large data set, and thus would not be a suitable method for this application.
 Note however that it may be a good method to take a snapshot of the data and be able to determine some characteristics of the data.
-This can still be derived from a plot though.
 \item[Statistics] The second way to process the data is to use some basic statistics in a tabulated form. 
 This allows it to be possible to quite quickly compare sets of data between each other, but it makes it difficult to be able to look within a set of data.
 Each of the statistic types will be computed using inbuilt functions where possible. 
@@ -1855,7 +1834,9 @@ Each of these will be used for a different set of data, and will be discussed be
 
 \subsection{Plot Types}
 
-The types of plot types that will be used are:
+In order to best display and process the data gathered, several plots need to be created.
+It is important as to what plot types are used as it can affect the conclusions drawn from them.
+The plots detailed below were the ones chosen for this project.
 
 \subsubsection{Scatter Plots}
 Scatter plots will be the first type of plot used, mainly on the raw delay data. 
@@ -1865,13 +1846,13 @@ Figure \ref{scatterExample:R} is one created using an R script, and the second i
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}{0.5\textwidth}
+\begin{subfigure}[b]{0.5\textwidth}
 	\centering
 	\includegraphics[scale=0.25,angle=270]{Figures/ScatterExampleR.eps}
 	\caption{Scatter Plot Example in R}
 	\label{scatterExample:R}
 \end{subfigure}%
-\begin{subfigure}{0.5\textwidth}
+\begin{subfigure}[b]{0.5\textwidth}
 	\centering
 	\includegraphics[scale=0.5]{Figures/ScatterExampleSync.eps}
 	\caption{Scatter Plot Example in Syncwatch Lab}
@@ -1891,13 +1872,13 @@ This is another method of displaying the same data as before, but it is more rel
 The figure below (Figure \ref{histogramExample} shows the two examples of histogram that will be used.
 \begin{figure}[H]
 \centering
-\begin{subfigure}{0.5\textwidth}
+\begin{subfigure}[b]{0.5\textwidth}
 	\centering
 	\includegraphics[scale=0.25, angle = 270]{Figures/HistogramExampleR.eps}
 	\caption{Histogram Plot Example in R}
 	\label{histogramExample:R}
 \end{subfigure}%
-\begin{subfigure}{0.5\textwidth}
+\begin{subfigure}[b]{0.5\textwidth}
 	\centering
     \includegraphics[scale=0.5]{Figures/HistogramExampleSync.eps}
 	\caption{Histogram Plot Example in Syncwatch Lab}
@@ -1925,26 +1906,16 @@ This is a very pictorial way in showing changes in delay across a set of data.
 
 \subsubsection{Line Graphs}
 
-The final method of plotting the data will plot the metric data for both TDEV and minTDEV.
+The final method of plotting the data will plot the metric data for both TDEV and MinTDEV.
 As it is difficult to determine how this data should be plotted, a set of simple line graphs will be produced initially.
 If a further plot type is required this will be highlighted in the results section. 
 
 Two plot examples for a line graph are shown below, in Figure \ref{lineExample}.
 \begin{figure}[H]
-\begin{subfigure}{\textwidth}
 	\centering
 	\includegraphics[scale=0.3,angle=270]{Figures/LineExampleR.eps}
 	\caption{Line Graph Example in R}
 	\label{histogramExample:R}
-\end{subfigure}%
-\begin{subfigure}{\textwidth}
-	\centering
-%	\includegraphics[scale=0.5]{Figures/LineExampleSync.eps}
-	\caption{Line Plot Example in Syncwatch Lab}
-	\label{histogramExample:Sync}
-\end{subfigure}
-\label{histogramExample}
-\caption{Line PlotExamples}
 \end{figure}
 
 
@@ -1958,16 +1929,7 @@ The implementations of the plotting functions will not be explained in much deta
 
 This section will detail the results gathered from the above metrics as well as the other testing that was performed.
 The summary table of all of the tests performed can be found in Appendix \ref{app:testsummary}. 
-The following elements of PTP will be investigated using these results:
-
-\begin{itemize}
-\item Long Term Grandmaster Drift
-\item Delay Distribution
-\item Delay anomalies
-\item Metric Results
-\item Master to Slave vs Slave to Master
-\item Comparing times of Day / locations
-\end{itemize}
+The following elements of PTP will be investigated using these results: Long Term Grandmaster Drift, Delay Distribution, Delay anomalies, Metric Results, Master to Slave vs Slave to Master amd Comparing times of Day / locations. 
 
 \subsection{Long Term Grandmaster Drift}
 
@@ -1975,9 +1937,11 @@ The first set of results gathered was measuring the long term drift of the Chron
 The clock used to compare it is a Rubidium oscillator.
 The full specification sheet \cite{Rubidium} has been summarised in a tabular form in Appendix \ref{rubidium}.
 
-%Explanation about the clock above
-
+The Rubidium clock used is a  Rubidium Frequency Standard FS725 made by \ac{SRS}.
+It integrates a rubidium oscillator (model PRS10) with an AC power supply and distribution amplifiers.
+It is a very stable oscillator with anticipated aging of less than 5x10-9 over a period of 20 years.
 A photo of the Rubidium clock used can be seen below, Figure \ref{fig:rubidium}. 
+The datasheet is referenced here on the \ac{SRS} website \cite{rubidium}. 
 
 \begin{figure}[H]
 \centering
@@ -1985,6 +1949,14 @@ A photo of the Rubidium clock used can be seen below, Figure \ref{fig:rubidium}.
 \label{fig:rubidium}
 :\caption{Rubidium Clock}
 \end{figure}
+
+The grandmaster clock (the Chronos TimePort) was compared with the Rubidium clock mentioned above, and this difference was plotted using the Alan Deviation.
+
+%Explanation on TimeLab
+%Explanation on the Counter
+%Explanation on results
+
+%---- Will look at the above on Monday -----
 
 \subsection{Delay Distribution}
 
@@ -2001,11 +1973,12 @@ The time that these results were taken was unknown, but this will be used as a b
 
 The first thing to note is that this has been taken at the start of the data set, and thus that is why there is a large delay that slowly tails off. 
 After around 1800 samples (which is about a minute), the delays have stabilised. 
+The important part of the results is this stabilised region and its overall spread. 
 This same distribution can be seen throughout the data sets collected, with a sample of them shown in the multi figure below.\\
 
 %There was a set of results (from Test 1 to Test \#) that were using the TimePort when it was in freewheeling mode.
 
-
+%Look through all results. find some interesting stuff.
 
 \begin{figure}[H]
 \centering
@@ -2030,7 +2003,7 @@ This same distribution can be seen throughout the data sets collected, with a sa
 	\label{delay:test9}
 	\caption{Delay Plot - Test 9}
 \end{subfigure}
-\label{Example of Delay Plots}
+\caption{Example of Delay Plots}
 \end{figure}
 
 Notice that there are some differences between these four examples.
@@ -2039,6 +2012,145 @@ The reason for the high values of delays in some of these tests were due to the 
 
 One interesting point to note however is with Test 7. 
 The delay spread look initially a wide spread, but this is because as the scale has automatically changed, the total delay spread is actually much less in this case.
+
+\subsubsection{Delays During the Test}
+The delay plots above have been taken from the first 10000 samples of the test. 
+The next set of plots will show the same tests covered above but further on in the data set. 
+The data sets have been calculated 10000 samples in from the end of the data set.  \\
+
+Same as before, the first figure below is with the example data set. 
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test0/DelayPlotMid.eps}
+\caption{Example Data Set Mid Delay Plot}
+\label{Test0DelayMid}
+\end{figure}
+
+Note that the delay has reached its steady state point and the delay variations around the median are due to errors. 
+The delay is mainly around 10 \mu s, but has peaks of up to 200\mu s. 
+The noise distribution seems to be fairly uniform with no clear discrete noise sources causing these delays.
+The same tests as in the previous section have been added below, in Figure \ref{delaymidPlots} 
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3, angle=270]{Figures/FinalResults/Test2/DelayPlotMid.eps}
+	\label{delay:test2mid}
+	\caption{Delay Plot Mid Set - Test 2}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test6/DelayPlotMid.eps}
+	\label{delay:test6mid}
+	\caption{Delay Plot Mid Set  - Test 6}
+\end{subfigure}
+
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test7/DelayPlotMid.eps}
+	\label{delay:test7mid}
+	\caption{Delay Plot Mid Set - Test 7}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test9/DelayPlotMid.eps}
+	\label{delay:test9mid}
+	\caption{Delay Plot Mid Set - Test 9}
+\end{subfigure}
+\caption{Example of Delay Mid Plots}
+\label{delaymidPlots}
+\end{figure}
+
+Discussion on the above
+\subsubsection{Irregular Delay Magnitudes}
+
+A second observation was made with the Syncwatch Plots. 
+See Figure \ref{Syncwatch:normal}, which shows the delay profile in steady state.
+As expected the delay is relatively static with some noise over the top.
+This is in contrast to Figure \ref{Syncwatch:strange}, where it seems like there are discrete delay variations surrounding the mean value.\\
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.5\textwidth}
+    \includegraphics[scale=0.5]{Figures/FinalResults/SyncwatchNormal.eps}
+    \caption{Syncwatch Plot Normal}
+    \label{Syncwatch:normal}
+\end{subfigure}%
+\begin{subfigure}[b]{0.5\textwidth}
+    \includegraphics[scale=0.5]{Figures/FinalResults/SyncwatchStrange.eps}
+    \caption{Syncwatch Plot Abnormal}
+    \label{Syncwatch:strange}
+\end{subfigure}%
+
+It can be seen in Figure \ref{Syncwatch:strange} that there are around three discrete delay values with a couple of other noise peaks. 
+This was very interesting when you compare it to the data discussed in the previous section where there was a clear spread of delay values without seeing any discreteness.
+
+Throughout the data collection phase of the project several occurences of a very high delay peak was recorded.
+A screenshot (Figure \ref{packetdata}) of some general test statistics is shown below for the main Syncwatch test.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figures/packetData.eps}
+\caption{General Packet Data for the Syncwatch Test}
+\label{packetdata}
+\end{figure}
+
+The figure above shows that the maximum packet delay value was over 25ms. 
+This is clearly an extremely high packet data considering the test was only set up going through 7 switches.
+This packet delay variation is therefore very interesting to note when PTP is run on a typical Ethernet network. \\
+
+Referring back to Figure \ref{Syncwatch:strange}, it was not easy to determine what cases this occurred. 
+The day which this was most noticeable coincided with a few network engineers working on a network cabinet downstairs on Level 2, but it was not conclusive whether these two events were related or just a coincidence.
+In addition to this it seemed as though if a slave clock running on a lab desktop machine was run in tandem with the Syncwatch test, this delay quantisation effect was reduced to almost nothing, and the delay looked like the normal figure in Figure \ref{Syncwatch:normal}. 
+Some reasons as to why this happens will be explored at the end of this report.
+
+\subsubsection{Histogram Distribution}
+
+Histograms have been used to be able to easily work out the histogram delay distribution.
+For example, the plot below is from the example data set.
+
+%----- Need more bins  ------
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figures/FinalResults/Test0/HistogramTest0Sample9996.eps}
+\caption{Histogram of Example Set}
+\label{Hist:example}
+\end{figure}
+
+%Explain the distribution.
+
+The delay distribution of some of the tests is shown below, Figure \ref{fig:histPlots}. 
+
+
+\begin{comment}
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3, angle=270]{Figures/FinalResults/Test2/HistPlot.eps}
+	\label{hist:test2}
+	\caption{Histogram Plot - Test 2}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test6/HistPlot.eps}
+	\label{hist:test6}
+	\caption{Histogram Plot - Test 6}
+\end{subfigure}
+
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test7/HistPlot.eps}
+	\label{hist:test7}
+	\caption{Histogram Plot - Test 7}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test9/HistPlot.eps}
+	\label{hist:test9}
+	\caption{Histogram Plot - Test 9}
+\end{subfigure}
+\label{Example of Delay Plots}
+\end{figure}
+\end{comment}
+
+%Explanation of the delay distribution.
+%Verify that it matches what is found in the other plots
 
 
 \subsection{Master to Slave vs Slave to Master}
@@ -2054,7 +2166,36 @@ The plot below (Figure \ref{delay:bothDir})is the Master to Slave and Slave to M
 \caption{Bi-directional delay for the example set of Data}
 \end{figure}
 
-%Comment on the results above
+%Pick only a few examples of these plots and explain them
+
+\begin{comment}
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3, angle=270]{Figures/FinalResults/Test2/HistPlot.eps}
+	\label{hist:test2}
+	\caption{Histogram Plot - Test 2}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test6/HistPlot.eps}
+	\label{hist:test6}
+	\caption{Histogram Plot - Test 6}
+\end{subfigure}
+
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test7/HistPlot.eps}
+	\label{hist:test7}
+	\caption{Histogram Plot - Test 7}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test9/HistPlot.eps}
+	\label{hist:test9}
+	\caption{Histogram Plot - Test 9}
+\end{subfigure}
+\label{Example of Delay Plots}
+\end{figure}
+\end{comment}
+Comment on the results above
 %Calculate some other plot types and carry on with the results
 
 \subsection{Comparing times of day}
@@ -2065,18 +2206,96 @@ The tests used for this will have the biggest difference associated with them.
 
 \begin{figure}[H]
 \centering
-%\includegraphics[scale=0.5]{Figures/FinalResults/...eps}
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.5]{Figures/FinalResults/Master2Slave.eps}
+    \caption{Master 2 Slave}
+    \label{Test0Normal}
+\end{subfigure}%
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.5]{Figures/FinalResults/Test0/Direction/Slave2Master.eps}
+    \caption{Slave to Master}
+    \label{Slave2Master}
+\end{subfigure}
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[scale=0.5]{Figures/FinalResults/Test0/Direction/Difference.eps}
 \label{timeOfDay}
-\caption{}
+\caption{Example Data Comparison between Directions}
 \end{figure}
+
+%Explanation of the delay differences being the same. 
+% Either have a set of plots to show the same thing, or maybe different ones if it is different
+
 
 \subsection{Metric Results}
 
-\section{Discussion}
+The next set of results calculated were using the packet metric scripts created in a previous section of this report.
+Same as before, the scripts were run using the Example test data first and some initial conclusions were drawn.
+The scripts then calculated both metrics and plotted them for all of the data sets collected. 
+The example data set metric plots can be seen below : Figures \ref{test0:TDEV} and \ref{test0:MATIE} for TDEV and minTDEV respectively. 
 
+\begin{figure}[H]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[scale=0.5]{Figures/FinalResults/Test0/TDEVPlot.eps}
+    \caption{Test 0 : TDEV Plot}
+    \label{test0:TDEV}
+\end{subfigure}%
+
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[scale=0.5]{Figures/FinalResults/Test0/MATIEMAFEPlot.eps}
+    \caption{Test 0: MATIE MAFE Plot}
+    \label{test0:MATIE}
+\end{subfigure}
+\caption{Example Data Metric Plots}
+\label{test0:metrics}
+\end{figure}
+%Explanation of these metrics briefly.
+
+%Read report regarding what these mean.
+
+\subsubsection{Test 1: Normal Conditions}
+
+The first test completed during the course of this project was Test 1. 
+Other repetitions of this test was also performed.
+The metric plots can be seen below: Figures \ref{test1:TDEV} and \ref{test1:MATIE}. 
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[scale=0.5]{Figures/FinalResults/Test1/TDEVPlot.eps}
+    \caption{Test 1 : TDEV Plot}
+    \label{test1:TDEV}
+\end{subfigure}%
+
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[scale=0.5]{Figures/FinalResults/Test1/MATIEMAFEPlot.eps}
+    \caption{Test 1: MATIE MAFE Plot}
+    \label{test:MATIE}
+\end{subfigure}
+\caption{Test 1 Metric Plots}
+\label{test0:metrics}
+\end{figure}
+
+
+
+\section{Discussion}
 \section{Challenges}
 \section{Milestones}
 \section{Conclusion}
+
+In conclusion the \ac{PTP} protocol was investigated successfully in a number of different ways.
+\ac{PTP} data was collected in a number of different locations throughout the university on several different clock configurations.
+This data was then analysed: both through looking at the raw delays and from the use of packet metric scripts.
+It was found that...
+Secure PTP was also looked into to see how PTP can be made more secure. 
+
 \section{Further Work}
 
 Due to the openness of the project, there is a number of additional tasks that could be completed to continue the investigation.
@@ -2092,8 +2311,9 @@ This would enable to better test the protocol in more common scenarios with the 
 \item[Verify Packet Metric Scripts against existing programs] Because there were no existing packet metric programs available to be used during this project, the scripts were not tested for validity. 
 The results looked correct hence why these were used for investigating \ac{PTP} performance. 
 Chronos has a packet metric software suite as an add on to the Syncwatch software  
-\item[Secure PTP]
-
+\item[Secure PTP] There has been some work done when describing Secure PTP (Section \ref{securePTP}), but if there was more time more work on this would have been investigated. 
+Some work into making a PTPd secure implementation would be looked at.
+In tandem with this a PTP network could be set up and attempts would be made to try and damage the network through its various attack vectors to demonstrate PTPs weaknesses. 
 \end{description}
 
 \section{Other Work}
@@ -2247,21 +2467,13 @@ The \ac{SA} is generated by the sender, and can be sent to all of the receivers,
 
 
 
-\section{Conclusion}
-
-In conclusion the \ac{PTP} protocol was investigated successfully in a number of different ways.
-\ac{PTP} data was collected in a number of different locations throughout the university on several different clock configurations.
-This data was then analysed: both through looking at the raw delays and from the use of packet metric scripts.
-It was found that...
-Secure PTP was also looked into to see how PTP can be made more secure. 
 %\section{Acknowledgements}
-\bibliographystyle{ieeetr}
 \bibliography{Bibliography}
 \begin{appendices}
 \section{Clock Accuracies}
 \label{clockaccuracies}
 \begin{table}[H]
-\label{Clock Accuracies}
+\caption{Clock Accuracies}
 \begin{tabular}{|c|c|c|c|c|} \hline
 \multirow{2}{*}{\cellcolor{Black}} & \multicolumn{1}{|c|}{\cellcolor{Black}\textcolor{White}{\textbf{Quartz Oscillators}}} & \multicolumn{3}{|c|}{\cellcolor{Black}\textcolor{White}{Atomic Oscillators}} \\ \hline
 & \textbf{OCXO} & \textbf{Rubidium} & \textbf{RbXO} & \textbf{Ceasium} \\ \hline
@@ -2276,10 +2488,10 @@ Secure PTP was also looked into to see how PTP can be made more secure.
 \end{tabular}
 \end{table}
 \section{Gantt Chart and Table}
-\label{ganttchart}
+\label{app:ganttchart}
 \begin{figure}[H]
 \centering
-%\includegraphics[scale=0.4]{Figures/GanttChart.eps}
+\includegraphics[scale=0.4]{Figures/GanttChart.eps}
 \caption{Gantt Chart}
 \end{figure}
 \begin{table}[H]
@@ -2311,6 +2523,7 @@ A & \textbf{Deliverables} & 72 & Mon 03/02/14 & Tues 13/05/14 & \\ \hline
 \end{table}
 
 \section{Chronos CTL4540 TimePort Specification}
+\label{app:TimePortSpec}
 \begin{table}
 \begin{tabular}{l l } \\
 \multirow{2}{\textbf{IPPS Holdover}} & 200 nanoseconds over 8 hours (\pm $10\,^{\circ}\mathrm{C}$ temp change)  \\ 
