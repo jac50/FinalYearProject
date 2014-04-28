@@ -67,7 +67,6 @@
 \newcommand{\degree}{\ensuremath{^\circ}}
 \renewcommand{\headrulewidth}{0pt} % remove the header rule
 \newcommand{\includecode}[2][c]{\lstinputlisting[caption=#2, escapechar=, style=custom#1]{#2}}
-\renewcommand*{\listlistingname}{List of XYZ}
  
 \addtolength{\voffset}{-1.5cm}
 \addtolength{\hoffset}{-1.3cm}
@@ -199,7 +198,8 @@ One way of realising this is by using a distributed timing system, such as \ac{N
 This would allow for nodes to be able to synchronise their clocks with a more accurate time source.
 
 \subsection{How the \acf{NTP} Works}
-\textit{This section has been taken from the Interim Report \cite{interimReport}and has been modified. Some sections however may be exact copies. }
+\textit{This section has been taken from the Interim Report \cite{interimReport}and has been modified. Some sections however may be exact copies.}\\
+
 This is a technology originally designed in 1985 and is used to synchronise clocks over a packet switched network. 
 It is able to achieve synchronisation with \ac{UTC} within a few milliseconds, but can maintain sub-millisecond accuracy on a \ac{LAN} if ideal conditions are met. 
 Errors due to different packet routes or network congestion can reduce this ~accuracy by 100ms or more \cite{NTPWhitePaper}.\\
@@ -529,6 +529,7 @@ From now on any equations quoted will be in this approximate form.
 TDEV(n\tau_0) \equiv \sqrt{\frac{1}{6(N - 3n + 1)}\sum\limits_{i=1}^{N - 3n + 1} [x(i+2n) - 2x(i+n) +  x(i)]^2]} \\
 
 for n = 1, 2, ... integer part (\frac{N}{3})
+
 \end{equation}
 
 The value in brackets next to $x$ denote the window that the particular selection method will be operating over. 
