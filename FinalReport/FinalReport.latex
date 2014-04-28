@@ -650,24 +650,11 @@ It also removes the requirement of relying on \ac{GPS}.\\
 
 \begin{figure}
 \centering
-\begin{subfigure}{\textwidth}
 	\centering
 	\includegraphics[scale=0.5]{Figures/TimePort.eps}
 	\label{TimePortOutside}
 	\caption{Chronos TimePort Outside}
-\end{subfigure}
 \end{figure}
-\begin{comment}
-\begin{subfigure}{\textwidth}
-	\centering
-%	\includegraphics{Figures/TimePortInside.eps}
-	\label{TimePortInside}
-	\caption{Chronos TimePort Inside Block Diagram}
-\end{subfigure}
-\label{TimePortDiagrams}
-\caption{Chronos TimePort Labelled Diagrams}
-\end{figure}
-\end{comment}
 The difference between the release TimePort and the TimePort that will be used in this project is that the firmware on the TimePort is bleeding edge. 
 With that in mind time needs to be allocated to allow for any issues that the clock may have or to update the firmware.
 The university has close links with Chronos thus it should be straightforward to either get our issues solved or to receive a new TimePort. \\
@@ -695,14 +682,14 @@ This command sets the baud rate to 115200, and will connect you to the first lay
 The system is a restricted linux distribution, so some commands you may be familiar with do exist.
 A full list of commands and the rest of the documentation can be found in Appendix \ref{TimePortDocumentation}. 
 %Figure \ref{fig:TP1stLayer} is a screenshot of this first layer
-
+\begin{comment}
 \begin{figure}
 \centering
 %\includegraphics[scale=0.5]{Figures/Screenshots/TimePortFirstLayer.eps}
 \caption{TimePort Access}
 \label{fig:TP1stLayer}
 \end{figure}
-
+\end{comment}
 % Need screenshots for this section
 \subsection{Hardware - Chronos Syncwatch \cite{Syncwatch}}
 \subsubsection{Description}
@@ -726,17 +713,6 @@ The figures below shows the outside panel of the device. \\
 	\label{SyncwatchOutside}
 	\caption{Chronos Syncwatch Outside}
 \end{figure}
-\begin{comment}
-\begin{subfigure}{\textwidth}
-	\centering
-%	\includegraphics{Figures/SyncwatchInside.eps}
-	\label{SyncwatchInside}
-	\caption{Chronos Syncwatch Inside}
-\end{subfigure}
-\label{SyncwatchDiagrams}
-\caption{Chronos Syncwatch Labelled Diagrams}
-\end{figure}
-\end{comment}
 
 This product is similar to the TimePort in the fact that it is an engineering release version therefore all of the features are not fully documented.
 Therefore Appendix \ref{app:SyncwatchDocumentation} shows the documentation written up for the Syncwatch.\\
@@ -778,7 +754,7 @@ As before, the command sets the baudrate to 115200, and connects to the device u
 % This brings up the following prompt (shown in Figure \ref{Syncwatch1stLayer}. \\
 \begin{figure}[H]
 \centering
-%\includegraphics[scale=0.5]{Figures/Screenshots/SyncwatchFirstLayer.eps}
+\includegraphics[scale=0.5]{Figures/FirstLayer.eps}
 \label{Syncwatch1stLayer}
 \caption{Syncwatch First Layer Screen}
 \end{figure}
@@ -795,7 +771,7 @@ The complete list of commands in both of the modes is shown in the documentation
 
 \begin{figure}[H]
 \centering
-%\includegraphics[scale=0.5]{Figures/Screenshots/SyncwatchSecondLayer.eps}
+\includegraphics[scale=0.5]{Figures/SecondLayer.eps.eps}
 \caption{Syncwatch Second Layer Screen}
 \label{Syncwatch2ndLayer}
 \end{figure}
@@ -1022,7 +998,7 @@ Due to getting access to rooms or the possibility of PTP not been transmitted ou
 
 A broad range of locations were attempted, within the limitations of the network. 
 Connecting via a VPN was attempted but it was deemed that the \ac{PTP} packets were not transmitted outside of the network and thus were not suited for the job.
-A network topology map has also been added, see below Figure \ref{NetworkMap}. 
+%A network topology map has also been added, see below Figure \ref{NetworkMap}. 
 
 \begin{figure}[H]
 \centering
@@ -1943,20 +1919,33 @@ The datasheet is referenced here on the \ac{SRS} website \cite{rubidium}.
 \centering
 \includegraphics[scale=0.5]{Figures/rubidium.eps}
 \label{fig:rubidium}
-:\caption{Rubidium Clock}
+\caption{Rubidium Clock}
 \end{figure}
 
-The grandmaster clock (the Chronos TimePort) was compared with the Rubidium clock mentioned above, and this difference was plotted using the Alan Deviation.
+The grandmaster clock (the Chronos TimePort) was compared with the Rubidium clock mentioned above, and this difference was plotted using the Allan Deviation.
+The plot was performed using TimeLab \cite{timelab}, which is software that takes precise frequency and time measurements and then plot them. 
+There are several theoretical references also available. \\
 
-%Explanation on TimeLab
-%Explanation on the Counter
+A counter is used to compare the Rubidium clock pictured above to the TimePort clock, which the TimeLab software then uses to calculate the Allan Deviation.
+The counter used was an Agilent 53230 \cite{agilentCounter}. 
+
+%Some info on counter. 
+
+
+With all of the above, the complete Allan deviation plot is given below, Figure \ref{allandev}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figures/allandev.eps}
+\label{allandev}
+\caption{Allan Deviation Plot}
+\end{figure}
+
 %Explanation on results
-
-%---- Will look at the above on Monday -----
 
 \subsection{Delay Distribution}
 
-The next set of results is to compare delay distribution of the sets and to se if there are any interesting anomalies with the results.
+The next set of results is to compare delay distribution of the sets and to see if there are any interesting anomalies with the results.
 See below the first set of data: the example set.
 The time that these results were taken was unknown, but this will be used as a base line to compare the other results to. \\
 
@@ -2025,9 +2014,10 @@ Same as before, the first figure below is with the example data set.
 \end{figure}
 
 Note that the delay has reached its steady state point and the delay variations around the median are due to errors. 
-The delay is mainly around 10 \mu s, but has peaks of up to 200\mu s. 
+The delay is mainly around 10 $\mu$ s, but has peaks of up to 200$\mu$ s. 
 The noise distribution seems to be fairly uniform with no clear discrete noise sources causing these delays.
 The same tests as in the previous section have been added below, in Figure \ref{delaymidPlots} 
+
 \begin{figure}[H]
 \centering
 \begin{subfigure}{0.5\textwidth}
@@ -2055,7 +2045,9 @@ The same tests as in the previous section have been added below, in Figure \ref{
 \label{delaymidPlots}
 \end{figure}
 
-Discussion on the above
+Based on the plots above it can be seen that the delays stabilise over a set period of time and are fairly consitent as is what is shown in the other Syncwatch plots of delay.
+
+%More discussion once this compiles
 \subsubsection{Irregular Delay Magnitudes}
 
 A second observation was made with the Syncwatch Plots. 
@@ -2117,7 +2109,6 @@ For example, the plot below is from the example data set.
 The delay distribution of some of the tests is shown below, Figure \ref{fig:histPlots}. 
 
 
-\begin{comment}
 \begin{figure}[H]
 \centering
 \begin{subfigure}{0.5\textwidth}
@@ -2143,7 +2134,6 @@ The delay distribution of some of the tests is shown below, Figure \ref{fig:hist
 \end{subfigure}
 \label{Example of Delay Plots}
 \end{figure}
-\end{comment}
 
 %Explanation of the delay distribution.
 %Verify that it matches what is found in the other plots
