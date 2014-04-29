@@ -95,6 +95,7 @@
 \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
     minimum height=2em]
 
+\providecommand{\e}[1]{\ensuremath{\times 10^{#1}}}
 
 \bibliographystyle{IEEEtran}
 \title {EE40150 - Final Year Project- Investigation into the Precision Time Protocol}
@@ -198,7 +199,7 @@ One way of realising this is by using a distributed timing system, such as \ac{N
 This would allow for nodes to be able to synchronise their clocks with a more accurate time source.
 
 \subsection{How the \acf{NTP} Works}
-\textit{This section has been taken from the Interim Report \cite{interimReport}and has been modified. Some sections however may be exact copies.}\\
+\textit{This section has been taken from the Interim Report \cite{interimReport} and has been modified. Some sections however may be exact copies.}\\
 
 This is a technology originally designed in 1985 and is used to synchronise clocks over a packet switched network. 
 It is able to achieve synchronisation with \ac{UTC} within a few milliseconds, but can maintain sub-millisecond accuracy on a \ac{LAN} if ideal conditions are met. 
@@ -479,10 +480,10 @@ As \ac{PTP} messages are sent in plain text there is room for exploitation or ha
 
 With the following objectives and tasks in mind, a literature review was performed on any relavent material. 
 
-\subsection{Definitions and Terminology for Synchronisation in Packet Networks \cite{ITUPacketMetrics}}
+\subsection{Definitions and Terminology for Synchronisation in Packet Networks }
 \label{metricReview}
 
-The first paper defines a number of definitions and terms when dealing with packet synchronisation. The areas of interest in this report were packet metrics which are found in Appendix I3 and I4.  
+The first paper \cite{ITUPacketMetrics} defines a number of definitions and terms when dealing with packet synchronisation. The areas of interest in this report were packet metrics which are found in Appendix I3 and I4.  
 These can be split into three sections: Packet Selection Methods, Packet Metrics without Pre-filtering, and Packet Metrics with Pre-filtering.
 
 \subsubsection{Packet Selection Methods}
@@ -1842,6 +1843,7 @@ The Syncwatch scatter plot will instead be used to show some anomalies in the re
 The second plot type is histograms of the raw delay values.
 This is another method of displaying the same data as before, but it is more related to the distribution of delays across the entire data set.
 The figure below (Figure \ref{histogramExample} shows the two examples of histogram that will be used.
+
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.5\textwidth}
@@ -1856,25 +1858,28 @@ The figure below (Figure \ref{histogramExample} shows the two examples of histog
 	\caption{Histogram Plot Example in Syncwatch Lab}
 	\label{histogramExample:Sync}
 \end{subfigure}
-\label{histogramExample}
 \caption{Histogram Plot Examples}
+\label{histogramExample}
 \end{figure}
 
-The two histogram plots will show similar results, so instead the second histogram plot will be used for the long term data collection.
+The two histogram plots will show similar results, so instead the second histogram plot will be used for the long term data collection as that was generated with the Syncwatch Lab program. 
+It can also be seen that the number of bins selected can have a large effect on the histogram, therefore care needs to be taken when choosing the correct bin size.
 \subsubsection{Heat Maps}
 
-If slices of time are taken, then converted to histograms and flattened to a 1dimensional coloured bar, a heat map of these time slices can be produced.
+If slices of time are taken, then converted to histograms and flattened to a 1-dimensional coloured bar, a heat map of these time slices can be produced.
 These can be produced in any language, such as Matlab or R.
 An R implementation has been produced, and an example can be found below in Figure \ref{heatmapExample}. 
 
 \begin{figure}[H]
 \centering
-%\includegraphics[scale=0.5]{Figures/HeatMapExample.eps}
-\caption{Heat Map Example in Matlab/R}
+\includegraphics[scale=0.5]{Figures/HeatMapExample.eps}
+\caption{Heat Map Example in R}
 \label{heatmapExample}
 \end{figure}
 
 This is a very pictorial way in showing changes in delay across a set of data.
+Note that the histogram above was from a data set which had a few zero values in, which causes the white areas on the image.
+When the results are discussed this image be truncated so only the coloured portions of the image can be analysed. 
 
 \subsubsection{Line Graphs}
 
@@ -1907,11 +1912,11 @@ The following elements of PTP will be investigated using these results: Long Ter
 
 The first set of results gathered was measuring the long term drift of the Chronos TimePort Grandmaster clock with respect to a Rubidium clock available in the lab. 
 The clock used to compare it is a Rubidium oscillator.
-The full specification sheet \cite{Rubidium} has been summarised in a tabular form in Appendix \ref{rubidium}.
+The full specification sheet \cite{Rubidium} has been summarised in a tabular form in Appendix \ref{rubidium}. \\
 
 The Rubidium clock used is a  Rubidium Frequency Standard FS725 made by \ac{SRS}.
 It integrates a rubidium oscillator (model PRS10) with an AC power supply and distribution amplifiers.
-It is a very stable oscillator with anticipated aging of less than 5x10-9 over a period of 20 years.
+It is a very stable oscillator with anticipated aging of less than 5\e{-9} over a period of 20 years.
 A photo of the Rubidium clock used can be seen below, Figure \ref{fig:rubidium}. 
 The datasheet is referenced here on the \ac{SRS} website \cite{Rubidium}. 
 
@@ -1941,7 +1946,16 @@ With all of the above, the complete Allan deviation plot is given below, Figure 
 \caption{Allan Deviation Plot}
 \end{figure}
 
-%Explanation on results
+The light blue thick line is the theoretical drift of the rubidium oscillator. 
+This information was gathered from the datasheet for some of the points along the graph (1000s, 10000s, 100000s). 
+Time interval sweeps are taken of the drift, and as the timeframe that the plot is generated across increases, the error bars on the graph as shown will decrease.\\
+
+Up to the 10000s point of the graph the results seem to match up with the theoretical curve really well. 
+They are not expected to to match up perfectly because the TimePort oscillator is not of the same standard as the Rubidium, but the shape of them should match. 
+An interesting point on this plot however is the oscillatory behavour at 100,000s. 
+It is a point of discussion for two main reasons: it is below the theoretical delay curve of the Rubidium clock, and that it oscillates. 
+The latter point could possibly be smoothened out one more results are collected. 
+There is no immediate reason for the plot to drop below this theoretical mark, so this will be discussed later in the Discussion section of the report.
 
 \subsection{Delay Distribution}
 
@@ -1960,6 +1974,9 @@ The first thing to note is that this has been taken at the start of the data set
 After around 1800 samples (which is about a minute), the delays have stabilised. 
 The important part of the results is this stabilised region and its overall spread. 
 This same distribution can be seen throughout the data sets collected, with a sample of them shown in the multi figure below.\\
+
+The four plots below are from Tests 2, 6, 7, and 9. 
+The tests taken earlier on in the project were using a freewheeling grandmaster, and thus these would not be as suitable to analyse. 
 
 %There was a set of results (from Test 1 to Test \#) that were using the TimePort when it was in freewheeling mode.
 
@@ -1997,6 +2014,11 @@ The reason for the high values of delays in some of these tests were due to the 
 
 One interesting point to note however is with Test 7. 
 The delay spread look initially a wide spread, but this is because as the scale has automatically changed, the total delay spread is actually much less in this case.
+Between samples 6000 and 6500 there is also a noticeable contraction in that delay spread.\\
+
+As mentioned previously all of these plots were taken using the first 10000 samples. 
+Because it takes some time for the delays to settle down and stabilise, the same tests as above were used but the last 10000 samples were now taken.  
+
 
 \subsubsection{Delays During the Test}
 The delay plots above have been taken from the first 10000 samples of the test. 
@@ -2014,7 +2036,7 @@ Same as before, the first figure below is with the example data set.
 \end{figure}
 
 Note that the delay has reached its steady state point and the delay variations around the median are due to errors. 
-The delay is mainly around 10 $\mu$ s, but has peaks of up to 200$\mu$ s. 
+The delay is mainly around 10 $\mu$s, but has peaks of up to 200 $\mu$s. 
 The noise distribution seems to be fairly uniform with no clear discrete noise sources causing these delays.
 The same tests as in the previous section have been added below, in Figure \ref{delaymidPlots} 
 
@@ -2045,9 +2067,11 @@ The same tests as in the previous section have been added below, in Figure \ref{
 \label{delaymidPlots}
 \end{figure}
 
-Based on the plots above it can be seen that the delays stabilise over a set period of time and are fairly consitent as is what is shown in the other Syncwatch plots of delay.
+The plots above mean that the majority the three tests (2, 7 , and 9) involved a freewheeling grandmaster and thus the slave clock was not being steered accurately. 
+Test 6 has a very stable delay value with the Beaglebone and the example test data has an expected distribution of delays. 
 
-%More discussion once this compiles
+%More tests with beaglebone if possible
+
 \subsubsection{Irregular Delay Magnitudes}
 
 A second observation was made with the Syncwatch Plots. 
@@ -2067,6 +2091,8 @@ This is in contrast to Figure \ref{Syncwatch:strange}, where it seems like there
     \caption{Syncwatch Plot Abnormal}
     \label{Syncwatch:strange}
 \end{subfigure}%
+\caption{Syncwatch Delay Plots}
+\label{Syncwatchdelays}
 \end{figure}
 It can be seen in Figure \ref{Syncwatch:strange} that there are around three discrete delay values with a couple of other noise peaks. 
 This was very interesting when you compare it to the data discussed in the previous section where there was a clear spread of delay values without seeing any discreteness.\\
@@ -2099,12 +2125,12 @@ For example, the plot below is from the example data set.
 
 \begin{figure}[H]
 \centering
-%\includegraphics[scale=0.5]{Figures/FinalResults/Test0/HistogramTest0Sample9996.eps}
+\includegraphics[scale=0.5]{Figures/FinalResults/Test0/hist.eps}
 \caption{Histogram of Example Set}
 \label{Hist:example}
 \end{figure}
 
-%Explain the distribution.
+
 
 The delay distribution of some of the tests is shown below, Figure \ref{fig:histPlots}. 
 
