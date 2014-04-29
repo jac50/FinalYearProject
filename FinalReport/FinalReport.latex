@@ -2117,16 +2117,21 @@ The day which this was most noticeable coincided with a few network engineers wo
 In addition to this it seemed as though if a slave clock running on a lab desktop machine was run in tandem with the Syncwatch test, this delay quantisation effect was reduced to almost nothing, and the delay looked like the normal figure in Figure \ref{Syncwatch:normal}. 
 Some reasons as to why this happens will be explored at the end of this report.\\
 
-The final plot below was also noted on the same day as results day.
+The final plot for this section (Figure \ref{strangeDelay} below was also noted on the same day as results day.
 This is the only occurance that was noted of this sort of activity happening, and it only seemed to occur this one time. 
-The figure has been taken with a camera phone instead of a screenshot
+The figure has been taken with a camera phone instead of a screenshot. 
+
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{Figures/strangeSync.eps}
-\caption{Strange Delay Magnitudes (Taken by Dr Robert Watson}
+\caption{Strange Delay Magnitudes (Taken by Dr Robert Watson)}
 \label{strangeDelay}
 \end{figure}
 
+As it can be seen the period from sample 194,440 to 194,460 has a very high noise source which is causing delays up to 25,000$\mu$s (or 25ms). 
+This delay is most definitely not due to a rerouting time difference because of it being very high.
+Most likely this is caused by the PTP pakets being held in a switch for a long time period. 
+It is interesting that it has only happened in this fashion at this one particular time, and that there is a solid column of high delay values (anywhere from 500$\mu$s, to 25000$\mu$s). 
 
 \subsubsection{Histogram Distribution}
 
@@ -2194,7 +2199,7 @@ The example data set will first be used to see what the delay differences are if
     \centering
     \includegraphics[scale=0.3,angle=270]{Figures/FinalResults/Master2Slave.eps}
     \caption{Master to Slave Direction}
-    \label{Test0Normal}
+    \label{Master2SlavePlot}
 \end{subfigure}%
 \begin{subfigure}[b]{0.5\textwidth}
     \centering
@@ -2202,6 +2207,7 @@ The example data set will first be used to see what the delay differences are if
     \caption{Slave to Master Direction}
     \label{Slave2Master}
 \end{subfigure}
+\caption{Different Direction Delay Plots}
 \end{figure}
 
 Firstly it is clear that both of the plots above follow the same shape as before, with the damped response before the delays settle down to their normal value. 
@@ -2212,16 +2218,39 @@ Firstly there are more noise points around the mean value of Figure \ref{Slave2M
 It can also be seen that there are higher noise peaks, at around 450$\mu$s compared with the Master to Slave plot that peaks at around 200$\mu$s. 
 It is also noted that there more noise points below the average number than in the previous plot.\\
 
-The next ov
-Commene on the results above
-%Calculate some other plot types and carry on with the results
+The next observation is that the average value in the Slave to Master direction is higher (around 100$\mu$s) compared with the MAster to Slave direction (around 10$\mu$s). 
+There are not any obvious reasons for this increase in delay, but it will be discussed in a later part of this report.\\
 
+To make sure that this did not only occur at the beginning of the data set, a plot of the end of the data set was also created. (Figure \ref{
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3,angle=270]{Figures/FinalResults/Test0/Master2SlaveMid.eps}
+    \caption{Master to Slave Direction}
+    \label{Master2SlaveMid}
+\end{subfigure}%
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle=270]{Figures/FinalResults/Test0/Slave2MasterMid.eps}
+    \caption{Slave to Master Direction}
+    \label{Slave2MasterMid}
+\end{subfigure}
+\caption{Different Direction Delay Plots (End of Data Set)}
+\end{figure}
+
+%Explain
+
+
+%Calculate some other plot types and carry on with the results
 \subsection{Comparing times of day}
 
 This next text aims to try and see how time of day affects the testing. 
 The hypothesis for this part of the test guesses that as the network is busier there will be a bigger spread of delays. 
 The tests used for this will have the biggest difference associated with them. 
 
+%Calculate some other plot types and carry on with the results
 
 %Explanation of the delay differences being the same. 
 % Either have a set of plots to show the same thing, or maybe different ones if it is different
