@@ -1872,7 +1872,7 @@ An R implementation has been produced, and an example can be found below in Figu
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{Figures/HeatMapExample.eps}
+%\includegraphics[scale=0.5]{Figures/HeatMapExample.eps}
 \caption{Heat Map Example in R}
 \label{heatmapExample}
 \end{figure}
@@ -2125,7 +2125,7 @@ For example, the plot below is from the example data set.
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{Figures/FinalResults/Test0/hist.eps}
+\includegraphics[scale=0.3, angle=270]{Figures/FinalResults/Test0/hist.eps}
 \caption{Histogram of Example Set}
 \label{Hist:example}
 \end{figure}
@@ -2158,7 +2158,8 @@ The delay distribution of some of the tests is shown below, Figure \ref{fig:hist
 	\label{hist:test9}
 	\caption{Histogram Plot - Test 9}
 \end{subfigure}
-\label{Example of Delay Plots}
+\label{fig:histPlots}
+\caption{Example Of Delay Plots}
 \end{figure}
 
 %Explanation of the delay distribution.
