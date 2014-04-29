@@ -96,7 +96,7 @@
     minimum height=2em]
 
 
-\bibliographystyle{ieeetr}
+\bibliographystyle{IEEEtran}
 \title {EE40150 - Final Year Project- Investigation into the Precision Time Protocol}
 \author {James Cox
 \\ Department of Electrical and Electronic Engineering \\
@@ -691,7 +691,7 @@ A full list of commands and the rest of the documentation can be found in Append
 \end{figure}
 \end{comment}
 % Need screenshots for this section
-\subsection{Hardware - Chronos Syncwatch \cite{Syncwatch}}
+\subsection{Hardware - Chronos Syncwatch \cite{SyncWatch}}
 \subsubsection{Description}
 The Chronos Syncwatch is a hardware slave clock used to synchronise time in  a number of different applications.
 It operates in all of the current synchronisation technologies such as SyncE, ESMC,  PTPv2, 1PPS+TOD, 1PPS, Frequencies(64k-200MHz), T1 \& E1 protocols and interfaces are supported. 
@@ -1143,7 +1143,7 @@ The general script layout has been converted to a flow chart, see below Figure \
 	\node [block, right of=inccount] (calctime) {Calculate the time delta};
 	\node [block, right of=calctime] (print) {Print time delta and delay data};
 	\node [block, right of=print] (reset) {Set variables to 0};
-	\node [block, down of=everyline] (finish) {End};
+	\node [block, below of=everyline] (finish) {End};
 
 
     % Draw edges
@@ -1156,7 +1156,7 @@ The general script layout has been converted to a flow chart, see below Figure \
 	\path[line] (calctime) -- (print);
 	\path[line] (print) -- (reset);
 	%\draw[->] (reset.south) -| ($(reset.south)!0.5! (everyline.west)$) -| (everyline.west);
-    \draw[->] (reset.south) -| everyline.west;
+    \draw[->] (reset.south) -| (everyline.west);
 	\draw[->] (NR3.north) -| ($(NR3.north)!0.5! (everyline.west)$) -| (everyline.west);
 
 
@@ -1498,16 +1498,16 @@ The following flowchart explains the logic that the parsing argument function go
 
 \node[block] (parseArgs) {Parse Arguments into Array};
 \node[decision,right of=parseArgs] (inter) {Interactive?};
-\node[block,south of=inter] (runInt) {Run Interactive};
+\node[block,below of=inter] (runInt) {Run Interactive};
 \node[decision,right of=inter] (dirDelay) {Check if Dir or Delay = None};
-\node[decision,south of =dirDelay] (ifError) {If Error};
-\node[block,south of =ifError] (Stop) {Stop};
+\node[decision,below of=dirDelay] (ifError) {If Error};
+\node[block,below of =ifError] (Stop) {Stop};
 \node[decision,right of =dirDelay] (SSValid) {Is SampleSize Valid?};
-\node[block, south of =SSValid] (SetTo50) {Set SS to 50};
+\node[block, below of=SSValid] (SetTo50) {Set SS to 50};
 \node[decision,right of =SSValid] (StartNot0) {If Starting Point != 0};
-\node[block, south of =StartNot0] (SetStart) {Set Start Point};
+\node[block, below of =StartNot0] (SetStart) {Set Start Point};
 \node[decision,right of =StartNot0] (SampleSize) {All SampleSize Test?};
-\node[block, down of=SampleSize] (SetSize) {Set Size and Test Nunbers};
+\node[block, below of=SampleSize] (SetSize) {Set Size and Test Nunbers};
 \node[block, right of=SampleSize] (SetTest) {Set Tests to NTest};
 \node[block, right of=SetTest] (Stop) {Stop};
 
@@ -1913,7 +1913,7 @@ The Rubidium clock used is a  Rubidium Frequency Standard FS725 made by \ac{SRS}
 It integrates a rubidium oscillator (model PRS10) with an AC power supply and distribution amplifiers.
 It is a very stable oscillator with anticipated aging of less than 5x10-9 over a period of 20 years.
 A photo of the Rubidium clock used can be seen below, Figure \ref{fig:rubidium}. 
-The datasheet is referenced here on the \ac{SRS} website \cite{rubidium}. 
+The datasheet is referenced here on the \ac{SRS} website \cite{Rubidium}. 
 
 \begin{figure}[H]
 \centering
@@ -1936,7 +1936,7 @@ With all of the above, the complete Allan deviation plot is given below, Figure 
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{Figures/allandev.eps}
+\includegraphics[scale=0.25]{Figures/allandev.eps}
 \label{allandev}
 \caption{Allan Deviation Plot}
 \end{figure}
@@ -2069,7 +2069,7 @@ This is in contrast to Figure \ref{Syncwatch:strange}, where it seems like there
 \end{subfigure}%
 \end{figure}
 It can be seen in Figure \ref{Syncwatch:strange} that there are around three discrete delay values with a couple of other noise peaks. 
-This was very interesting when you compare it to the data discussed in the previous section where there was a clear spread of delay values without seeing any discreteness.
+This was very interesting when you compare it to the data discussed in the previous section where there was a clear spread of delay values without seeing any discreteness.\\
 
 Throughout the data collection phase of the project several occurences of a very high delay peak was recorded.
 A screenshot (Figure \ref{packetdata}) of some general test statistics is shown below for the main Syncwatch test.
@@ -2099,7 +2099,7 @@ For example, the plot below is from the example data set.
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{Figures/FinalResults/Test0/HistogramTest0Sample9996.eps}
+%\includegraphics[scale=0.5]{Figures/FinalResults/Test0/HistogramTest0Sample9996.eps}
 \caption{Histogram of Example Set}
 \label{Hist:example}
 \end{figure}
@@ -2112,23 +2112,23 @@ The delay distribution of some of the tests is shown below, Figure \ref{fig:hist
 \begin{figure}[H]
 \centering
 \begin{subfigure}{0.5\textwidth}
-	\includegraphics[scale = 0.3, angle=270]{Figures/FinalResults/Test2/HistPlot.eps}
+	\includegraphics[scale = 0.15, angle=270]{Figures/FinalResults/Test2/HistPlot.eps}
 	\label{hist:test2}
 	\caption{Histogram Plot - Test 2}
 \end{subfigure}%
 \begin{subfigure}{0.5\textwidth}
-	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test6/HistPlot.eps}
+	\includegraphics[scale = 0.15,angle=270]{Figures/FinalResults/Test6/HistPlot.eps}
 	\label{hist:test6}
 	\caption{Histogram Plot - Test 6}
 \end{subfigure}
 
 \begin{subfigure}{0.5\textwidth}
-	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test7/HistPlot.eps}
+	\includegraphics[scale = 0.15,angle=270]{Figures/FinalResults/Test7/HistPlot.eps}
 	\label{hist:test7}
 	\caption{Histogram Plot - Test 7}
 \end{subfigure}%
 \begin{subfigure}{0.5\textwidth}
-	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test9/HistPlot.eps}
+	\includegraphics[scale = 0.15, angle=270]{Figures/FinalResults/Test9/HistPlot.eps}
 	\label{hist:test9}
 	\caption{Histogram Plot - Test 9}
 \end{subfigure}
@@ -2194,7 +2194,7 @@ The tests used for this will have the biggest difference associated with them.
 \centering
 \begin{subfigure}[b]{0.5\textwidth}
     \centering
-    \includegraphics[scale=0.5]{Figures/FinalResults/Master2Slave.eps}
+    \includegraphics[scale=0.3,angle=270]{Figures/FinalResults/Master2Slave.eps}
     \caption{Master 2 Slave}
     \label{Test0Normal}
 \end{subfigure}%
@@ -2227,14 +2227,14 @@ The example data set metric plots can be seen below : Figures \ref{test0:TDEV} a
 \centering
 \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[scale=0.5]{Figures/FinalResults/Test0/TDEVPlot.eps}
+    \includegraphics[scale=0.3, angle=270]{Figures/FinalResults/Test0/TDEVPlot.eps}
     \caption{Test 0 : TDEV Plot}
     \label{test0:TDEV}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[scale=0.5]{Figures/FinalResults/Test0/MATIEMAFEPlot.eps}
+    \includegraphics[scale=0.3,angle=270]{Figures/FinalResults/Test0/MATIEMAFEPlot.eps}
     \caption{Test 0: MATIE MAFE Plot}
     \label{test0:MATIE}
 \end{subfigure}
@@ -2255,14 +2255,14 @@ The metric plots can be seen below: Figures \ref{test1:TDEV} and \ref{test1:MATI
 \centering
 \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[scale=0.5]{Figures/FinalResults/Test1/TDEVPlot.eps}
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test1/TDEVPlot.eps}
     \caption{Test 1 : TDEV Plot}
     \label{test1:TDEV}
 \end{subfigure}%
 
 \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[scale=0.5]{Figures/FinalResults/Test1/MATIEMAFEPlot.eps}
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test1/MATIEMAFEPlot.eps}
     \caption{Test 1: MATIE MAFE Plot}
     \label{test:MATIE}
 \end{subfigure}
