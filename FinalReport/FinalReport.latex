@@ -2112,14 +2112,28 @@ This is clearly an extremely high packet data considering the test was only set 
 This packet delay variation is therefore very interesting to note when PTP is run on a typical Ethernet network. \\
 
 Referring back to Figure \ref{Syncwatch:strange}, it was not easy to determine what cases this occurred. 
-The day which this was most noticeable coincided with a few network engineers working on a network cabinet downstairs on Level 2, but it was not conclusive whether these two events were related or just a coincidence.
+The day which this was most noticeable coincided with a few network engineers working on a network cabinet downstairs on Level 2, but it was not conclusive whether these two events were related or just a coincidence.\\
+
 In addition to this it seemed as though if a slave clock running on a lab desktop machine was run in tandem with the Syncwatch test, this delay quantisation effect was reduced to almost nothing, and the delay looked like the normal figure in Figure \ref{Syncwatch:normal}. 
-Some reasons as to why this happens will be explored at the end of this report.
+Some reasons as to why this happens will be explored at the end of this report.\\
+
+The final plot below was also noted on the same day as results day.
+This is the only occurance that was noted of this sort of activity happening, and it only seemed to occur this one time. 
+The figure has been taken with a camera phone instead of a screenshot
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figures/strangeSync.eps}
+\caption{Strange Delay Magnitudes (Taken by Dr Robert Watson}
+\label{strangeDelay}
+\end{figure}
+
 
 \subsubsection{Histogram Distribution}
 
 Histograms have been used to be able to easily work out the histogram delay distribution.
 For example, the plot below is from the example data set.
+R calculates the number of bins automatically. 
+The complete data set has been used in this case.
 
 %----- Need more bins  ------
 
@@ -2130,9 +2144,10 @@ For example, the plot below is from the example data set.
 \label{Hist:example}
 \end{figure}
 
+It can be seen from the above figure that even though the bins have been chosen automatically, the majority of the delays occur around the zero delay point, and thus it appears that there are only a few bins.
+There isn't an obvious distribution type in this plot due to the large number of delays in those first couple of bins.\\
 
-
-The delay distribution of some of the tests is shown below, Figure \ref{fig:histPlots}. 
+The same tests as before we used and histograms were drawn with that data, shown below in Figure \ref{fig:histPlots}. 
 
 
 \begin{figure}[H]
@@ -2162,53 +2177,43 @@ The delay distribution of some of the tests is shown below, Figure \ref{fig:hist
 \caption{Example Of Delay Plots}
 \end{figure}
 
-%Explanation of the delay distribution.
-%Verify that it matches what is found in the other plots
+As expected Test 6 produces a heavily weighted histogram towards the mode delay value, with the others producing some more distributed histograms.
+Histogram 7 looks fairly gaussian as expected when looking at the delay plot earlier in Figure \ref{delay:test7}. 
+
+%More disucssion. 
 
 
 \subsection{Master to Slave vs Slave to Master}
 
 The next test would be to compare the one way delay direction against each other for similar tests.
-Test 0 (The example data set) will first be used to see what the delay differences are if any.
-The plot below (Figure \ref{delay:bothDir})is the Master to Slave and Slave to Master delay plotted on the same graph.
+The example data set will first be used to see what the delay differences are if any.
 
 \begin{figure}[H]
 \centering
-%\includegraphics[scale=0.5]{Figures/FinalResults/Test0Both.eps}
-\label{delay:bothDir}
-\caption{Bi-directional delay for the example set of Data}
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3,angle=270]{Figures/FinalResults/Master2Slave.eps}
+    \caption{Master to Slave Direction}
+    \label{Test0Normal}
+\end{subfigure}%
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle=270]{Figures/FinalResults/Test0/Slave2Master.eps}
+    \caption{Slave to Master Direction}
+    \label{Slave2Master}
+\end{subfigure}
 \end{figure}
 
-%Pick only a few examples of these plots and explain them
+Firstly it is clear that both of the plots above follow the same shape as before, with the damped response before the delays settle down to their normal value. 
+There is also noise points around the set of normal values as expected. \\
 
-\begin{comment}
-\begin{figure}[H]
-\centering
-\begin{subfigure}{0.5\textwidth}
-	\includegraphics[scale = 0.3, angle=270]{Figures/FinalResults/Test2/HistPlot.eps}
-	\label{hist:test2}
-	\caption{Histogram Plot - Test 2}
-\end{subfigure}%
-\begin{subfigure}{0.5\textwidth}
-	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test6/HistPlot.eps}
-	\label{hist:test6}
-	\caption{Histogram Plot - Test 6}
-\end{subfigure}
+The differences though are surprising. 
+Firstly there are more noise points around the mean value of Figure \ref{Slave2Master} than the other one. 
+It can also be seen that there are higher noise peaks, at around 450$\mu$s compared with the Master to Slave plot that peaks at around 200$\mu$s. 
+It is also noted that there more noise points below the average number than in the previous plot.\\
 
-\begin{subfigure}{0.5\textwidth}
-	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test7/HistPlot.eps}
-	\label{hist:test7}
-	\caption{Histogram Plot - Test 7}
-\end{subfigure}%
-\begin{subfigure}{0.5\textwidth}
-	\includegraphics[scale = 0.3,angle=270]{Figures/FinalResults/Test9/HistPlot.eps}
-	\label{hist:test9}
-	\caption{Histogram Plot - Test 9}
-\end{subfigure}
-\label{Example of Delay Plots}
-\end{figure}
-\end{comment}
-Comment on the results above
+The next ov
+Commene on the results above
 %Calculate some other plot types and carry on with the results
 
 \subsection{Comparing times of day}
@@ -2217,27 +2222,6 @@ This next text aims to try and see how time of day affects the testing.
 The hypothesis for this part of the test guesses that as the network is busier there will be a bigger spread of delays. 
 The tests used for this will have the biggest difference associated with them. 
 
-\begin{figure}[H]
-\centering
-\begin{subfigure}[b]{0.5\textwidth}
-    \centering
-    \includegraphics[scale=0.3,angle=270]{Figures/FinalResults/Master2Slave.eps}
-    \caption{Master 2 Slave}
-    \label{Test0Normal}
-\end{subfigure}%
-\begin{subfigure}[b]{0.5\textwidth}
-    \centering
-    \includegraphics[scale=0.5]{Figures/FinalResults/Test0/Direction/Slave2Master.eps}
-    \caption{Slave to Master}
-    \label{Slave2Master}
-\end{subfigure}
-\begin{subfigure}[b]{\textwidth}
-    \centering
-    \includegraphics[scale=0.5]{Figures/FinalResults/Test0/Direction/Difference.eps}
-\label{timeOfDay}
-\caption{Example Data Comparison between Directions}
-\end{subfigure}
-\end{figure}
 
 %Explanation of the delay differences being the same. 
 % Either have a set of plots to show the same thing, or maybe different ones if it is different
