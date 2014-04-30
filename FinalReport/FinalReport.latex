@@ -158,6 +158,7 @@ Finally packet metrics were used to attempt to quantify this delay.
 \newpage
 \listoftables
 \newpage
+\section*{List of Code Extracts}
 \lstlistoflistings
 \newpage
 \section{Introduction}
@@ -1937,12 +1938,12 @@ The counter used was an Agilent 53230 \cite{agilentCounter}.
 %Some info on counter. 
 
 
-With all of the above, the complete Allan deviation plot is given below, Figure \ref{allandev}.
-
+With all of the above, the complete Allan deviation plot is given below, Figure \ref{allandev1}.
+% Get watson's plots
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.25]{Figures/allandev.eps}
-\label{allandev}
+\includegraphics[scale=0.5]{Figures/FinalResults/allandev1.eps}
+\label{allandev1}
 \caption{Allan Deviation Plot}
 \end{figure}
 
@@ -1956,6 +1957,20 @@ An interesting point on this plot however is the oscillatory behavour at 100,000
 It is a point of discussion for two main reasons: it is below the theoretical delay curve of the Rubidium clock, and that it oscillates. 
 The latter point could possibly be smoothened out one more results are collected. 
 There is no immediate reason for the plot to drop below this theoretical mark, so this will be discussed later in the Discussion section of the report.
+\ac{SRS} most likely will quote a worst case performance for the FS725 on their datasheet (which the light blue line was derived from), and thus this line would typically be lower than what is above.
+
+A second Allan deviation plot was created using a different reference light blue curve.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figures/FinalResults/allandev2.eps}
+\label{allandev2}
+\caption{Allan Deviation Plot}
+\end{figure}
+
+It can be seen that this line follows the plot gathered much closer.
+To get a conclusive answer data must be collected over a lot longer than the twelve days allocated to the collect the data above.
+The only conclusions that can be drawn from this is that the TimePort is fairly stable over the measured time period, but a longer test would make this more conclusive. 
 
 \subsection{Delay Distribution}
 
@@ -1978,9 +1993,6 @@ This same distribution can be seen throughout the data sets collected, with a sa
 The four plots below are from Tests 2, 6, 7, and 9. 
 The tests taken earlier on in the project were using a freewheeling grandmaster, and thus these would not be as suitable to analyse. 
 
-%There was a set of results (from Test 1 to Test \#) that were using the TimePort when it was in freewheeling mode.
-
-%Look through all results. find some interesting stuff.
 
 \begin{figure}[H]
 \centering
@@ -2221,7 +2233,7 @@ It is also noted that there more noise points below the average number than in t
 The next observation is that the average value in the Slave to Master direction is higher (around 100$\mu$s) compared with the MAster to Slave direction (around 10$\mu$s). 
 There are not any obvious reasons for this increase in delay, but it will be discussed in a later part of this report.\\
 
-To make sure that this did not only occur at the beginning of the data set, a plot of the end of the data set was also created. (Figure \ref{
+To make sure that this did not only occur at the beginning of the data set, a plot of the end of the data set was also created. (Figure \ref{DelayDiffDirMid})
 
 \begin{figure}[H]
 \centering
@@ -2238,12 +2250,56 @@ To make sure that this did not only occur at the beginning of the data set, a pl
     \label{Slave2MasterMid}
 \end{subfigure}
 \caption{Different Direction Delay Plots (End of Data Set)}
+\label{DelayDiffDirMid}
 \end{figure}
 
-%Explain
+As it can be seen these plots are identical, and thus it seems like the one way delay differences gets better to the point where they are equal at the end of the test.
+The plots below highlights this difference.
 
+%------------------------------------------------------------------------------------------------------------------------------
+%--------- Need to carry on from here... 
+%------------------------------------------------------------------------------------------------------------------------------
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3,angle=270]{Figures/FinalResults/Test0/NormDifference.eps}
+    \caption{Start of the Data Set Differences}
+    \label{NormalDiff}
+\end{subfigure}%
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle=270]{Figures/FinalResults/Test0/MidDifference.eps}
+    \caption{End of the Data Set}
+    \label{Slave2MasterMid}
+\end{subfigure}
+\caption{Middle of the Data Set Differences}
+\label{MidDiff}
+\end{figure}
 
-%Calculate some other plot types and carry on with the results
+The same plots have been made for a few of the other tests calculated to see if this was consistant.
+The figure below (Figure \ref{delayDiffDifferences}) shows this for a couple other tests.
+
+\begin{comment}
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3,angle=270]{Figures/FinalResults/Test0/NormDifference.eps}
+    \caption{Start of the Data Set Differences}
+    \label{NormalDiff}
+\end{subfigure}%
+\begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle=270]{Figures/FinalResults/Test0/MidDifference.eps}
+    \caption{End of the Data Set}
+    \label{Slave2MasterMid}
+\end{subfigure}
+\caption{Middle of the Data Set Differences}
+\label{MidDiff}
+\end{figure}
+\end{comment}
+
 \subsection{Comparing times of day}
 
 This next text aims to try and see how time of day affects the testing. 
