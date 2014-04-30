@@ -1933,7 +1933,7 @@ The plot was performed using TimeLab \cite{timelab}, which is software that take
 There are several theoretical references also available. \\
 
 A counter is used to compare the Rubidium clock pictured above to the TimePort clock, which the TimeLab software then uses to calculate the Allan Deviation.
-The counter used was an Agilent 53230 \cite{agilentCounter}. 
+The counter used was an Agilent 53230 \cite{agilentCounter}. \\
 
 %Some info on counter. 
 
@@ -1957,7 +1957,7 @@ An interesting point on this plot however is the oscillatory behavour at 100,000
 It is a point of discussion for two main reasons: it is below the theoretical delay curve of the Rubidium clock, and that it oscillates. 
 The latter point could possibly be smoothened out one more results are collected. 
 There is no immediate reason for the plot to drop below this theoretical mark, so this will be discussed later in the Discussion section of the report.
-\ac{SRS} most likely will quote a worst case performance for the FS725 on their datasheet (which the light blue line was derived from), and thus this line would typically be lower than what is above.
+\ac{SRS} most likely will quote a worst case performance for the FS725 on their datasheet (which the light blue line was derived from), and thus this line would typically be lower than what is above.\\
 
 A second Allan deviation plot was created using a different reference light blue curve.
 
@@ -2254,7 +2254,8 @@ To make sure that this did not only occur at the beginning of the data set, a pl
 \end{figure}
 
 As it can be seen these plots are identical, and thus it seems like the one way delay differences gets better to the point where they are equal at the end of the test.
-The plots below highlights this difference.
+\begin{comment}
+%The plots below highlights this difference.
 
 %------------------------------------------------------------------------------------------------------------------------------
 %--------- Need to carry on from here... 
@@ -2280,7 +2281,6 @@ The plots below highlights this difference.
 The same plots have been made for a few of the other tests calculated to see if this was consistant.
 The figure below (Figure \ref{delayDiffDifferences}) shows this for a couple other tests.
 
-\begin{comment}
 \begin{figure}[H]
 \centering
 \begin{subfigure}[b]{0.5\textwidth}
@@ -2300,6 +2300,7 @@ The figure below (Figure \ref{delayDiffDifferences}) shows this for a couple oth
 \end{figure}
 \end{comment}
 
+\begin{comment}
 \subsection{Comparing times of day}
 
 This next text aims to try and see how time of day affects the testing. 
@@ -2310,8 +2311,9 @@ The tests used for this will have the biggest difference associated with them.
 
 %Explanation of the delay differences being the same. 
 % Either have a set of plots to show the same thing, or maybe different ones if it is different
+\end{comment}
 
-
+% ---------- Need to recalculate metric plots with correct labels -----------------
 \subsection{Metric Results}
 
 The next set of results calculated were using the packet metric scripts created in a previous section of this report.
@@ -2321,14 +2323,13 @@ The example data set metric plots can be seen below : Figures \ref{test0:TDEV} a
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}{\textwidth}
+\begin{subfigure}{0.5\textwidth}
     \centering
     \includegraphics[scale=0.3, angle=270]{Figures/FinalResults/Test0/TDEVPlot.eps}
     \caption{Test 0 : TDEV Plot}
     \label{test0:TDEV}
 \end{subfigure}%
-
-\begin{subfigure}{\textwidth}
+\begin{subfigure}{0.5\textwidth}
     \centering
     \includegraphics[scale=0.3,angle=270]{Figures/FinalResults/Test0/MATIEMAFEPlot.eps}
     \caption{Test 0: MATIE MAFE Plot}
@@ -2337,40 +2338,111 @@ The example data set metric plots can be seen below : Figures \ref{test0:TDEV} a
 \caption{Example Data Metric Plots}
 \label{test0:metrics}
 \end{figure}
-%Explanation of these metrics briefly.
 
-%Read report regarding what these mean.
+The packet metric recommendation report \cite{ITUPacketMetrics} detailed in the literature view did not go into any detail in how to process this metric data or any method in determining what to look for when regarding these plots.
+Therefore at this stage only comparisons between data sets will be made which can then be compared to the raw delay data discussed previously. \\
 
-\subsubsection{Test 1: Normal Conditions}
+As it can be seen above all of the TDEV metrics have been plotted on one plot, with the four MATIE / MAFE plots on the second (Figure \ref{test0:MATIE}). 
+The conditions of the example test are not known completely, therefore no conclusions can be drawn from the metric data above.
 
-The first test completed during the course of this project was Test 1. 
+\subsubsection{Test 2 Packet Metric Results}
+
+The first packet metric scripts run were on the second set of test results (excludin the exampe set. )
 Other repetitions of this test was also performed.
-The metric plots can be seen below: Figures \ref{test1:TDEV} and \ref{test1:MATIE}. 
+The metric plots can be seen below: Figures \ref{test2:TDEV} and \ref{test2:MATIE}. 
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}{\textwidth}
+\begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test1/TDEVPlot.eps}
-    \caption{Test 1 : TDEV Plot}
-    \label{test1:TDEV}
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test2/TDEVPlot.eps}
+    \caption{Test 2 : TDEV Plot}
+    \label{test2:TDEV}
 \end{subfigure}%
-
-\begin{subfigure}{\textwidth}
+\begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test1/MATIEMAFEPlot.eps}
-    \caption{Test 1: MATIE MAFE Plot}
-    \label{test:MATIE}
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test2/MATIEMAFEPlot.eps}
+    \caption{Test 2: MATIE MAFE Plot}
+    \label{test2:MATIE}
 \end{subfigure}
-\caption{Test 1 Metric Plots}
-\label{test0:metrics}
+\caption{Test 2 Metric Plots}
+\label{test2:metrics}
+\end{figure}
+
+Similar with the previous set of delay results, tests 2, 6, 7 and 9 will be used first, followed by any other relavent tests. 
+
+%Explanation to the above, with some discussion.
+
+\subsubsection{Test 6 Packet Metric Results}
+
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test6/TDEVPlot.eps}
+    \caption{Test 6 : TDEV Plot}
+    \label{test6:TDEV}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test6/MATIEMAFEPlot.eps}
+    \caption{Test 6: MATIE MAFE Plot}
+    \label{test6:MATIE}
+\end{subfigure}
+\caption{Test 6 Metric Plots}
+\label{test6:metrics}
+\end{figure}
+
+%Explanation to the above, with some discussion.
+
+\subsubsection{Test 7 Packet Metric Results}
+
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test7/TDEVPlot.eps}
+    \caption{Test 7 : TDEV Plot}
+    \label{test7:TDEV}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test7/MATIEMAFEPlot.eps}
+    \caption{Test 7: MATIE MAFE Plot}
+    \label{test7:MATIE}
+\end{subfigure}
+\caption{Test 7 Metric Plots}
+\label{test7:metrics}
+\end{figure}
+
+\subsubsection{Test 9 Packet Metric Results}
+
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test9/TDEVPlot.eps}
+    \caption{Test 9 : TDEV Plot}
+    \label{test9:TDEV}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.3, angle = 270]{Figures/FinalResults/Test9/MATIEMAFEPlot.eps}
+    \caption{Test 9: MATIE MAFE Plot}
+    \label{test9:MATIE}
+\end{subfigure}
+\caption{Test 9 Metric Plots}
+\label{test9:metrics}
 \end{figure}
 
 
-
 \section{Discussion}
-\section{Challenges}
-\section{Milestones}
+
+
+
 \section{Conclusion}
 
 In conclusion the \ac{PTP} protocol was investigated successfully in a number of different ways.
@@ -2378,6 +2450,36 @@ In conclusion the \ac{PTP} protocol was investigated successfully in a number of
 This data was then analysed: both through looking at the raw delays and from the use of packet metric scripts.
 It was found that...
 Secure PTP was also looked into to see how PTP can be made more secure. 
+
+\subsection{Milestones}
+
+The following milestones have been identified for this project:
+
+\begin{description}
+\item[Gained Knowledge on PTP] Knowledge on a technology not covered during university was learnt thoroughly to then help with the project.
+Several papers were covered on the topic, both from a technical aspect on the current protocol and look into the future for PTP in terms of collision detection and securing the protocol. 
+\item[Set up a basic PTP Network] With the knowledge gained from above and with the availability of both grandmaster and slave clocks, a basic network was set up with the TimePort as the main Grandmaster and several different slave implementations.
+This was then used to collect delay data from a few locations on the university network.
+\item[Implementing Packet Metric Scripts] Several packet metric script were implemented from scratch in an unfamiliar language.
+The packet metric ITU recommendation report was read and the metric scripts were created based off of this.
+The script created was built in a user-friendly way and has tried to be written in a self-documentating fashion.
+\item[PTP Delay Results] PTP delay results were gathered and analysed and some surprising findings were noticed even with standard networking switches. 
+These results can then be used to compare against subsequent work undertaken on PTP. 
+\end{description}
+
+
+\subsection{Challenges}
+
+Several challenges were identified throughout this project, which have been summarised below.
+They were split up into the different subtasks identified for this project.
+
+\begin{description}
+\item[Research into Packet Metrics and the Technology] \hfill \\
+\item[Data Collection] \hfill \\ 
+\item[Packet Metric Implementation] \hfill \\
+\item[Data Processing] \hfill \\
+\end{description}
+
 
 \section{Further Work}
 
