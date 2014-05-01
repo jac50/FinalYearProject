@@ -2343,11 +2343,32 @@ The packet metric recommendation report \cite{ITUPacketMetrics} detailed in the 
 Therefore at this stage only comparisons between data sets will be made which can then be compared to the raw delay data discussed previously. \\
 
 As it can be seen above all of the TDEV metrics have been plotted on one plot, with the four MATIE / MAFE plots on the second (Figure \ref{test0:MATIE}). 
-The conditions of the example test are not known completely, therefore no conclusions can be drawn from the metric data above.
+The conditions of the example test are not known completely, therefore no conclusions can be drawn from the metric data above.\\
+
+The plots below do not show the legends on each of them, but all share the same colour set.
+The legends have been provided below, Figure \ref{legendA} for the TDEV plot, and Figure \ref{legendB} for the MATIE / MAFE plot.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics{Figures/LegendA.eps}
+    \caption{TDEV Legend}
+    \label{legendA}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics{Figures/LegendB.eps}
+    \caption{MATIE/MAFE Legend}
+    \label{legendB}
+\end{subfigure}
+\caption{Plot Legends}
+\end{figure}
+
 
 \subsubsection{Test 2 Packet Metric Results}
 
-The first packet metric scripts run were on the second set of test results (excludin the exampe set. )
+The first packet metric scripts run were on the second set of test results (excluding the example set. )
 Other repetitions of this test was also performed.
 The metric plots can be seen below: Figures \ref{test2:TDEV} and \ref{test2:MATIE}. 
 
@@ -2369,10 +2390,8 @@ The metric plots can be seen below: Figures \ref{test2:TDEV} and \ref{test2:MATI
 \label{test2:metrics}
 \end{figure}
 
-Similar with the previous set of delay results, tests 2, 6, 7 and 9 will be used first, followed by any other relavent tests. 
-
-%Explanation to the above, with some discussion.
-
+The TDEV plots are noisier and oscilliatory during 100 and 1000 samples, but eventually stabilises to just noise later on in the plots.
+The MATIE and MAFE plots should be a smoother line than this, but this seems reasonable given the conditions that this test was in. 
 \subsubsection{Test 6 Packet Metric Results}
 
 
@@ -2394,10 +2413,15 @@ Similar with the previous set of delay results, tests 2, 6, 7 and 9 will be used
 \label{test6:metrics}
 \end{figure}
 
+Test 6 were the best results gathered, both from the delay data mentioned previously and the above. 
+The MATIE and MAFE plots are smooth linear lines when plotted on a log scale and the TDEV plots are not oscillatory as they were in the other examples.
+Therefore PTP seems to hold up well under these conditions. 
 %Explanation to the above, with some discussion.
 
 \subsubsection{Test 7 Packet Metric Results}
 
+
+The next set of results was Test 7. 
 
 \begin{figure}[H]
 \centering
@@ -2417,8 +2441,12 @@ Similar with the previous set of delay results, tests 2, 6, 7 and 9 will be used
 \label{test7:metrics}
 \end{figure}
 
+This contrasts quite heavily with the previous set of results as there is a lot of oscillatory behaviour in the TDEV results and the MATIE plots are not as smooth as before. 
+It is also interesting to note that there are not many points for the minimum MATIE plot (light blue line). This is most likely because there were several NA values which are not plotted on the graph. 
+
 \subsubsection{Test 9 Packet Metric Results}
 
+The final set of results used was Test 9. 
 
 \begin{figure}[H]
 \centering
@@ -2438,8 +2466,8 @@ Similar with the previous set of delay results, tests 2, 6, 7 and 9 will be used
 \label{test9:metrics}
 \end{figure}
 
-
-\section{Discussion}
+Similarly with the previous set, there is some oscillatory behavoir in the TDEV results, but the MATIE plots look correct. 
+%\section{Discussion}
 
 
 
@@ -2474,12 +2502,24 @@ Several challenges were identified throughout this project, which have been summ
 They were split up into the different subtasks identified for this project.
 
 \begin{description}
-\item[Research into Packet Metrics and the Technology] \hfill \\
-\item[Data Collection] \hfill \\ 
-\item[Packet Metric Implementation] \hfill \\
-\item[Data Processing] \hfill \\
-\end{description}
+\item[Research into Packet Metrics and the Technology] \hfill \\ The main challenge when researching various parts of this project was the limited amount of reports on the specific packet metrics used. 
+Excluding the ITU report already covered in the literature review, there was very little information on these metrics.
+Thus it made it difficult to understand how this packet metric data was processed and analysed.
+\item[Data Collection] \hfill \\ The challenges associated with data collection mainly consisted of working with the hardware.
+With the TimePort, there were some issues with the device not holding a solid GPS lock and thus was freewheeling. 
+After this the TimePort was not able to get a GPS lock at all. 
+The GPS module was replaced with a spare one and the TimePort was able to maintain a lock successfully.\\
 
+One other issue was that the position of the TimePort seemed to determine whether this lock occurred. 
+Once a firmware update fixed a serial corruption issue (as noted in a screenshot earlier in this report), the oreintated of the TimePort error was also solved. 
+The Syncwatch also had one main issue of the Ethernet ports on the device were not activated.
+Instead the other ports had to be used instead.\\
+
+The one other issue of data collection arose due to the availability of either docking ethernet ports or available ethernet ports. 
+This issue was solved by choosing areas of the university where there were ports available. 
+\item[Packet Metric Implementation] \hfill \\ During the packet implementation stage of the project the challenges faced were usually based on the implementation or of the syntax of the language, but this would occur during any programming project.
+The only challenge was verifying that the results calculated were correct. 
+\end{description}
 
 \section{Further Work}
 
@@ -2490,9 +2530,9 @@ These have been identified below.
 \item[Different Network Topologies] Due to the equipment available, it was difficult to test \ac{PTP} on different network types.
 Therefore it would be beneficial to perform the same tests as before but with different topologies.
 This would enable to better test the protocol in more common scenarios with the use of boundary and transparent clocks. 
-
+\item[Gather more data] More network data is required to be able to better analyse the performance of \ac{PTP} on the network. 
+More network locations and at different times of day should be tested.
 \item[More Packet Metrics] Once a better understanding of the packet metrics is gathered, more packet metrics can be implemented where necessary. 
-
 \item[Verify Packet Metric Scripts against existing programs] Because there were no existing packet metric programs available to be used during this project, the scripts were not tested for validity. 
 The results looked correct hence why these were used for investigating \ac{PTP} performance. 
 Chronos has a packet metric software suite as an add on to the Syncwatch software  
@@ -2513,11 +2553,12 @@ The issue arises if a master or grandmaster was compromised and clock shift dela
 This would cause all of the slave clocks on the network to drift away from the actual time reference.
 The impact on critical systems mentioned in this report would be huge: timestamps for telecommunications data would be invalid or power transmission relays would trigger in the wrong order.
 Therefore this section of the report will highlight some of the attack vectors that could affect PTP and methods in which to help mitigate this.
-
+\begin{comment}
 \subsubsection{Issues with NTP}
 
 * find documentation on the NTP DDOS type attack style *
 * comment whether it's possible with PTP*
+\end{comment}
 \subsubsection{Possible Attack Vectors}
 
 There a number of different methods that are possible with the existing \ac{PTP} standard.
