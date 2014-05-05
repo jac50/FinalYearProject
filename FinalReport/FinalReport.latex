@@ -76,7 +76,7 @@
 \addtolength{\evensidemargin}{-0.3in}
 \textwidth 6.6in
 \setlength{\cftbeforetoctitleskip}{-2em} 
-\setcounter{tocdepth{2}}
+%\setcounter{tocdepth}{2}
 \setlength\cftparskip{1pt}
 \setlength{\parindent}{0pt}
 % leftmark shows the chapter, rightmark shows the section.
@@ -103,15 +103,17 @@
 \\ Department of Electrical and Electronic Engineering \\
 \\
 University of Bath}
-\date{\today}
+\date{\today} \hfill \\
 \begin{document}
 
 \maketitle
+Supervisor: Dr Robert Watson \hfill Assessor: Dr Pedro Estrella
 \vfill
 
 \begin{abstract}
 There is an ever increasing importance to synchronise clocks or processes in several industries including telecommunications and power distribution.
-Use is made of the high precision clocks on-board the \acf{GPS} for synchronisation but this method is susceptible to jamming.  
+Use is made of the high precision clocks on-board the \acf{GPS} for synchronisation.
+However this method is susceptible to jamming.  
 Therefore solely relying on this technology would not be wise and an alternative method should be used alongside \ac{GPS}. 
 One example is a distributed network for synchronisation called the  \ac{NTP} or the \acf{PTP}. 
 This project investigates the newer of the two technologies (\ac{PTP}) and investigates how it performs over an Ethernet network.
@@ -174,7 +176,7 @@ In a number of high profile applications there is an ever increasing requirement
 These clocks may be used for generating an accurate timestamp (used in telecommunications)  or a method to synchronise processes in the automotive industry. 
 Multiple clocks will be used in these applications, and thus they all need to be synchronised with one another. \\
 
-It may not be feasible to have a high accuracy atomic clock (or \ac{CSAC}) due to space or cost constraints.
+It may not be feasible to have a high accuracy atomic clock (or \ac{CSAC}) on every node due to space or cost constraints.
 An alternative to this would be to use a \ac{GPS} receiver and time can then be synchronised to the accurate atomic clocks on-board the \ac{GPS} satellites.
 Using high accuracy clocks like the ones mentioned would help to reduce any clock inaccuracies.\\
 
@@ -182,7 +184,8 @@ There are two main types of clock inaccuracies.
 Firstly they may have started at a different time relative to the others. 
 Adjusting for this error is called offset correction. 
 The second effect is caused by a difference in clock speeds. 
-Therefore they need to be continuously adjusted which is called drift correction.
+Therefore they need to be continuously adjusted. 
+This is called drift correction. 
 The amount of drift correction required depends on the quality of the clock.
 Appendix \ref{clockaccuracies} shows a table of clocks and their corresponding accuracies.\\
 
@@ -199,7 +202,8 @@ The adoption of the \ac{NERC}  Standard PRC018-1 in 2006 \cite{NERCPRC0181} made
 With the increase in \ac{GPS} jamming, systems such as 4G mobile telephony must rely on other timing methods in case \ac{GPS} is affected. 
 \end{description}
 
-All of the industries mentioned above could feasibly use \ac{GPS} for a highly accurate timing reference if there was an issue with the system, for example a jamming incident, then there will be some major consequences should timing drift.
+All of the industries mentioned above could feasibly use \ac{GPS} for a highly accurate timing reference if there was an issue with the system.
+The problem is if there is a jamming incident and major consequences could occur if timing was to drift. 
 It is known that jamming GPS receivers is becoming more common and thus an alternative method of time synchronisation should be use \cite{GPSJamming}.
 There are multiple cases where jamming may occur (both accidental and intentional) and thus a way of synchronising time with this threat must be realised. \\
 
@@ -355,6 +359,7 @@ Selection Algorithm For Best Clock & Unknown & Election Based & Hierarchical \\ 
 
 PTP networks can be configured in a number of different ways.
 The decisions on what hardware to use depends on the overall network complexity and the required accuracy of the time synchronisation. 
+The following list are the possible pieces of hardware in a typical PTP network.
 
 \begin{description}
 \item[Grandmaster Clock] The grandmaster clock is the main source of time synchronisation within the same \ac{PTP} domain. 
@@ -378,7 +383,7 @@ A \ac{P2P} clock also takes into account the upstream delay, which is the propag
 This time is then added on to the offset mentioned previously. 
 \end{description}
 
-The figure below (Figure \ref{PTPNet} \cite{CiscoPTP}) is an example of a PTP network. 
+The figure below (Figure \ref{PTPNet} taken from \cite{CiscoPTP}) is an example of a PTP network. 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.6]{Figures/PTPNetwork.eps}
@@ -420,10 +425,10 @@ The 2008 standard uses a hierarchical selection algorithm system, which is outli
 The \ac{BMC} algorithm is used to determine each master, and ultimately the grandmaster of the entire \ac{PTP} network. 
 
 \subsection{Project Description}
-This project aims to investigate \ac{PTP} performance on a heavily used Ethernet network, and to attempt to quantify \ac{PTP} performance. 
+This project aims to investigate \ac{PTP} performance on a heavily used Ethernet network and to attempt to quantify \ac{PTP} performance. 
 This will be done using both raw delay data and calculating a number of different packet metrics.
 There are also some deliverables as part of the Final Year Project which are an interim report, a log book, a final year report and a poster. 
-These deliverables, along with the sub tasks created to complete the project them have been detailed in the Gantt chart, as seen in Appendix \ref{app:ganttchart}.
+These deliverables, along with the sub tasks created to complete the project have been detailed in the Gantt chart, as seen in Appendix \ref{app:ganttchart}.
 This has also been tabulated in the same appendix.\\
 
 The following project objectives have been identified:
@@ -477,16 +482,15 @@ This packet selection method is also known as a Class B metric. \\
 The other method uses a pre-processing technique which preselects packets from a time window. 
 By doing this the process will average out any inconsistencies in the delays, thus resembling a clock running in steady state. 
 Therefore this method is more suitable when trying to specify network limits. This is known as a class A metric.
-Based on the definitions above, Class B metrics were focussed on throughout this project as they were decided to be more relevant. \\
+Based on the definitions above, Class B metrics were focussed on throughout this project as they were more relevant. \\
 
 There are four examples of packet selection methods that are mentioned in the recommendation report. 
 These are: Minimum Packet Selection Method, Percentile Packet Selection Method, Band Packet Selection Method and Cluster Range Packet Selection Method. 
 The normal packet selection method uses a mean value across the window, whereas the minimum packet selection method takes the lowest value.
-The band packet and percentile packet uses a band mean method, with the percentile method setting the lower band to 0. \\
+The band packet and percentile packet uses a band mean method, with the percentile method setting the lower band to zero. \\
 
 It was decided that the cluster range packet selection method was not required for this project as there were enough methods already discussed that would be useful to compare them against.
-This packet selection method will therefore not be implemented with the other metrics. 
-
+This packet selection method will therefore not be implemented with the other metrics.\\
 
 The other method of packet selection is using pre-filtering before the metric is calculated. 
 An averaging function is applied to the set of data. It is important that the data is not filtered too much or data will be lost.
@@ -667,8 +671,7 @@ It is a small 1U rack sized device with a simple user interface.
 It also integrates with with Symmetricom's TimeMonitor software. 
 The device markets include telecommunications, TV and radio broadcasting, and the power industry. \\
 
-The table shown in Appendix \ref{app:SyncwatchSpec} details the Syncwatch specifications. 
-The figures below shows the outside panel of the device. \\
+The figure below shows the outside panel of the device. \\
 
 
 \begin{figure}[H]
@@ -727,8 +730,7 @@ minicom -S
 \end{lstlisting}
 
 This then brings up the second layer: the PTP console. 
-The screenshot below (Figure \ref{Syncwatch2ndLayer} shows a list of commands available.
-The complete list of commands in both of the modes is shown in the documentation, shown in Appendix \ref{app:SyncwatchDocumentation}. 
+The screenshot below (Figure \ref{Syncwatch2ndLayer}) shows a list of commands available.
 
 \begin{figure}[H]
 \centering
@@ -738,7 +740,9 @@ The complete list of commands in both of the modes is shown in the documentation
 \end{figure}
 
 Note that there is some serial corruption visible in this screenshot. 
-This was addressed at the end of the report. 
+This has been an issue both with the Syncwatch and the TimePort.
+The TimePort serial corruption was fixed with a firmware update. 
+
 \subsubsection{Hardware - Beaglebone Black}
 \subsubsection{Description}
 
@@ -754,7 +758,7 @@ It has Ethernet connectivity and runs off of a 5V DC supply.\\
 An SSH server has been set up on it with a static IP address. 
 This made it easy to start the PTP daemon. \\
 
-Below (Figure \ref{fig:BBBLabelled} \cite{BBBImg}) is a labelled picture of the BeagleBone Black.
+Below (Figure \ref{fig:BBBLabelled} taken from \cite{BBBImg}) is a labelled picture of the BeagleBone Black.
 
 \begin{figure}[H]
 \centering
@@ -1086,7 +1090,7 @@ The time field must also be parsed correctly and the time delta added to the new
 The general script layout has been converted to a flow chart, see below Figure \ref{FC:AwkScript}.\\
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[framed, node distance = 3cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
+\begin{tikzpicture}[framed, node distance = 3.5cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
     % Place nodes
 	\node [block] (init) {Start Script};
 	\node [block,right of =init] (inputargs) {Check any Input Arguments};
@@ -2412,11 +2416,6 @@ Similarly with the previous set, there is some oscillatory behavoir in the TDEV 
 
 \section{Conclusion}
 
-Overall the project has gone very well.
-The majority of the objectives that were set at the beginning of the project were completed and some interesting results were found.\\
-Packet delays seem to be fairly consistent even with it being measured on a busy network.
-The packet metrics could also be correlated with this delay data and patterns were noticed.\\
-
 In conclusion the \ac{PTP} protocol was investigated successfully in a number of different ways.
 \ac{PTP} data was collected in a number of different locations throughout the university on several different clock configurations.
 This data was then analysed: both through looking at the raw delays and from the use of packet metric scripts.
@@ -2463,7 +2462,14 @@ This issue was solved by choosing areas of the university where there were ports
 The only challenge was verifying that the results calculated were correct. 
 \end{description}
 
-\section{Further Work}
+\subsection{Reflection on Project}
+
+Overall the project has gone very well.
+The majority of the objectives that were set at the beginning of the project were completed and some interesting results were found.\\
+Packet delays seem to be fairly consistent even with it being measured on a busy network.
+The packet metrics could also be correlated with this delay data and patterns were noticed.\\
+
+section{Further Work}
 
 Due to the openness of the project, there is a number of additional tasks that could be completed to continue the investigation.
 These have been identified below.
@@ -2769,6 +2775,7 @@ Weight: & 1150g \\ \\
 \section{TDEVAllMethods}
 \label{app:TDEVAll}
 \lstinputlisting[caption=TDEV All Methods implementation, language = R]{../PacketMetrics/TDEVAllMethods.r}
+\newpage
 \section{MATIEAllMethods}
 \label{app:MATIEAll}
 \lstinputlisting[caption=MATIE All Methods implementation, language = R]{../PacketMetrics/MATIEAllMethods.r}
@@ -2783,7 +2790,7 @@ Weight: & 1150g \\ \\
 \label{app:mainScript}
 \lstinputlisting[caption=Main Packet Metric Script, language = R]{../PacketMetrics/PacketMetric.r}
 \section{Function Library}
-\lstinputlisting[caption=Functions Library, language = R}{../PacketMetricsFuncsPacketMetric.r}
+\lstinputlisting[caption=Functions Library, language = R}{../PacketMetrics/FuncsPacketMetric.r}
 \section{Plotting Function - Line}
 \label{app:plot}
 \begin{lstlisting}[language=R, caption=Plotting Function for Line Graphs]
@@ -2821,7 +2828,7 @@ plotHistogram <- function(data) {
 	
 	outputFileName = paste("../PTPData/Plots/HistogramsOfDelays/Histogram of Delays - Test:", args\$nTest, " Sample - N", N, " size.eps",sep = "")
 	postscript(outputFileName)
-	hist(data, xlab = "Bins of Delay", ylab="Frequency", main = )
+	hist(data, xlab = "Bins of Delay", ylab="Frequency", main="", breaks=10  )
 
 }
 \end{lstlisting}
@@ -2841,12 +2848,8 @@ plotDelay <- function(delay) {
 \begin{lstlisting}
 
 plotCHistogram <- function (delay) { 
-	# Work in Progress. Comment out all lines until it is completed
-	#outputFileName = paste("../PTPData/Plots/PlotOfDelays/Colour Histogram of Delays - Test:", args\$nTest, " Sample -", N, " size.eps",sep = "")
-	#postscript(outputFileName)
 	step <- 32 * 60
 	j <- 0
-	#delay <- rnorm(n=5000,m=24.2,sd=2.2)
 	# -- Flatten the histogram into their corresponding colours. 
 	nStep <- floor(length(delay) / step ) # 100 steps for the time being. 
 	colouredDelayArray = matrix(0,nStep,100) #temp matrix. need to define size
